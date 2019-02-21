@@ -12,6 +12,11 @@ export const SET_PATHS = 'SET_PATHS'
 export const GET_PATH = 'GET_PATH'
 export const SET_PATH = 'SET_PATH'
 
+export const GET_MATERIALS = 'GET_MATERIALS'
+export const SET_MATERIALS = 'SET_MATERIALS'
+export const GET_MATERIAL = 'GET_MATERIAL'
+export const SET_MATERIAL = 'SET_MATERIAL'
+
 // Invitations
 export const SEND_INVITATION = 'SEND_INVITATION'
 export const DELETE_INVITATION = 'DELETE_INVITATION'

@@ -1,6 +1,6 @@
 <template>
   <div class="name">
-    <h1>{{ path.name }} <small>{{ path.description }}</small></h1>
+    <h1>{{ name }} <small>{{ description }}</small></h1>
     <el-button type="success">
       Enroll Now
     </el-button>
@@ -19,32 +19,25 @@
 
 <script>
 import consola from 'consola'
-import { mapState } from 'vuex'
+// import { mapState } from 'vuex'
 
 export default {
     layout: 'aside',
 
     name: 'SinglePath',
-
     data() {
         return {
             activeItems: []
         }
     },
 
-    computed: {
-        ...mapState('paths', ['path']),
-
-        sprints() {
-            if (this.path) {
-                return this.path.sprints
-            }
-            return []
+    async asyncData({ params, store, error }) {
+        try {
+            const response = await store.dispatch('paths/GET_PATH', params.slug)
+            return response
+        } catch (e) {
+            error({ message: e, statusCode: 404 })
         }
-    },
-
-    created() {
-        this.$store.dispatch('paths/GET_PATH', this.$route.params.slug)
     },
 
     methods: {

@@ -1,5 +1,6 @@
 // ##### General
 export const REGISTER = 'REGISTER'
+export const SIGN_UP = 'SIGN_UP'
 export const LOGIN = 'LOGIN'
 export const LOGOUT = 'LOGOUT'
 export const FORGOT = 'FORGOT'
@@ -7,10 +8,20 @@ export const RESET = 'RESET'
 export const CHECK_AUTH = 'CHECK_AUTH'
 export const SET_AUTH = 'SET_AUTH'
 
+export const ENROLL = 'ENROLL'
+export const UNENROLL = 'UNENROLL'
+export const CREATE_PATH = 'CREATE_PATH'
 export const GET_PATHS = 'GET_PATHS'
 export const SET_PATHS = 'SET_PATHS'
 export const GET_PATH = 'GET_PATH'
 export const SET_PATH = 'SET_PATH'
+export const ADD_SPRINTS = 'ADD_SPRINTS'
+export const REMOVE_SPRINTS = 'REMOVE_SPRINTS'
+
+export const GET_SPRINTS = 'GET_SPRINTS'
+export const SET_SPRINTS = 'SET_SPRINTS'
+export const ADD_MATERIALS = 'ADD_MATERIALS'
+export const REMOVE_MATERIALS = 'REMOVE_MATERIALS'
 
 export const GET_MATERIALS = 'GET_MATERIALS'
 export const SET_MATERIALS = 'SET_MATERIALS'

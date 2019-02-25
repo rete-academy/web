@@ -22,9 +22,13 @@ import consola from 'consola'
 // import { mapState } from 'vuex'
 
 export default {
-    layout: 'aside',
 
     name: 'SinglePath',
+
+    auth: false,
+
+    layout: 'aside',
+
     data() {
         return {
             activeItems: []

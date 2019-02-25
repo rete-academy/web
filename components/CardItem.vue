@@ -13,12 +13,6 @@
         <time class="time">
           {{ path.createdTime | convertTime('DD.MM.YYYY') }}
         </time>
-        <el-button
-          type="text"
-          @click="go(path.slug)"
-        >
-          View Details
-        </el-button>
       </div>
     </div>
   </el-card>

@@ -4,6 +4,7 @@
       v-for="path in paths"
       :key="path._id"
       :data="path"
+      @click.native="openSinglePath(path)"
     />
   </section>
 </template>
@@ -13,6 +14,8 @@ import { mapState } from 'vuex'
 import CardItem from '~/components/CardItem.vue'
 
 export default {
+    auth: false,
+
     components: {
         CardItem
     },
@@ -23,6 +26,12 @@ export default {
 
     created() {
         this.$store.dispatch('paths/GET_PATHS')
+    },
+
+    methods: {
+        openSinglePath(p) {
+            this.$router.push(`/paths/${p.slug}`)
+        }
     }
 }
 </script>

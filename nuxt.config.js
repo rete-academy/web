@@ -3,9 +3,6 @@ const pkg = require('./package')
 module.exports = {
     mode: 'universal',
 
-    /*
-  ** Headers of the page
-  */
     head: {
         title: pkg.name,
         meta: [
@@ -18,29 +15,18 @@ module.exports = {
         ]
     },
 
-    /*
-  ** Customize the progress-bar color
-  */
     loading: { color: '#fff' },
 
-    /*
-  ** Global CSS
-  */
     css: [
         'element-ui/lib/theme-chalk/index.css'
     ],
 
-    /*
-  ** Plugins to load before mounting the App
-  */
-    plugins: [
+    plugins: [ // load before mounting the App
         '@/plugins/element-ui',
-        '@/plugins/filters'
+        '@/plugins/filters',
+        '@/plugins/fontawesome'
     ],
 
-    /*
-  ** Nuxt.js modules
-  */
     modules: [
     // Doc: https://axios.nuxtjs.org/usage
         '@nuxtjs/axios',
@@ -64,9 +50,7 @@ module.exports = {
             }
         }
     },
-    /*
-  ** Axios module configuration
-  */
+
     axios: {
     // See https://github.com/nuxt-community/axios-module#options
         baseUrl: 'http://localhost:3000'
@@ -76,19 +60,14 @@ module.exports = {
         // Set up auth module global
         middleware: ['auth']
     },
+
     server: {
         port: 8080, // default: 3000
         timing: false
     },
-    /*
-  ** Build configuration
-  */
+
     build: {
         transpile: [/^element-ui/],
-
-        /*
-    ** You can extend webpack config here
-    */
         extend(config, ctx) {
             // Run ESLint on save
             if (ctx.isDev && ctx.isClient) {

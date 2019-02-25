@@ -1,7 +1,7 @@
 <template>
-  <div class="name">
-    Sprint admin here
-  </div>
+    <div class="name">
+        Sprint admin here
+    </div>
 </template>
 
 <script>

@@ -1,61 +1,61 @@
 <template>
-  <el-dialog
-    title="Add New Material"
-    :modal="true"
-    :show-close="false"
-    :close-on-click-modal="false"
-    :visible.sync="visible"
-    width="80%"
-    class="custom-dialog"
-  >
-    <el-form ref="form" :model="form" label-width="120px">
-      <el-form-item label="Material URL">
-        <el-input
-          v-model="form.url"
-          placeholder="url"
-          :disabled="loading"
-          clearable
-        >
-          <i
-            slot="suffix"
-            class="el-input__icon "
-            :class="loading ? 'el-icon-loading' : ''"
-          >&nbsp;</i>
-        </el-input>
-      </el-form-item>
+    <el-dialog
+        title="Add New Material"
+        :modal="true"
+        :show-close="false"
+        :close-on-click-modal="false"
+        :visible.sync="visible"
+        width="80%"
+        class="custom-dialog"
+    >
+        <el-form ref="form" :model="form" label-width="120px">
+            <el-form-item label="Material URL">
+                <el-input
+                    v-model="form.url"
+                    placeholder="url"
+                    :disabled="loading"
+                    clearable
+                >
+                    <i
+                        slot="suffix"
+                        class="el-input__icon "
+                        :class="loading ? 'el-icon-loading' : ''"
+                    >&nbsp;</i>
+                </el-input>
+            </el-form-item>
 
-      <el-row :gutter="20">
-        <el-col :span="18">
-          <el-form-item v-if="fetched" label="Title">
-            <el-input
-              v-model="form.title"
-              placeholder="Title"
-              clearable
-            />
-          </el-form-item>
-          <el-form-item v-if="fetched" label="Description">
-            <el-input
-              v-model="form.description"
-              placeholder="Title"
-              type="textarea"
-              :autosize="{ minRows: 3, maxRows: 6}"
-            />
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <img :src="form.image" class="material-image">
-        </el-col>
-      </el-row>
-      <el-form-item>
-        <el-button type="success" @click="onSubmit">
-          Add Material
-        </el-button>
-        <el-button type="danger" @click="handleClose">
-          Close
-        </el-button>
-      </el-form-item>
-    </el-form>
-  </el-dialog>
+            <el-row :gutter="20">
+                <el-col :span="18">
+                    <el-form-item v-if="fetched" label="Title">
+                        <el-input
+                            v-model="form.title"
+                            placeholder="Title"
+                            clearable
+                        />
+                    </el-form-item>
+                    <el-form-item v-if="fetched" label="Description">
+                        <el-input
+                            v-model="form.description"
+                            placeholder="Title"
+                            type="textarea"
+                            :autosize="{ minRows: 3, maxRows: 6}"
+                        />
+                    </el-form-item>
+                </el-col>
+                <el-col :span="6">
+                    <img :src="form.image" class="material-image">
+                </el-col>
+            </el-row>
+            <el-form-item>
+                <el-button type="success" @click="onSubmit">
+                    Add Material
+                </el-button>
+                <el-button type="danger" @click="handleClose">
+                    Close
+                </el-button>
+            </el-form-item>
+        </el-form>
+    </el-dialog>
 </template>
 
 <script>

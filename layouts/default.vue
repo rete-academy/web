@@ -1,12 +1,12 @@
 <template>
-  <el-container>
-    <el-header>
-      <nav-bar />
-    </el-header>
-    <el-main>
-      <nuxt />
-    </el-main>
-  </el-container>
+    <el-container>
+        <el-header>
+            <nav-bar />
+        </el-header>
+        <el-main>
+            <nuxt />
+        </el-main>
+    </el-container>
 </template>
 
 <script>

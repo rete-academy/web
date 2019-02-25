@@ -1,72 +1,72 @@
 <template>
-  <el-dialog
-    title="Add New Path"
-    :modal="true"
-    :show-close="false"
-    :close-on-click-modal="false"
-    :visible.sync="visible"
-    width="50%"
-    class="custom-dialog"
-  >
-    <el-form ref="form" :model="form" label-width="120px">
-      <el-form-item label="Path Name">
-        <el-input
-          v-model="form.name"
-          placeholder="Name"
-          :disabled="loading"
-          clearable
-          @blur="checkPathBySlug"
-        >
-          <i
-            slot="suffix"
-            class="el-input__icon "
-            :class="loading ? 'el-icon-loading' : ''"
-          >&nbsp;</i>
-        </el-input>
-      </el-form-item>
+    <el-dialog
+        title="Add New Path"
+        :modal="true"
+        :show-close="false"
+        :close-on-click-modal="false"
+        :visible.sync="visible"
+        width="50%"
+        class="custom-dialog"
+    >
+        <el-form ref="form" :model="form" label-width="120px">
+            <el-form-item label="Path Name">
+                <el-input
+                    v-model="form.name"
+                    placeholder="Name"
+                    :disabled="loading"
+                    clearable
+                    @blur="checkPathBySlug"
+                >
+                    <i
+                        slot="suffix"
+                        class="el-input__icon "
+                        :class="loading ? 'el-icon-loading' : ''"
+                    >&nbsp;</i>
+                </el-input>
+            </el-form-item>
 
-      <el-row :gutter="20">
-        <el-col :span="18">
-          <el-form-item label="Slug">
-            <el-input
-              v-model="form.slug"
-              :class="taken ? 'taken' : ''"
-              placeholder="slug"
-            >
-              <i
-                slot="suffix"
-                class="el-input__icon "
-                :class="taken ? 'el-icon-warning taken' : ''"
-              >&nbsp;</i>
-            </el-input>
-          </el-form-item>
-          <el-form-item label="Description">
-            <el-input
-              v-model="form.description"
-              placeholder="Title"
-              type="textarea"
-              :autosize="{ minRows: 3, maxRows: 6}"
-            />
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <img :src="form.image" class="image">
-        </el-col>
-      </el-row>
-      <el-form-item>
-        <el-button
-          type="success"
-          :disabled="taken"
-          @click="onSubmit"
-        >
-          Create Path
-        </el-button>
-        <el-button type="danger" @click="handleClose">
-          Close
-        </el-button>
-      </el-form-item>
-    </el-form>
-  </el-dialog>
+            <el-row :gutter="20">
+                <el-col :span="18">
+                    <el-form-item label="Slug">
+                        <el-input
+                            v-model="form.slug"
+                            :class="taken ? 'taken' : ''"
+                            placeholder="slug"
+                        >
+                            <i
+                                slot="suffix"
+                                class="el-input__icon "
+                                :class="taken ? 'el-icon-warning taken' : ''"
+                            >&nbsp;</i>
+                        </el-input>
+                    </el-form-item>
+                    <el-form-item label="Description">
+                        <el-input
+                            v-model="form.description"
+                            placeholder="Title"
+                            type="textarea"
+                            :autosize="{ minRows: 3, maxRows: 6}"
+                        />
+                    </el-form-item>
+                </el-col>
+                <el-col :span="6">
+                    <img :src="form.image" class="image">
+                </el-col>
+            </el-row>
+            <el-form-item>
+                <el-button
+                    type="success"
+                    :disabled="taken"
+                    @click="onSubmit"
+                >
+                    Create Path
+                </el-button>
+                <el-button type="danger" @click="handleClose">
+                    Close
+                </el-button>
+            </el-form-item>
+        </el-form>
+    </el-dialog>
 </template>
 
 <script>

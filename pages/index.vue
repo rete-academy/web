@@ -1,12 +1,12 @@
 <template>
-  <section class="container">
-    <card-item
-      v-for="path in paths"
-      :key="path._id"
-      :data="path"
-      @click.native="openSinglePath(path)"
-    />
-  </section>
+    <section class="container">
+        <card-item
+            v-for="path in paths"
+            :key="path._id"
+            :data="path"
+            @click.native="openSinglePath(path)"
+        />
+    </section>
 </template>
 
 <script>

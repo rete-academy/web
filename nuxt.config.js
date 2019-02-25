@@ -15,7 +15,11 @@ module.exports = {
         ]
     },
 
-    loading: { color: '#fff' },
+    loading: {
+        color: '#FFEB3B',
+        height: '5px',
+        continuous: true
+    },
 
     css: [
         'element-ui/lib/theme-chalk/index.css'

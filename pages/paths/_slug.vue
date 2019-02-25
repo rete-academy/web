@@ -1,20 +1,20 @@
 <template>
-  <div class="name">
-    <h1>{{ name }} <small>{{ description }}</small></h1>
-    <el-button type="success">
-      Enroll Now
-    </el-button>
-    <el-collapse v-model="activeItems" @change="handleChange">
-      <el-collapse-item
-        v-for="sprint in sprints"
-        :key="sprint._id"
-        :title="sprint.name"
-        :name="sprint._id"
-      >
-        <div>{{ sprint.description }}</div>
-      </el-collapse-item>
-    </el-collapse>
-  </div>
+    <div class="name">
+        <h1>{{ name }} <small>{{ description }}</small></h1>
+        <el-button type="success">
+            Enroll Now
+        </el-button>
+        <el-collapse v-model="activeItems" @change="handleChange">
+            <el-collapse-item
+                v-for="sprint in sprints"
+                :key="sprint._id"
+                :title="sprint.name"
+                :name="sprint._id"
+            >
+                <div>{{ sprint.description }}</div>
+            </el-collapse-item>
+        </el-collapse>
+    </div>
 </template>
 
 <script>

@@ -1,15 +1,15 @@
 <template>
-  <div class="sign-in wrapper">
-    <input id="username" v-model="username" type="text" name="">
-    <input id="password" v-model="password" type="text" name="">
-    <button type="submit" class="button is-dark is-fullwidth" @click="login">
-      Log In
-    </button>
-    <br>
-    ---
-    <br>
-    {{ res }}
-  </div>
+    <div class="sign-in wrapper">
+        <input id="username" v-model="username" type="text" name="">
+        <input id="password" v-model="password" type="text" name="">
+        <button type="submit" class="button is-dark is-fullwidth" @click="login">
+            Log In
+        </button>
+        <br>
+        ---
+        <br>
+        {{ res }}
+    </div>
 </template>
 
 <script>

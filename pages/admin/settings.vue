@@ -1,7 +1,7 @@
 <template>
-  <div class="name">
-    Setting page
-  </div>
+    <div class="name">
+        Setting page
+    </div>
 </template>
 
 <script>

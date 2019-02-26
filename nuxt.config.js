@@ -3,6 +3,10 @@ const pkg = require('./package')
 module.exports = {
     mode: 'universal',
 
+    env: {
+        BASE_URL: process.env.API_URL || 'http://localhost:3000'
+    },
+
     head: {
         title: pkg.name,
         meta: [
@@ -57,7 +61,7 @@ module.exports = {
 
     axios: {
     // See https://github.com/nuxt-community/axios-module#options
-        baseUrl: 'http://localhost:3000'
+        baseUrl: process.env.BASE_URL
     },
 
     router: {

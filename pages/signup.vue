@@ -24,8 +24,19 @@
             <el-form-item label="Email">
                 <el-input
                     v-model="input.email"
+                    type="text"
                     class="email clear"
                     placeholder="email@example.com"
+                    clearable
+                    @keyup.native.enter="onSubmit"
+                />
+            </el-form-item>
+            <el-form-item label="Password">
+                <el-input
+                    v-model="input.email"
+                    :type="currentType"
+                    class="password clear"
+                    placeholder="Your Password"
                     clearable
                     @keyup.native.enter="onSubmit"
                 />
@@ -94,7 +105,8 @@ export default {
             acceptTos: true,
             dialogVisible: false,
             link: '',
-            finished: false
+            finished: false,
+            currentType: 'text'
         }
     },
 

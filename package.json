@@ -4,6 +4,10 @@
   "description": "My luminous Nuxt.js project",
   "author": "Sang Dang",
   "private": true,
+  "engine": {
+    "node": "10.15.x",
+    "npm": "6.7.x"
+  },
   "scripts": {
     "dev": "cross-env NODE_ENV=development nodemon server/index.js --watch server",
     "build": "nuxt build",
@@ -11,6 +15,7 @@
     "generate": "nuxt generate",
     "lint": "eslint --fix --ext .js,.vue --ignore-path .gitignore .",
     "precommit": "npm run lint",
+    "heroku-postbuild": "npm run build",
     "test": "jest"
   },
   "dependencies": {

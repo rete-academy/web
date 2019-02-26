@@ -70,7 +70,7 @@ module.exports = {
     },
 
     server: {
-        port: 8080, // default: 3000
+        // port: 8080, // default: 3000
         timing: false
     },
 

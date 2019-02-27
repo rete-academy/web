@@ -9,6 +9,8 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import {
     faCog,
     faExternalLinkAlt,
+    faEye,
+    faEyeSlash,
     faFile,
     faFileAlt,
     faFileCsv,
@@ -34,11 +36,13 @@ import {
     faUserMinus,
     faUserTimes
 } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { FontAwesomeIcon, FontAwesomeLayers } from '@fortawesome/vue-fontawesome'
 
 library.add(
     faCog,
     faExternalLinkAlt,
+    faEye,
+    faEyeSlash,
     faFile,
     faFileAlt,
     faFileCsv,
@@ -66,3 +70,4 @@ library.add(
 )
 
 Vue.component('fa', FontAwesomeIcon)
+Vue.component('fa-layer', FontAwesomeLayers)

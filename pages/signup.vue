@@ -9,7 +9,7 @@
             ref="signUpForm"
             :model="input"
             label-width="80px"
-            label-position="top"
+            label-position="left"
         >
             <el-form-item label="Name">
                 <el-input
@@ -17,7 +17,6 @@
                     type="text"
                     class="name clear"
                     placeholder="Your Name"
-                    clearable
                     @keyup.native.enter="onSubmit"
                 />
             </el-form-item>
@@ -27,18 +26,29 @@
                     type="text"
                     class="email clear"
                     placeholder="email@example.com"
-                    clearable
                     @keyup.native.enter="onSubmit"
                 />
             </el-form-item>
             <el-form-item label="Password">
                 <el-input
-                    v-model="input.email"
+                    v-model="input.password"
                     :type="currentType"
                     class="password clear"
                     placeholder="Your Password"
-                    clearable
                     @keyup.native.enter="onSubmit"
+                >
+                    <fa
+                        slot="suffix"
+                        class="el-input__icon eye-icon"
+                        :icon="passwordIcon"
+                        @click="handleIconClick"
+                    />
+                </el-input>
+                <el-progress
+                    :percentage="25*score"
+                    :show-text="false"
+                    :stroke-width="5"
+                    :status="score < 3 ? 'exception' : 'success'"
                 />
             </el-form-item>
             <el-form-item>
@@ -88,6 +98,7 @@
 
 <script>
 import consola from 'consola'
+import zxcvbn from 'zxcvbn'
 
 export default {
     name: 'SignUpForm',
@@ -100,14 +111,29 @@ export default {
         return {
             input: {
                 email: '',
-                name: ''
+                name: '',
+                password: ''
             },
             acceptTos: true,
             dialogVisible: false,
             link: '',
             finished: false,
-            currentType: 'text'
+            count: 10,
+            currentType: 'password',
+            showPassword: false,
+            passwordIcon: 'eye-slash'
         }
+    },
+
+    computed: {
+        score() {
+            return zxcvbn(this.input.password).score
+        }
+    },
+
+    created() {
+        consola.info(process.env.apiUrl)
+        this.$axios.defaults.baseURL = process.env.apiUrl
     },
 
     methods: {
@@ -119,6 +145,31 @@ export default {
         onDecline() {
             this.acceptTos = false
             this.dialogVisible = false
+        },
+
+        handleIconClick() {
+            this.showPassword = !this.showPassword
+            if (this.showPassword) {
+                this.currentType = 'text'
+                this.passwordIcon = 'eye'
+
+                const countDown = setInterval(() => {
+                    this.count -= 1
+                    if (this.count <= 0) {
+                        clearInterval(countDown)
+                        this.currentType = 'password'
+                        this.passwordIcon = 'eye-slash'
+                        this.count = 10
+                    }
+                }, 1000)
+            } else {
+                this.currentType = 'password'
+                this.passwordIcon = 'eye-slash'
+            }
+        },
+
+        checkScore(score) {
+            this.score = score
         },
 
         openDialog(string) {
@@ -133,16 +184,36 @@ export default {
         },
 
         onSubmit() {
+            if (this.score < 3) {
+                this.$confirm(
+                    'Your password is weak. Continue?',
+                    'Warning',
+                    {
+                        confirmButtonText: 'OK',
+                        cancelButtonText: 'Use Stronger Password',
+                        type: 'warning',
+                        center: true
+                    }
+                ).then(() => {
+                    this.handleSignUp()
+                }).catch(() => {})
+            } else {
+                this.handleSignUp()
+            }
+        },
+
+        handleSignUp() {
             if (this.acceptTos) {
                 this.$nuxt.$loading.start()
-                this.$store.dispatch('users/SIGN_UP', this.input).then((res) => {
-                    this.$nuxt.$loading.finish()
-                    this.finished = true
-                    consola.info(res)
-                }).catch((err) => {
-                    this.$nuxt.$loading.fail()
-                    consola.error(err.message)
-                })
+                this.$store.dispatch('users/SIGN_UP', this.input)
+                    .then((res) => {
+                        this.$nuxt.$loading.finish()
+                        this.finished = true
+                        consola.info(res)
+                    }).catch((err) => {
+                        this.$nuxt.$loading.fail()
+                        this.$message.error(err.message)
+                    })
             }
         }
     }
@@ -184,11 +255,22 @@ export default {
         margin: 30 auto;
     }
 
+    .eye-icon {
+        width: 1.25em;
+        margin-right: 5px;
+
+        &:hover {
+            cursor: pointer;
+            color: #CCCCCC;
+        }
+    }
+
     .sign-up-btn {
         margin-top: 10px;
         height: 50px;
         font-size: 16px;
         width: 100%;
+        border-radius: 25px;
     }
 
     .tos {
@@ -215,6 +297,19 @@ export default {
         p {
             font-size: 14px;
         }
+    }
+    .el-form-item:last-child {
+        margin-bottom: 0;
+
+    }
+
+    .password {
+        .el-input__inner {
+            border-bottom: 0 !important;
+        }
+    }
+    .el-progress {
+        margin-top: 2px;
     }
 }
 </style>

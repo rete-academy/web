@@ -4,7 +4,7 @@ module.exports = {
     mode: 'universal',
 
     env: {
-        BASE_URL: process.env.API_URL || 'http://localhost:3000'
+        apiUrl: process.env.API_URL || 'http://localhost:4321'
     },
 
     head: {
@@ -41,6 +41,12 @@ module.exports = {
         '@nuxtjs/pwa',
         '@nuxtjs/auth'
     ],
+
+    axios: {
+    // See https://github.com/nuxt-community/axios-module#options
+        baseURL: process.env.apiUrl
+    },
+
     auth: {
         redirect: {
             login: '/login',
@@ -57,11 +63,6 @@ module.exports = {
                 }
             }
         }
-    },
-
-    axios: {
-    // See https://github.com/nuxt-community/axios-module#options
-        baseUrl: process.env.BASE_URL
     },
 
     router: {

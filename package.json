@@ -6,7 +6,7 @@
   "private": true,
   "engine": {
     "node": "10.15.x",
-    "npm": "6.7.x"
+    "npm": "6.x.x"
   },
   "scripts": {
     "dev": "cross-env NODE_ENV=development nodemon server/index.js --watch server",
@@ -37,7 +37,8 @@
     "node-sass": "^4.11.0",
     "npm": "^6.8.0",
     "nuxt": "^2.4.0",
-    "sass-loader": "^7.1.0"
+    "sass-loader": "^7.1.0",
+    "zxcvbn": "^4.4.2"
   },
   "devDependencies": {
     "@nuxtjs/eslint-config": "^0.0.1",

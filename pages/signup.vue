@@ -1,5 +1,5 @@
 <template>
-    <div class="sign-up-form">
+    <div class="sign-up-form form-wrapper">
         <img class="logo" src="@/assets/images/rete-logo-big.jpg">
         <h2 v-if="!finished">
             Sign Up
@@ -76,11 +76,26 @@
                 >
                     Register
                 </el-button>
+                <el-button
+                    type="primary"
+                    class="login-btn"
+                    plain
+                    @click="$router.push('/login')"
+                >
+                    Or, Login
+                </el-button>
             </el-form-item>
+            <el-form-item />
         </el-form>
         <div v-else class="finished">
             <h2>Registration finished!</h2>
             <p>Please check your inbox to confirm email address.</p>
+            <p>
+                Go back to
+                <nuxt-link to="/">
+                    Home page
+                </nuxt-link>
+            </p>
         </div>
 
         <el-dialog
@@ -258,18 +273,6 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss">
 .sign-up-form {
-    max-width: 600px;
-    margin: 0 auto;
-
-    .el-form {
-        max-width: 380px;
-        margin: 0 auto;
-    }
-
-    .logo {
-        width: 100%;
-    }
-
     h2 {
         text-align: center;
         margin: 0 auto 20px;
@@ -288,24 +291,6 @@ export default {
 
     .test {
         margin: 30 auto;
-    }
-
-    .eye-icon {
-        width: 1.25em;
-        margin-right: 5px;
-
-        &:hover {
-            cursor: pointer;
-            color: #CCCCCC;
-        }
-    }
-
-    .sign-up-btn {
-        margin-top: 10px;
-        height: 50px;
-        font-size: 16px;
-        width: 100%;
-        border-radius: 25px;
     }
 
     .tos {

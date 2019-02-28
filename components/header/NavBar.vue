@@ -1,6 +1,10 @@
 <template>
     <div class="nav-bar">
         this is navbar
+
+        <el-button type="text" @click="logout">
+            Logout
+        </el-button>
     </div>
 </template>
 
@@ -14,6 +18,9 @@ export default {
     },
 
     methods: {
+        async logout() {
+            await this.$auth.logout()
+        }
     }
 }
 </script>

@@ -8,10 +8,12 @@
             v-if="!finished"
             ref="signUpForm"
             :model="input"
+            :rules="rules"
             label-width="80px"
             label-position="left"
+            hide-required-asterisk
         >
-            <el-form-item label="Name">
+            <el-form-item label="Name" prop="name" required>
                 <el-input
                     v-model="input.name"
                     type="text"
@@ -20,16 +22,16 @@
                     @keyup.native.enter="onSubmit"
                 />
             </el-form-item>
-            <el-form-item label="Email">
+            <el-form-item label="Email" prop="email" required>
                 <el-input
                     v-model="input.email"
-                    type="text"
+                    type="email"
                     class="email clear"
                     placeholder="email@example.com"
                     @keyup.native.enter="onSubmit"
                 />
             </el-form-item>
-            <el-form-item label="Password">
+            <el-form-item label="Password" prop="password" required>
                 <el-input
                     v-model="input.password"
                     :type="currentType"
@@ -47,12 +49,15 @@
                 <el-progress
                     :percentage="25*score"
                     :show-text="false"
-                    :stroke-width="5"
+                    :stroke-width="4"
                     :status="score < 3 ? 'exception' : 'success'"
                 />
             </el-form-item>
             <el-form-item>
-                <el-checkbox v-model="acceptTos">
+                <el-checkbox
+                    v-model="acceptTos"
+                    class="accept-checkbox"
+                >
                     I have read and accepted
                     <a
                         class="link"
@@ -121,7 +126,24 @@ export default {
             count: 10,
             currentType: 'password',
             showPassword: false,
-            passwordIcon: 'eye-slash'
+            passwordIcon: 'eye-slash',
+            rules: {
+                name: [{
+                    required: true,
+                    message: 'Name is required',
+                    trigger: 'blur'
+                }],
+                email: [{
+                    type: 'email',
+                    message: 'Please input correct email address',
+                    trigger: ['blur']
+                }],
+                password: [{
+                    required: true,
+                    validator: this.checkPass,
+                    trigger: ['blur', 'change']
+                }]
+            }
         }
     },
 
@@ -132,8 +154,8 @@ export default {
     },
 
     created() {
-        consola.info(process.env.apiUrl)
-        this.$axios.defaults.baseURL = process.env.apiUrl
+        // consola.info(this.$axios.defaults.baseURL)
+        // this.$axios.defaults.baseURL = process.env.apiUrl
     },
 
     methods: {
@@ -168,8 +190,17 @@ export default {
             }
         },
 
-        checkScore(score) {
-            this.score = score
+        checkPass(rule, value, callback) {
+            if (!value) {
+                return callback(new Error('Please input password'))
+            }
+            setTimeout(() => {
+                if (this.score < 2) {
+                    callback(new Error('Password is too weak'))
+                } else {
+                    callback()
+                }
+            }, 500)
         },
 
         openDialog(string) {
@@ -184,22 +215,26 @@ export default {
         },
 
         onSubmit() {
-            if (this.score < 3) {
-                this.$confirm(
-                    'Your password is weak. Continue?',
-                    'Warning',
-                    {
-                        confirmButtonText: 'OK',
-                        cancelButtonText: 'Use Stronger Password',
-                        type: 'warning',
-                        center: true
+            this.$refs.signUpForm.validate((valid) => {
+                if (valid) {
+                    if (this.score < 3) {
+                        this.$confirm(
+                            'Your password is quite weak. Continue?',
+                            'Weak Password',
+                            {
+                                confirmButtonText: 'OK',
+                                cancelButtonText: 'Choose Stronger Password',
+                                type: 'warning',
+                                center: true
+                            }
+                        ).then(() => {
+                            this.handleSignUp()
+                        }).catch(() => {})
+                    } else {
+                        this.handleSignUp()
                     }
-                ).then(() => {
-                    this.handleSignUp()
-                }).catch(() => {})
-            } else {
-                this.handleSignUp()
-            }
+                }
+            })
         },
 
         handleSignUp() {
@@ -221,7 +256,7 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped lang="scss">
+<style lang="scss">
 .sign-up-form {
     max-width: 600px;
     margin: 0 auto;
@@ -234,6 +269,7 @@ export default {
     .logo {
         width: 100%;
     }
+
     h2 {
         text-align: center;
         margin: 0 auto 20px;
@@ -247,7 +283,6 @@ export default {
       margin: 0 10px;
     }
     a, .link {
-      font-weight: bold;
       cursor: pointer;
     }
 
@@ -298,18 +333,31 @@ export default {
             font-size: 14px;
         }
     }
+
     .el-form-item:last-child {
         margin-bottom: 0;
-
     }
 
     .password {
         .el-input__inner {
-            border-bottom: 0 !important;
+            // border-bottom: 0 !important;
+            // border-radius: 4px 4px 0 0;
         }
     }
+
     .el-progress {
-        margin-top: 2px;
+        margin-top: 3px;
+        .el-progress-bar__outer {
+            // border-radius: 0 0 4px 4px;
+            // background: #CCC;
+        }
+    }
+
+    .accept-checkbox {
+        .el-checkbox__label {
+            font-size: 13px !important;
+        }
     }
 }
+
 </style>

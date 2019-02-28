@@ -1,10 +1,14 @@
+require('dotenv').config()
+
 const pkg = require('./package')
 
 module.exports = {
     mode: 'universal',
 
-    env: {
-        apiUrl: process.env.API_URL || 'http://localhost:4321'
+    env: {},
+
+    axios: {
+        baseURL: process.env.API_URL || 'http://localhost:8000'
     },
 
     head: {
@@ -30,6 +34,7 @@ module.exports = {
     ],
 
     plugins: [ // load before mounting the App
+        // '@/plugins/axios',
         '@/plugins/element-ui',
         '@/plugins/filters',
         '@/plugins/fontawesome'
@@ -37,15 +42,11 @@ module.exports = {
 
     modules: [
     // Doc: https://axios.nuxtjs.org/usage
+        '@nuxtjs/auth',
         '@nuxtjs/axios',
-        '@nuxtjs/pwa',
-        '@nuxtjs/auth'
+        '@nuxtjs/dotenv',
+        '@nuxtjs/pwa'
     ],
-
-    axios: {
-    // See https://github.com/nuxt-community/axios-module#options
-        baseURL: process.env.apiUrl
-    },
 
     auth: {
         redirect: {

@@ -1,5 +1,5 @@
 <template>
-    <div class="name">
+    <div class="wrapper">
         <h1>{{ name }} <small>{{ description }}</small></h1>
         <el-button type="success">
             Enroll Now
@@ -26,8 +26,6 @@ export default {
     name: 'SinglePath',
 
     auth: false,
-
-    layout: 'aside',
 
     data() {
         return {

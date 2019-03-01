@@ -5,7 +5,7 @@
         shadow="hover"
     >
         <div class="image-content">
-            <img src="https://datamartsolutions.com/wp-content/uploads/2018/08/Full-time-hiring-8.2015-09-e1440676083937.png" class="image">
+            <img :src="path.image" class="image">
         </div>
         <div style="padding: 15px 10px;">
             <span class="title">{{ path.name }}</span>
@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import consola from 'consola'
+// import consola from 'consola'
 
 export default {
     name: 'CardItem',
@@ -44,7 +44,7 @@ export default {
 
     methods: {
         go(slug) {
-            consola.info(slug)
+            // consola.info(slug)
             this.$router.push({
                 path: `/paths/${slug}`,
                 params: { slug: slug }
@@ -76,6 +76,7 @@ export default {
     .title {
         font-size: 16px;
         font-weight: bold;
+        color: #222222;
     }
 
     .time {

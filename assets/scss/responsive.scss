@@ -1,0 +1,337 @@
+$breakpoint-sm:  760px;
+$breakpoint-md:  992px;
+$breakpoint-lg: 1200px;
+$breakpoint-xl: 1600px;
+
+.flex-nav {
+    background: none;
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0 auto;
+
+    .logo {
+        height: 75px;
+        img {
+            width: 75px;
+        }
+    }
+
+    .nav-content, .profile {
+        justify-content: center;
+        align-items: center;
+
+        .item {
+            text-decoration: none;
+            text-transform: uppercase;
+            font-weight: bold;
+            margin-left: 30px;
+            color: #F9A825;
+            // color: #FFF;
+        }
+    }
+
+    .profile {
+        // margin-right: 10px;
+    }
+
+    .router-link-exact-active {
+        text-decoration: underline !important;
+    }
+}
+
+.wrapper, .single-project, .profile-box, .users-list {
+    display: flex;
+    height: auto;
+    margin: 0 auto;
+    flex-wrap: wrap;
+    position: relative;
+}
+/* using for project cards */
+.items {
+    margin: 0 auto;
+    .item {
+        float:left;
+        margin: 0 20px 20px 0;
+
+        &:hover {
+            cursor: pointer;
+        }
+    }
+}
+
+.users-list-wrapper {
+    margin: 0 auto;
+}
+
+.float-left-button {
+    position: fixed;
+    bottom: 10px;
+}
+
+
+.subscription-dialog {
+    background: linear-gradient(45deg, rgba(34,193,195,1) 0%, rgba(253,45,205,0.759563200280112) 100%);
+    .el-dialog {
+        color: #FFF;
+        box-shadow: 1px 1px 15px 1px rgba(0,0,0,0.25);
+    }
+}
+
+@media (max-width: $breakpoint-sm - 1) {
+    .flex-nav {
+        width: 100%;
+        .nav-content {
+            display: none;
+        }
+    }
+    .items {
+        width: 302px;
+        .item:nth-child(1n) {
+            margin-right: 0;
+        }
+    }
+    .users-list-wrapper {
+        width: 302px;
+    }
+
+    .project-image {
+        // max-width: 360px;
+        float: left;
+    }
+
+    .project-head {
+        float: left;
+        // max-width: 360px;
+        margin: 10px 0 10px;
+        font-size: 90%;
+
+        .name {
+            margin: 0;
+            display: inline-block;
+            width: 69%;
+        }
+        .time {
+            margin: 5px 0 0;
+            font-size: 90%;
+            display: inline-block;
+            width: 30%;
+            text-align: right;
+        }
+    }
+    .single-project, .profile-box, .users-list {
+        width: 100%;
+    }
+    .subscription-dialog {
+        .el-dialog {
+            border-radius: 0;
+            margin-top: 150px !important;
+            width: 100%;
+        }
+    }
+
+    .wrapper {
+        width: 302px;
+    }
+
+    .is-small, .is-medium, .is-large, .is-extra-large {
+        display: none;
+    }
+    .float-left-button {
+        left: calc((100vw - 302px) / 4);
+    }
+}
+
+@media (min-width: $breakpoint-sm) and (max-width: $breakpoint-md - 1) {
+    .flex-nav {
+        width: 624px;
+        .nav-content {
+            display: none;
+        }
+    }
+    .items {
+        width: 624px;
+        .item:nth-child(2n) {
+            margin-right: 0;
+        }
+    }
+    .users-list-wrapper {
+        width: 624px;
+    }
+
+    .project-content {
+        width: 624px;
+    }
+    .project-image {
+        width: 220px;
+        margin: 0 20px 20px 0;
+        float: left;
+    }
+    .project-head {
+        width: 344px;
+        padding-top: 10px;
+        float: right;
+        font-size: 90%;
+
+        .name {
+            margin: 0;
+            display: inline-block;
+            width: 69%;
+        }
+        .time {
+            margin: 5px 0 10px;
+            font-size: 90%;
+            display: inline-block;
+            width: 30%;
+            text-align: left;
+        }
+    }
+
+    .wrapper, .single-project, .users-list {
+        width: 624px;
+    }
+
+    .profile-box {
+        width: 624px;
+    }
+
+    .subscription-dialog {
+        .el-dialog {
+            // margin-top: 0 !important;
+            border-radius: 5px;
+            width: 624px;
+        }
+    }
+
+    .is-extra-small, .is-medium, .is-extra-large, .is-large {
+        display: none;
+    }
+    .float-left-button {
+        left: calc((100vw - 624px) / 4);
+    }
+}
+
+@media (min-width: $breakpoint-md) and (max-width: $breakpoint-lg - 1) {
+    .flex-nav {
+        width: 946px;
+        .nav-content {
+            display: flex;
+        }
+    }
+    .items {
+        width: 946px;
+        .item:nth-child(3n) {
+            margin-right: 0;
+        }
+    }
+    .users-list-wrapper {
+        width: 946px;
+    }
+
+    .project-image {
+        width: 260px;
+        float: left;
+        margin: 0 20px 20px 0;
+    }
+    .project-content {
+        width: 946px;
+    }
+    .project-head {
+        width: 626px;
+        float: right;
+
+        .name {
+            margin-top: 0;
+            display: inline-block;
+            width: 69%;
+        }
+        .time {
+            margin-top: 5px;
+            display: inline-block;
+            width: 30%;
+            text-align: right;
+        }
+    }
+
+    .wrapper, .single-project, .users-list {
+        width: 946px;
+    }
+
+    .profile-box {
+        width: 624px;
+    }
+
+    .is-extra-small, .is-small, .is-medium, .is-extra-large {
+        display: none;
+    }
+
+    .float-left-button {
+        left: calc((100vw - 946px) / 4);
+    }
+}
+
+@media (min-width: $breakpoint-lg) {
+    .flex-nav {
+        width: 1268px;
+        .nav-content {
+            display: flex;
+        }
+    }
+    .items {
+        width: 1268px;
+        .item:nth-child(4n) {
+            margin-right: 0;
+        }
+    }
+    .users-list-wrapper {
+        width: 1268px;
+    }
+
+    .project-image {
+        width: 300px;
+        margin: 0 20px 20px 0;
+    }
+    .project-content {
+        width: 880px;
+
+        .project-head {
+            .name {
+                margin-top: 0;
+                display: inline-block;
+                width: 69%;
+            }
+            .time {
+                margin-top: 5px;
+                display: inline-block;
+                width: 30%;
+                text-align: right;
+            }
+        }
+    }
+    .image-wrapper {
+        max-height: 300px;
+    }
+    .wrapper, .single-project, .users-list {
+        width: 1268px;
+    }
+
+    .profile-box {
+        width: 624px;
+    }
+
+    .sub-plans {
+        margin-right: 20px;
+    }
+    .is-extra-small, .is-small, .is-medium, .is-large {
+        display: none;
+    }
+
+    .hide-extra-large {
+        display: none;
+    }
+
+    .float-left-button {
+        left: calc((100vw - 1268px) / 2);
+    }
+}

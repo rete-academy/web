@@ -32,6 +32,7 @@ import {
     faTimes,
     faTrashAlt,
     faUniversity,
+    faUser,
     faUserPlus,
     faUserMinus,
     faUserTimes
@@ -64,6 +65,7 @@ library.add(
     faTimes,
     faTrashAlt,
     faUniversity,
+    faUser,
     faUserPlus,
     faUserMinus,
     faUserTimes

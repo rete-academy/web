@@ -41,14 +41,14 @@ $breakpoint-xl: 1600px;
     }
 }
 
-.wrapper, .single-project, .profile-box, .users-list {
+.wrapper, .single-path, .profile-box, .users-list {
     display: flex;
     height: auto;
     margin: 0 auto;
     flex-wrap: wrap;
     position: relative;
 }
-/* using for project cards */
+/* using for path cards */
 .items {
     margin: 0 auto;
     .item {
@@ -96,12 +96,12 @@ $breakpoint-xl: 1600px;
         width: 302px;
     }
 
-    .project-image {
+    .path-image {
         // max-width: 360px;
         float: left;
     }
 
-    .project-head {
+    .path-head {
         float: left;
         // max-width: 360px;
         margin: 10px 0 10px;
@@ -120,7 +120,7 @@ $breakpoint-xl: 1600px;
             text-align: right;
         }
     }
-    .single-project, .profile-box, .users-list {
+    .single-path, .profile-box, .users-list {
         width: 100%;
     }
     .subscription-dialog {
@@ -131,6 +131,9 @@ $breakpoint-xl: 1600px;
         }
     }
 
+    .block {
+        margin-bottom: 40px;
+    }
     .wrapper {
         width: 302px;
     }
@@ -160,15 +163,15 @@ $breakpoint-xl: 1600px;
         width: 624px;
     }
 
-    .project-content {
+    .path-content {
         width: 624px;
     }
-    .project-image {
+    .path-image {
         width: 220px;
         margin: 0 20px 20px 0;
         float: left;
     }
-    .project-head {
+    .path-head {
         width: 344px;
         padding-top: 10px;
         float: right;
@@ -188,8 +191,11 @@ $breakpoint-xl: 1600px;
         }
     }
 
-    .wrapper, .single-project, .users-list {
+    .wrapper, .single-path, .users-list {
         width: 624px;
+    }
+    .block {
+        margin-bottom: 60px;
     }
 
     .profile-box {
@@ -229,15 +235,15 @@ $breakpoint-xl: 1600px;
         width: 946px;
     }
 
-    .project-image {
+    .path-image {
         width: 260px;
         float: left;
         margin: 0 20px 20px 0;
     }
-    .project-content {
+    .path-content {
         width: 946px;
     }
-    .project-head {
+    .path-head {
         width: 626px;
         float: right;
 
@@ -254,10 +260,13 @@ $breakpoint-xl: 1600px;
         }
     }
 
-    .wrapper, .single-project, .users-list {
+    .wrapper, .single-path, .users-list {
         width: 946px;
     }
 
+    .block {
+        margin-bottom: 80px;
+    }
     .profile-box {
         width: 624px;
     }
@@ -288,14 +297,14 @@ $breakpoint-xl: 1600px;
         width: 1268px;
     }
 
-    .project-image {
+    .path-image {
         width: 300px;
         margin: 0 20px 20px 0;
     }
-    .project-content {
+    .path-content {
         width: 880px;
 
-        .project-head {
+        .path-head {
             .name {
                 margin-top: 0;
                 display: inline-block;
@@ -312,10 +321,13 @@ $breakpoint-xl: 1600px;
     .image-wrapper {
         max-height: 300px;
     }
-    .wrapper, .single-project, .users-list {
+    .wrapper, .single-path, .users-list {
         width: 1268px;
     }
 
+    .block {
+        margin-bottom: 100px;
+    }
     .profile-box {
         width: 624px;
     }

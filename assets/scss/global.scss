@@ -19,6 +19,44 @@ code {
 a, .link {
     color: #F9A825;
 }
+
+.sprints-list {
+    &.el-collapse {
+        border-top: 0;
+        border-bottom: 0;
+    }
+
+    .el-collapse-item {
+        padding: 0 10px;
+        margin-bottom: 10px;
+        background: #F5F5F5;
+        border: 1px solid #E0E0E0;
+        border-radius: 4px;
+    }
+    .el-collapse-item__content {
+        padding-bottom: 10px;
+    }
+
+    .el-collapse-item__header {
+        border-radius: 4px;
+        border-bottom: 0;
+        background: none;
+
+        font-size: 14px;
+        font-weight: bold;
+
+        &.is-active {
+            color: #111111;
+        }
+    }
+
+    .el-collapse-item__wrap {
+        border-radius: 4px;
+        border-bottom: 0;
+        background: none;
+    }
+}
+
 .form-wrapper {
     max-width: 600px;
     margin: 0 auto;
@@ -45,7 +83,8 @@ a, .link {
     .sign-up-btn, .login-btn {
         margin: 10px 0 0;
         height: 50px;
-        font-size: 16px;
+        font-size: 12px;
+        font-weight: 200;
         width: 100%;
         border-radius: 25px;
     }

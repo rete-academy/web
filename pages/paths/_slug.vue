@@ -10,26 +10,43 @@
             <div class="sprints block">
                 <el-row :gutter="10">
                     <el-col :span="16">
-                        <h3>Sprints</h3>
+                        <h2>Sprints</h2>
                     </el-col>
                     <el-col :span="8">
-                        <h5>Materials: 1024</h5>
+                        <h5>Materials: {{ totalMaterials }}</h5>
                     </el-col>
                 </el-row>
 
-                <el-collapse v-model="activeItems" @change="handleChange">
+                <el-collapse
+                    v-model="activeItems"
+                    class="sprints-list"
+                    @change="handleChange"
+                >
                     <el-collapse-item
                         v-for="sprint in sprints"
                         :key="sprint._id"
                         :title="sprint.name"
                         :name="sprint._id"
                     >
-                        <el-row :gutter="10">
+                        <el-row
+                            v-for="m in sprint.materials"
+                            :key="m._id"
+                            :gutter="10"
+                        >
                             <el-col :span="16">
-                                <p>{{ sprint.description }}</p>
+                                <p>
+                                    <span class="icon">
+                                        <fa :icon="m.icon" />
+                                    </span>
+                                    <span class="name">
+                                        <a :href="m.url" target="_blank">
+                                            {{ m.name }}
+                                        </a>
+                                    </span>
+                                </p>
                             </el-col>
                             <el-col :span="8">
-                                <p>241</p>
+                                <p>{{ m.createdDate }}</p>
                             </el-col>
                         </el-row>
                     </el-collapse-item>
@@ -55,6 +72,20 @@ export default {
     data() {
         return {
             activeItems: []
+        }
+    },
+
+    computed: {
+        totalMaterials() {
+            let sum = 0
+            if (this.sprints && this.sprints.length > 0) {
+                this.sprints.forEach((s) => {
+                    consola.info(s.materials)
+                    sum += s.materials.length
+                })
+                return sum
+            }
+            return 0
         }
     },
 
@@ -191,6 +222,11 @@ export default {
     }
     .block {
         width: 100%;
+    }
+
+    .icon {
+        margin-right: 5px;
+        color: #AAA;
     }
 
 }

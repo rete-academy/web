@@ -15,6 +15,8 @@ import { mapState } from 'vuex'
 import CardItem from '~/components/CardItem.vue'
 
 export default {
+    name: 'Home',
+
     auth: false,
 
     components: {

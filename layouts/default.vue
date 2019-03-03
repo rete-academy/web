@@ -7,30 +7,17 @@
             <nuxt />
         </el-main>
         <el-footer>
-            <div class="wrapper">
-                <p class="sys-info">
-                    <span class="copy">
-                        Rete Academy Team made with <fa icon="heart" /> in Finland.
-                    </span>
-                    <span class="version">
-                        v{{ version }}
-                    </span>
-                </p>
-            </div>
+            <foot-bar />
         </el-footer>
     </el-container>
 </template>
 
 <script>
 import NavBar from '@/components/header/NavBar'
+import FootBar from '@/components/footer/Footer'
 
 export default {
     name: 'Default',
-    components: { NavBar },
-    computed: {
-        version() {
-            return process.env.version
-        }
-    }
+    components: { NavBar, FootBar }
 }
 </script>

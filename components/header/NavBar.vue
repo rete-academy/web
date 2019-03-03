@@ -7,7 +7,7 @@
             <img src="@/assets/images/rete-logo-icon.png" class="logo-icon">
         </router-link>
         <div class="nav-content">
-            <router-link class="item" to="/">
+            <router-link class="item" to="/paths">
                 Your Paths
             </router-link>
             <router-link class="item" to="/">

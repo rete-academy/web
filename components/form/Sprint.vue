@@ -5,7 +5,7 @@
         :show-close="false"
         :close-on-click-modal="false"
         :visible.sync="visible"
-        width="50%"
+        width="60%"
         class="custom-dialog"
     >
         <el-form ref="form" :model="form" label-width="120px">
@@ -80,7 +80,7 @@ export default {
         },
 
         onSubmit() {
-            consola.info('Begin add new sprint')
+            // consola.info('Begin add new sprint')
             this.$nuxt.$loading.start()
             this.$store.dispatch('sprints/CREATE_SPRINT', {
                 name: this.form.name,

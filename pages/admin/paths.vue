@@ -1,6 +1,16 @@
 <template>
     <div class="main-content">
-        <h2>Manage Paths</h2>
+        <div class="title-buttons">
+            <h2>Manage Paths</h2>
+            <el-button
+                type="success"
+                icon="el-icon-plus"
+                class="create-new-btn right"
+                @click="handleDialog"
+            >
+                Create New Path
+            </el-button>
+        </div>
         <el-table
             v-loading="loading"
             class="paths-table"
@@ -100,15 +110,6 @@
                 </template>
             </el-table-column>
         </el-table>
-        <el-button
-            size="small"
-            type="success"
-            icon="el-icon-plus"
-            class="create-new-btn right"
-            @click="handleDialog"
-        >
-            Create New Path
-        </el-button>
 
         <path-form :visible.sync="pathFormVisible" />
     </div>
@@ -219,7 +220,7 @@ export default {
                         type: 'success',
                         message: 'Delete completed',
                         showClose: true,
-                        duration: 500
+                        duration: 1000
                     })
                     this.loading = false
                     this.$nuxt.$loading.finish()
@@ -228,7 +229,7 @@ export default {
                         type: 'info',
                         message: 'Delete canceled',
                         showClose: true,
-                        duration: 500
+                        duration: 1000
                     })
                 })
             } catch (e) {

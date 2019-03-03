@@ -7,6 +7,7 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 // we import it as faCoffee,
 // and use in Vue Component like <fa icon="coffee"/>
 import {
+    faChevronDown,
     faCog,
     faExternalLinkAlt,
     faEye,
@@ -27,6 +28,7 @@ import {
     faGlobe,
     faHeart,
     faPlayCircle,
+    faSave,
     faStar,
     faSortDown,
     faSortUp,
@@ -42,6 +44,7 @@ import {
 import { FontAwesomeIcon, FontAwesomeLayers } from '@fortawesome/vue-fontawesome'
 
 library.add(
+    faChevronDown,
     faCog,
     faExternalLinkAlt,
     faEye,
@@ -62,6 +65,7 @@ library.add(
     faGlobe,
     faHeart,
     faPlayCircle,
+    faSave,
     faSortDown,
     faSortUp,
     faTasks,

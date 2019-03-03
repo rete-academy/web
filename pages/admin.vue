@@ -49,6 +49,7 @@ export default {
     },
 
     created() {
+        // should dispatch these per route, not like this.
         this.$store.dispatch('paths/GET_PATHS')
         this.$store.dispatch('sprints/GET_SPRINTS')
         this.$store.dispatch('materials/GET_MATERIALS')

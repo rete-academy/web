@@ -7,7 +7,9 @@ import {
     GET_PATH,
     SET_PATH,
     ADD_SPRINTS,
-    REMOVE_SPRINTS
+    REMOVE_SPRINTS,
+    ENROLL,
+    UNENROLL
 } from '@/common/types'
 
 export const state = () => ({
@@ -43,10 +45,11 @@ export const actions = {
                 // client_secret: 'YdgISicBRu4W6O3RL2U5ymPXEXhKEG3N796WFpsNtTcyTBbHijv1i8ZaIjTrFZUd'
             })
             commit(SET_PATHS, response.data.message)
+            consola.trace(response.data.message)
             return response.data.message
         } catch (error) {
             consola.error(error.message)
-            // throw error
+            throw error
         }
     },
 
@@ -54,8 +57,10 @@ export const actions = {
         try {
             const response = await this.$axios.get(`/api/paths/${slug}`)
             commit(SET_PATH, response.data.message)
+            consola.trace(response.data.message)
             return response.data.message
         } catch (error) {
+            consola.error(error.message)
             throw error
         }
     },
@@ -66,9 +71,10 @@ export const actions = {
                 id: sprintIds
             })
             dispatch(GET_PATHS)
-            consola.info(response.data.message)
+            consola.trace(response.data.message)
             return response.data.message
         } catch (error) {
+            consola.error(error.message)
             throw error
         }
     },
@@ -80,9 +86,38 @@ export const actions = {
                 id: sprintIds
             })
             dispatch(GET_PATHS)
-            consola.info(response.data.message)
+            consola.trace(response.data.message)
             return response.data.message
         } catch (error) {
+            consola.error(error.message)
+            throw error
+        }
+    },
+
+    async [ENROLL]({ dispatch }, { pathId, userIds }) {
+        try {
+            const response = await this.$axios.put(`/api/paths/${pathId}/enroll`, {
+                id: userIds
+            })
+            dispatch(GET_PATHS)
+            consola.trace(response.data.message)
+            return response.data.message
+        } catch (error) {
+            consola.error(error.message)
+            throw error
+        }
+    },
+
+    async [UNENROLL]({ dispatch }, { pathId, userIds }) {
+        try {
+            const response = await this.$axios.put(`/api/paths/${pathId}/unenroll`, {
+                id: userIds
+            })
+            dispatch(GET_PATHS)
+            consola.trace(response.data.message)
+            return response.data.message
+        } catch (error) {
+            consola.error(error.message)
             throw error
         }
     }

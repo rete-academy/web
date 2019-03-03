@@ -5,7 +5,7 @@
         :show-close="false"
         :close-on-click-modal="false"
         :visible.sync="visible"
-        width="80%"
+        width="60%"
         class="custom-dialog"
     >
         <el-form ref="form" :model="form" label-width="120px">
@@ -28,7 +28,7 @@
                 <el-col :span="18">
                     <el-form-item v-if="fetched" label="Title">
                         <el-input
-                            v-model="form.title"
+                            v-model="form.name"
                             placeholder="Title"
                             clearable
                         />
@@ -36,7 +36,7 @@
                     <el-form-item v-if="fetched" label="Description">
                         <el-input
                             v-model="form.description"
-                            placeholder="Title"
+                            placeholder="Description..."
                             type="textarea"
                             :autosize="{ minRows: 3, maxRows: 6}"
                         />
@@ -52,7 +52,7 @@
                     type="success"
                     @click="onSubmit"
                 >
-                    Add Material
+                    <fa icon="save" /> Add Material
                 </el-button>
                 <el-button
                     size="small"
@@ -87,7 +87,7 @@ export default {
         return {
             form: {
                 url: '',
-                title: '',
+                name: '',
                 description: '',
                 image: ''
             },
@@ -102,6 +102,7 @@ export default {
             this.isValidUrl(this.form.url)
             if (this.form.url && this.validUrl) {
                 this.loading = true
+                this.$nuxt.$loading.start()
                 this.$axios.post(
                     'https://api.linkpreview.net',
                     {
@@ -110,15 +111,17 @@ export default {
                     }).then((res) => {
                     if (res) {
                         this.fetched = true
-                        this.form.title = res.data.title
+                        this.form.name = res.data.title
                         this.form.description = res.data.description
                         this.form.image = res.data.image
 
                         this.loading = false
+                        this.$nuxt.$loading.finish()
                     }
                     consola.info(res.data)
                 }).catch((error) => {
                     this.loading = false
+                    this.$nuxt.$loading.fail()
                     consola.error(error)
                 })
             }
@@ -126,17 +129,27 @@ export default {
     },
 
     methods: {
-        checkForm(done) {
-            consola.info('are you sure?')
-            done()
-        },
-
         handleClose() {
-            // this.form.url = ''
+            this.form = {
+                url: '',
+                name: '',
+                description: '',
+                image: ''
+            }
             this.$emit('update:visible', false)
         },
 
         onSubmit() {
+            this.$nuxt.$loading.start()
+            this.$store.dispatch('materials/CREATE_MATERIAL', this.form)
+                .then(() => {
+                    this.handleClose()
+                    this.$nuxt.$loading.finish()
+                }).catch((e) => {
+                    this.$nuxt.$loading.fail()
+                    consola.error(e.message)
+                    this.$message.error(e.message)
+                })
         },
 
         isValidUrl(url) {

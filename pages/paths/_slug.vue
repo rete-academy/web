@@ -3,8 +3,11 @@
         <div class="path-content">
             <div class="block">
                 <h1>{{ name }} <small>{{ description }}</small></h1>
-                <el-button type="success" disabled>
-                    Enroll Now
+                <el-button
+                    :type="isEnrolled ? 'danger':'success'"
+                    @click="handleEnroll"
+                >
+                    {{ isEnrolled ? 'Unenroll':'Enroll Now' }}
                 </el-button>
             </div>
             <div class="sprints block">
@@ -34,7 +37,7 @@
                             :gutter="10"
                         >
                             <el-col :span="16">
-                                <p>
+                                <p class="material-name">
                                     <span class="icon">
                                         <fa :icon="m.icon" />
                                     </span>
@@ -60,7 +63,7 @@
 </template>
 
 <script>
-import consola from 'consola'
+// import consola from 'consola'
 // import { mapState } from 'vuex'
 
 export default {
@@ -80,28 +83,71 @@ export default {
             let sum = 0
             if (this.sprints && this.sprints.length > 0) {
                 this.sprints.forEach((s) => {
-                    consola.info(s.materials)
+                    // consola.info(s.materials)
                     sum += s.materials.length
                 })
                 return sum
             }
             return 0
+        },
+
+        isEnrolled() {
+            if (this.$auth.user && this.$auth.user.progress) {
+                return !!this.$auth.user.progress.find(o => o.path === this.$data._id)
+            }
+            return false
         }
     },
 
     async asyncData({ params, store, error }) {
         try {
-            const response = await store.dispatch('paths/GET_PATH', params.slug)
-            return response
+            return await store.dispatch('paths/GET_PATH', params.slug)
         } catch (e) {
             error({ message: e, statusCode: 404 })
         }
     },
 
     methods: {
-        handleChange() {
-            consola.info('change')
+        handleChange() {},
+
+        async handleEnroll() {
+            try {
+                this.$nuxt.$loading.start()
+                if (this.$auth.user) {
+                    const ACTION = this.isEnrolled ? 'UNENROLL' : 'ENROLL'
+                    await this.$store.dispatch(`paths/${ACTION}`, {
+                        pathId: this.$data._id,
+                        userIds: this.$auth.user._id
+                    })
+                    await this.$auth.fetchUser()
+                    this.$message({
+                        type: 'success',
+                        message: `${ACTION} successfully!`,
+                        showClose: true,
+                        duration: 1000
+                    })
+                }
+                this.$nuxt.$loading.finish()
+            } catch (e) {
+                this.$nuxt.$loading.fail()
+                this.$message.error(e.message)
+            }
         }
+
+        /*
+        async getSinglePath(slug) {
+            try {
+                this.$nuxt.$loading.start()
+                const response = await this.$store.dispatch('paths/GET_PATH', slug)
+                this.$nuxt.$loading.finish()
+                return response
+            } catch (e) {
+                this.$nuxt.$loading.fail()
+                this.$message.error(e.message)
+            }
+        },
+        */
+
     }
 }
 </script>
@@ -222,11 +268,6 @@ export default {
     }
     .block {
         width: 100%;
-    }
-
-    .icon {
-        margin-right: 5px;
-        color: #AAA;
     }
 
 }

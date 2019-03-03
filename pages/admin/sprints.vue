@@ -1,10 +1,20 @@
 <template>
     <div class="main-content">
-        <h2>Manage Sprints</h2>
+        <div class="title-buttons">
+            <h2>Manage Sprints</h2>
+            <el-button
+                type="success"
+                icon="el-icon-plus"
+                class="create-new-btn"
+                @click="handleSprintDialog"
+            >
+                Create New Sprint
+            </el-button>
+        </div>
         <el-table
             v-loading="loading"
             :data="sprints"
-            class="paths-table"
+            class="sprints-table"
             width="100%"
             border
         >
@@ -59,7 +69,7 @@
                                 width="40"
                             />
                             <el-table-column
-                                width="260"
+                                width="360"
                                 label="Material Name"
                                 property="name"
                             />
@@ -92,15 +102,6 @@
                 </template>
             </el-table-column>
         </el-table>
-        <el-button
-            size="small"
-            type="success"
-            icon="el-icon-plus"
-            class="create-new-btn right"
-            @click="handleSprintDialog"
-        >
-            Create New Sprint
-        </el-button>
 
         <sprint-form :visible.sync="sprintFormVisible" />
     </div>
@@ -236,10 +237,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.paths-table {
-    margin-bottom: 20px;
-    width: 100%;
-}
 .buttons {
     display: flex;
     justify-content: center;

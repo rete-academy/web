@@ -1,7 +1,28 @@
+
+/*
+Write your variables here. All available variables can be
+found in element-ui/packages/theme-chalk/src/common/var.scss.
+For example, to overwrite the theme color:
+*/
+$--color-primary: #F9A825;
+// $--color-success: #558B2F;
+// $--color-warning: #F57C00;
+// $--color-danger: #DD2C00;
+// $--color-info: #B39DDB;
+
+// Button
+// $--border-radius-base: 25px;
+// $--button-mini-border-radius: #{$--border-radius-base - 10};
+
+
+/* icon font path, required */
+$--font-path: '~element-ui/lib/theme-chalk/fonts';
+@import "~element-ui/packages/theme-chalk/src/index";
 @import url('https://fonts.googleapis.com/css?family=Fira+Mono|Fira+Sans');
 
 html, body {
     font-family: 'Fira Sans', sans-serif;
+    font-size: 14px;
     margin: 0;
 }
 
@@ -13,6 +34,18 @@ p {
 .el-container {
     min-height: 100vh;
 }
+
+.el-dropdown-link {
+    color: $--color-primary;
+    cursor: pointer;
+}
+.el-icon-arrow-down {
+    font-size: 11px;
+}
+
+.el-form-item__label {
+    line-height: 14px;
+}
 code {
     font-family: 'Fira Mono', monospace;
 }
@@ -21,6 +54,14 @@ code {
     font-size: 14px;
     font-weight: bold;
 }
+
+.material-name {
+    .icon {
+        margin-right: 5px;
+        color: #AAA;
+    }
+}
+
 .time {
     // font-family: 'Fira Mono', monospace;
     font-size: 11px;
@@ -43,7 +84,21 @@ h2 {
 }
 
 a, .link {
-    color: #F9A825;
+    color: $--color-primary;
+    text-decoration: none;
+
+    &:focus {
+        text-decoration: none;
+        color: inherit;
+        outline: none;
+    }
+}
+
+.title-buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 20px auto;
 }
 
 .sprints-list {
@@ -55,7 +110,7 @@ a, .link {
     .el-collapse-item {
         padding: 0 10px;
         margin-bottom: 10px;
-        background: #F5F5F5;
+        background: #FAFAFA;
         border: 1px solid #E0E0E0;
         border-radius: 4px;
     }

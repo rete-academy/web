@@ -11,20 +11,20 @@
             <el-table-column
                 label="Name"
                 width="320"
-                prop="name"
-            />
+            >
+                <template slot-scope="scope">
+                    <p class="name">
+                        {{ scope.row.name }}
+                    </p>
+                    <p class="time">
+                        Updated: {{ scope.row.updatedTime | convertTime('HH:mm DD.MM.YYYY') }}
+                    </p>
+                </template>
+            </el-table-column>
             <el-table-column
                 prop="description"
                 label="Description"
             />
-            <el-table-column
-                label="Updated Time"
-                width="120"
-            >
-                <template slot-scope="scope">
-                    {{ scope.row.updatedTime | convertTime('DD.MM.YYYY') }}
-                </template>
-            </el-table-column>
             <el-table-column
                 align="center"
                 label="Actions"

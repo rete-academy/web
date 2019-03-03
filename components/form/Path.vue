@@ -110,7 +110,12 @@ export default {
 
     methods: {
         handleClose() {
-            // this.form.url = ''
+            this.form = {
+                name: '',
+                slug: '',
+                description: '',
+                image: 'http://www.markweb.in/primehouseware/images/noimage.png'
+            }
             this.$emit('update:visible', false)
         },
 
@@ -122,8 +127,8 @@ export default {
                     name: this.form.name,
                     description: this.form.description
                 }).then(() => {
+                    this.handleClose()
                     this.$nuxt.$loading.finish()
-                    this.$emit('update:visible', false)
                 }).catch((err) => {
                     consola.error(err)
                 })

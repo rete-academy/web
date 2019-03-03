@@ -72,7 +72,10 @@ export default {
 
     methods: {
         handleClose() {
-            // this.form.url = ''
+            this.form = {
+                name: '',
+                description: ''
+            }
             this.$emit('update:visible', false)
         },
 
@@ -83,8 +86,8 @@ export default {
                 name: this.form.name,
                 description: this.form.description
             }).then(() => {
+                this.handleClose()
                 this.$nuxt.$loading.finish()
-                this.$emit('update:visible', false)
             }).catch((e) => {
                 this.$nuxt.$loading.fail()
                 consola.error(e.message)

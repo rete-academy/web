@@ -10,7 +10,7 @@
             :model="input"
             :rules="rules"
             label-width="80px"
-            label-position="left"
+            label-position="top"
             hide-required-asterisk
         >
             <el-form-item label="Name" prop="name" required>
@@ -77,7 +77,7 @@
                     Register
                 </el-button>
                 <el-button
-                    type="primary"
+                    type="info"
                     class="login-btn"
                     plain
                     @click="$router.push('/login')"

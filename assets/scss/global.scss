@@ -9,6 +9,14 @@ code {
     font-family: 'Fira Mono', monospace;
 }
 
+h2 {
+    color: #AAA;
+}
+
+.right {
+    float: right;
+}
+
 .el-header {
     background: #FAFAFA;
 }
@@ -101,3 +109,21 @@ a, .link {
     }
 }
 
+.sys-info {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    font-size: 11px;
+    color: #999;
+    padding: 20px 0;
+    width: 100%;
+    border-top: 1px solid #EEEEEE;
+
+    span {
+        margin: 0 20px;
+    }
+}
+
+.admin {
+
+}

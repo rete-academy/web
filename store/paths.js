@@ -1,6 +1,7 @@
 import consola from 'consola'
 import {
     CREATE_PATH,
+    DELETE_PATH,
     GET_PATHS,
     SET_PATHS,
     GET_PATH,
@@ -25,11 +26,21 @@ export const actions = {
         }
     },
 
+    async [DELETE_PATH]({ dispatch }, id) {
+        try {
+            const response = await this.$axios.delete(`/api/paths/${id}`)
+            dispatch(GET_PATHS)
+            return response.data.message
+        } catch (error) {
+            throw error
+        }
+    },
+
     async [GET_PATHS]({ commit }) {
         try {
             const response = await this.$axios.get('/api/paths', {
-                client_id: 'lcdCITZvyCq2POdcIPiqJrhbIEODUwpB',
-                client_secret: 'YdgISicBRu4W6O3RL2U5ymPXEXhKEG3N796WFpsNtTcyTBbHijv1i8ZaIjTrFZUd'
+                // client_id: 'lcdCITZvyCq2POdcIPiqJrhbIEODUwpB',
+                // client_secret: 'YdgISicBRu4W6O3RL2U5ymPXEXhKEG3N796WFpsNtTcyTBbHijv1i8ZaIjTrFZUd'
             })
             commit(SET_PATHS, response.data.message)
             return response.data.message

@@ -130,7 +130,12 @@ export default {
                         }
                     }).then(() => {
                         this.$nuxt.$loading.finish()
-                        this.$message.success('Login successful!')
+                        this.$message({
+                            showClose: true,
+                            duration: 500,
+                            type: 'success',
+                            message: 'Login successful!'
+                        })
                         this.$router.push('/')
                     }).catch((e) => {
                         this.$nuxt.$loading.fail()

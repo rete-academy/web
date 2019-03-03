@@ -47,10 +47,18 @@
                 </el-col>
             </el-row>
             <el-form-item>
-                <el-button type="success" @click="onSubmit">
+                <el-button
+                    size="small"
+                    type="success"
+                    @click="onSubmit"
+                >
                     Add Material
                 </el-button>
-                <el-button type="danger" @click="handleClose">
+                <el-button
+                    size="small"
+                    type="danger"
+                    @click="handleClose"
+                >
                     Close
                 </el-button>
             </el-form-item>

@@ -41,13 +41,18 @@ $breakpoint-xl: 1600px;
     }
 }
 
-.wrapper, .single-path, .profile-box, .users-list {
+.single-path, .profile-box, .users-list {
     display: flex;
     height: auto;
     margin: 0 auto;
     flex-wrap: wrap;
     position: relative;
 }
+
+.wrapper {
+    margin: 0 auto;
+}
+
 /* using for path cards */
 .items {
     margin: 0 auto;
@@ -135,7 +140,8 @@ $breakpoint-xl: 1600px;
         margin-bottom: 40px;
     }
     .wrapper {
-        width: 302px;
+        // width: 302px;
+        width: 100%;
     }
 
     .is-small, .is-medium, .is-large, .is-extra-large {

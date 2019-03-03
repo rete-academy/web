@@ -5,14 +5,16 @@ const pkg = require('./package')
 module.exports = {
     mode: 'universal',
 
-    env: {},
+    env: {
+        version: pkg.version
+    },
 
     axios: {
         baseURL: process.env.API_URL || 'http://localhost:8000'
     },
 
     head: {
-        title: pkg.name,
+        title: 'Rete Academy',
         meta: [
             { charset: 'utf-8' },
             { name: 'viewport', content: 'width=device-width, initial-scale=1' },

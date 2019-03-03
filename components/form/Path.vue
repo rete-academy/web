@@ -43,9 +43,9 @@
                     <el-form-item label="Description">
                         <el-input
                             v-model="form.description"
-                            placeholder="Title"
+                            placeholder="Description text here..."
                             type="textarea"
-                            :autosize="{ minRows: 3, maxRows: 6}"
+                            :autosize="{ minRows: 4, maxRows: 6}"
                         />
                     </el-form-item>
                 </el-col>
@@ -55,13 +55,18 @@
             </el-row>
             <el-form-item>
                 <el-button
+                    size="small"
                     type="success"
                     :disabled="taken"
                     @click="onSubmit"
                 >
                     Create Path
                 </el-button>
-                <el-button type="danger" @click="handleClose">
+                <el-button
+                    size="small"
+                    type="danger"
+                    @click="handleClose"
+                >
                     Close
                 </el-button>
             </el-form-item>
@@ -111,11 +116,13 @@ export default {
 
         onSubmit() {
             consola.info('Begin add new path')
+            this.$nuxt.$loading.start()
             if (!this.taken) {
                 this.$store.dispatch('paths/CREATE_PATH', {
                     name: this.form.name,
                     description: this.form.description
                 }).then(() => {
+                    this.$nuxt.$loading.finish()
                     this.$emit('update:visible', false)
                 }).catch((err) => {
                     consola.error(err)
@@ -124,12 +131,15 @@ export default {
         },
 
         checkPathBySlug() {
+            this.$nuxt.$loading.start()
             this.$store.dispatch('paths/GET_PATH', this.form.slug)
                 .then((path) => {
                     this.taken = true
+                    this.$nuxt.$loading.finish()
                 })
                 .catch((err) => {
                     this.taken = false
+                    this.$nuxt.$loading.fail()
                     consola.error(err)
                 })
         },

@@ -3,7 +3,7 @@
         <div class="path-content">
             <div class="block">
                 <h1>{{ name }} <small>{{ description }}</small></h1>
-                <el-button type="success">
+                <el-button type="success" disabled>
                     Enroll Now
                 </el-button>
             </div>

@@ -1,34 +1,50 @@
 <template>
     <div class="main-content">
+        <h2>Manage Paths</h2>
         <el-table
             v-loading="loading"
             class="paths-table"
             :data="paths"
+            width="100%"
             border
         >
             <el-table-column
-                prop="name"
                 label="Name"
-                width="300"
+                width="320"
+                prop="name"
             />
             <el-table-column
                 prop="description"
                 label="Description"
-                width="300"
             />
             <el-table-column
-                label="Sprints"
-                width="200"
+                label="Updated Time"
+                width="120"
+            >
+                <template slot-scope="scope">
+                    {{ scope.row.updatedTime | convertTime('DD.MM.YYYY') }}
+                </template>
+            </el-table-column>
+            <el-table-column
+                align="center"
+                label="Actions"
+                width="250"
             >
                 <template slot-scope="scopePath">
                     <el-popover
-                        placement="left"
                         width="400"
+                        placement="left"
                         trigger="click"
                         @show="calculateSelections"
                         @hide="handleReset"
                     >
-                        <el-button slot="reference" size="mini">
+                        <el-button
+                            slot="reference"
+                            size="mini"
+                            class="manage-popover"
+                            type="primary"
+                            plain
+                        >
                             Manage Sprints ({{ scopePath.row.sprints.length }})
                         </el-button>
                         <el-table
@@ -43,8 +59,8 @@
                             />
                             <el-table-column
                                 width="260"
-                                property="name"
                                 label="Sprint Name"
+                                property="name"
                             />
                             <el-table-column
                                 width="100"
@@ -72,20 +88,22 @@
                             </el-button>
                         </div>
                     </el-popover>
-                </template>
-            </el-table-column>
-            <el-table-column
-                label="Created"
-                width="150"
-            >
-                <template slot-scope="scope">
-                    {{ scope.row.createdTime | convertTime('DD.MM.YYYY') }}
+
+                    <el-button
+                        size="mini"
+                        icon="el-icon-delete"
+                        type="danger"
+                        plain
+                        @click="handleDelete(scopePath.row._id)"
+                    />
                 </template>
             </el-table-column>
         </el-table>
         <el-button
+            size="small"
             type="success"
             icon="el-icon-plus"
+            class="create-new-btn right"
             @click="handleDialog"
         >
             Create New Path
@@ -147,41 +165,93 @@ export default {
             })
         },
 
-        async handleSubmit(id) {
-            this.loading = true
-            const currentSprints = this.paths.find(p => p._id === id).sprints
-            const removed = currentSprints.filter(c => !this.selectedSprints.find(o => o._id === c._id))
-            const added = this.selectedSprints.filter(s => !currentSprints.find(o => o._id === s._id))
-            await this.$store.dispatch('paths/REMOVE_SPRINTS', {
-                pathId: id,
-                sprintIds: removed.map(o => o._id)
-            })
-            await this.$store.dispatch('paths/ADD_SPRINTS', {
-                pathId: id,
-                sprintIds: added.map(o => o._id)
-            })
-            this.loading = false
-        },
-
         handleReset() {
             this.calculateSelections()
             this.changed = false
+        },
+
+        async handleSubmit(id) {
+            try {
+                this.loading = true
+                this.$nuxt.$loading.start()
+                const currentSprints = this.paths.find(p => p._id === id).sprints
+
+                const removed = currentSprints.filter(c =>
+                    !this.selectedSprints.find(o => o._id === c._id))
+                const added = this.selectedSprints.filter(s =>
+                    !currentSprints.find(o => o._id === s._id))
+
+                await this.$store.dispatch('paths/REMOVE_SPRINTS', {
+                    pathId: id,
+                    sprintIds: removed.map(o => o._id)
+                })
+                await this.$store.dispatch('paths/ADD_SPRINTS', {
+                    pathId: id,
+                    sprintIds: added.map(o => o._id)
+                })
+
+                this.loading = false
+                this.$nuxt.$loading.finish()
+            } catch (e) {
+                this.$nuxt.$loading.fail()
+                consola.error(e.message)
+                this.$message.error(e.message)
+            }
+        },
+
+        handleDelete(id) {
+            try {
+                this.$confirm(
+                    'This will permanently delete the path. Continue?',
+                    'Warning',
+                    {
+                        confirmButtonText: 'OK, Delete',
+                        confirmButtonClass: 'el-button--danger',
+                        cancelButtonText: 'Cancel',
+                        type: 'warning',
+                        center: true
+                    }
+                ).then(async () => {
+                    this.loading = true
+                    this.$nuxt.$loading.start()
+                    await this.$store.dispatch('paths/DELETE_PATH', id)
+                    this.$message({
+                        type: 'success',
+                        message: 'Delete completed',
+                        showClose: true,
+                        duration: 500
+                    })
+                    this.loading = false
+                    this.$nuxt.$loading.finish()
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: 'Delete canceled',
+                        showClose: true,
+                        duration: 500
+                    })
+                })
+            } catch (e) {
+                this.$nuxt.$loading.fail()
+                consola.error(e.message)
+                this.$message.error(e.message)
+            }
         }
     }
 }
 </script>
 
 <style lang="scss" scoped>
-.main-content {
-    width: 100%;
-    margin-left: 20px;
-}
 .paths-table {
     margin-bottom: 20px;
+    width: 100%;
 }
 .buttons {
     display: flex;
     justify-content: center;
     margin-top: 10px;
+}
+.manage-popover {
+    min-width: 160px;
 }
 </style>

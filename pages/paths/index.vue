@@ -5,7 +5,14 @@
             :key="path._id"
             class="path-row"
         >
-            <h2>{{ path.name }}</h2>
+            <h2 class="title">
+                {{ path.name }}
+
+                <fa
+                    icon="cog"
+                    class="actions"
+                />
+            </h2>
             <p>{{ path.description }}</p>
             <div class="progress-wrapper">
                 <div class="progress-inner">
@@ -16,27 +23,28 @@
                         <el-step
                             v-for="sprint in path.sprints"
                             :key="sprint._id"
-                            :title="sprint.name"
+                            :title="'Sprint: ' + sprint.name"
                             :description="sprint.description"
                             class="sprint"
+                            :align-center="true"
                         />
                     </el-steps>
 
-                    <div
-                        v-for="sprint in path.sprints"
-                        :key="sprint._id"
-                        class="sprint"
-                    >
-                        <ul>
-                            <li
-                                v-for="m in sprint.materials"
-                                :key="m._id"
-                            >
-                                <el-checkbox :value="check(m._id)">
-                                    {{ m.name }}
-                                </el-checkbox>
-                            </li>
-                        </ul>
+                    <div class="sprint-content">
+                        <div
+                            v-for="sprint in path.sprints"
+                            :key="sprint._id"
+                            class="sprint"
+                        >
+                            <div class="materials-list">
+                                <h4>Materials</h4>
+                                <material-row
+                                    v-for="material in sprint.materials"
+                                    :key="material._id"
+                                    :data="material"
+                                />
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -46,6 +54,7 @@
 
 <script>
 import { mapState } from 'vuex'
+import MaterialRow from '@/components/material/MaterialRow'
 // import consola from 'consola'
 // import CardItem from '~/components/CardItem.vue'
 
@@ -55,7 +64,8 @@ export default {
     auth: true,
 
     components: {
-        // CardItem
+        // CardItem,
+        MaterialRow
     },
 
     computed: {
@@ -86,11 +96,6 @@ export default {
     },
 
     methods: {
-        check(id) {
-            const found = this.$auth.user.progress.find(o => o.material === id)
-            if (found) return found.status
-        },
-
         openSinglePath(p) {
             this.$router.push(`/paths/${p.slug}`)
         }
@@ -99,18 +104,42 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+h2 {
+    font-size: 32px;
+
+    .actions {
+        font-size: 18px;
+        color: #CCC;
+    }
+}
 .progress-wrapper {
     width: 100%;
     height: 50vh;
-    margin: 20px auto;
+    margin: 40px auto 80px;
+    padding: 20px 10px 10px;
+    border-radius: 4px;
     overflow-y: hidden;
     overflow-x: scroll;
+    background: #F5F5F5;
 }
 .progress-inner {
 }
 .sprint {
-    float: left;
     min-width: 500px;
-    display: block;
+}
+
+.sprint-content {
+    display: flex;
+}
+
+.materials-list {
+    width: 470px;
+    padding: 0 10px 10px;
+    border-radius: 4px;
+    background: #EEEEEE;
+
+    h4 {
+        padding: 10px 0 0 25px;
+    }
 }
 </style>

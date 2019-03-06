@@ -10,7 +10,7 @@
             <router-link class="item" to="/paths">
                 Your Paths
             </router-link>
-            <router-link class="item" to="/">
+            <!-- router-link class="item" to="/" disabled>
                 Events
             </router-link>
             <router-link class="item" to="/">
@@ -18,8 +18,9 @@
             </router-link>
             <router-link class="item" to="/">
                 Dashboard
-            </router-link>
+            </router-link -->
             <router-link
+                v-if="isAdmin(user)"
                 class="item"
                 to="/admin"
             >
@@ -71,6 +72,11 @@ export default {
     },
 
     methods: {
+        isAdmin(user) {
+            if (user.role) return user.role.includes(0)
+            return false
+        },
+
         goTo(string) {
             this.$router.push(string)
             this.visible = false

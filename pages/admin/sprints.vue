@@ -28,6 +28,7 @@
                     </p>
                     <p class="time">
                         Updated: {{ scope.row.updatedTime | convertTime('HH:mm DD.MM.YYYY') }}
+                        – v.{{ scope.row.meta.version }}
                     </p>
                 </template>
             </el-table-column>
@@ -177,14 +178,20 @@ export default {
                     !this.selectedMaterials.find(o => o._id === c._id))
                 const added = this.selectedMaterials.filter(s =>
                     !currentMaterials.find(o => o._id === s._id))
-                await this.$store.dispatch('sprints/REMOVE_MATERIALS', {
-                    sprintId: id,
-                    materialIds: removed.map(o => o._id)
-                })
-                await this.$store.dispatch('sprints/ADD_MATERIALS', {
-                    sprintId: id,
-                    materialIds: added.map(o => o._id)
-                })
+
+                if (removed && removed.length > 0) {
+                    await this.$store.dispatch('sprints/REMOVE_MATERIALS', {
+                        sprintId: id,
+                        materialIds: removed.map(o => o._id)
+                    })
+                }
+
+                if (added && added.length > 0) {
+                    await this.$store.dispatch('sprints/ADD_MATERIALS', {
+                        sprintId: id,
+                        materialIds: added.map(o => o._id)
+                    })
+                }
                 this.loading = false
                 this.$nuxt.$loading.finish()
             } catch (e) {

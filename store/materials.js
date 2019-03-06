@@ -5,7 +5,8 @@ import {
     GET_MATERIALS,
     SET_MATERIALS,
     GET_MATERIAL,
-    SET_MATERIAL
+    SET_MATERIAL,
+    UPDATE_MATERIAL_STATUS
 } from '@/common/types'
 
 export const state = () => ({
@@ -48,6 +49,16 @@ export const actions = {
         try {
             const response = await this.$axios.get(`/api/materials/${id}`)
             commit(SET_MATERIAL, response.data.message)
+            return response.data.message
+        } catch (error) {
+            throw error
+        }
+    },
+
+    async [UPDATE_MATERIAL_STATUS]({ dispatch }, { userId, materialId, status }) {
+        try {
+            const response = await this.$axios.put(`/api/users/${userId}/materials/${materialId}`, { status })
+            dispatch(GET_MATERIALS)
             return response.data.message
         } catch (error) {
             throw error

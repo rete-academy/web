@@ -42,9 +42,10 @@
                                         <fa :icon="m.icon" />
                                     </span>
                                     <span class="name">
-                                        <a :href="m.url" target="_blank">
+                                        {{ m.name }}
+                                        <!-- a :href="m.url" target="_blank">
                                             {{ m.name }}
-                                        </a>
+                                        </a -->
                                     </span>
                                 </p>
                             </el-col>

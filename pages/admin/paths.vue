@@ -28,6 +28,7 @@
                     </p>
                     <p class="time">
                         Updated: {{ scope.row.updatedTime | convertTime('HH:mm DD.MM.YYYY') }}
+                        – v.{{ scope.row.meta.version }}
                     </p>
                 </template>
             </el-table-column>
@@ -127,10 +128,10 @@ export default {
 
     data() {
         return {
-            selectedSprints: null,
             changed: false,
             loading: false,
-            pathFormVisible: false
+            pathFormVisible: false,
+            selectedSprints: null
         }
     },
 
@@ -153,7 +154,7 @@ export default {
         },
 
         /*
-         *Calculate and pre-select the sprints that already included
+         * Calculate and pre-select the sprints that already included
          * into this path.
          */
         calculateSelections() {
@@ -182,14 +183,19 @@ export default {
                 const added = this.selectedSprints.filter(s =>
                     !currentSprints.find(o => o._id === s._id))
 
-                await this.$store.dispatch('paths/REMOVE_SPRINTS', {
-                    pathId: id,
-                    sprintIds: removed.map(o => o._id)
-                })
-                await this.$store.dispatch('paths/ADD_SPRINTS', {
-                    pathId: id,
-                    sprintIds: added.map(o => o._id)
-                })
+                if (removed && removed.length > 0) {
+                    await this.$store.dispatch('paths/REMOVE_SPRINTS', {
+                        pathId: id,
+                        sprintIds: removed.map(o => o._id)
+                    })
+                }
+
+                if (added && added.length > 0) {
+                    await this.$store.dispatch('paths/ADD_SPRINTS', {
+                        pathId: id,
+                        sprintIds: added.map(o => o._id)
+                    })
+                }
 
                 this.loading = false
                 this.$nuxt.$loading.finish()

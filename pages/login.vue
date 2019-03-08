@@ -55,6 +55,14 @@
                 >
                     Or, Create Account
                 </el-button>
+                <el-button
+                    type="text"
+                    class="forgot-btn"
+                    plain
+                    @click="$router.push('/password/forgot')"
+                >
+                    Forgot Password?
+                </el-button>
             </el-form-item>
         </el-form>
     </div>
@@ -163,6 +171,22 @@ export default {
         &:hover {
             cursor: pointer;
             color: #CCCCCC;
+        }
+    }
+
+    hr {
+        width: 80%;
+        color: #CCC;
+        margin: 20px auto 10px;
+    }
+
+    .forgot-btn {
+        width: 100%;
+        margin: 10px auto 0;
+        font-size: 12px;
+
+        &:hover {
+            border: none;
         }
     }
 }

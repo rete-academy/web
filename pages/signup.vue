@@ -273,10 +273,6 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss">
 .sign-up-form {
-    h2 {
-        text-align: center;
-        margin: 0 auto 20px;
-    }
     ul {
       list-style-type: none;
       padding: 0;
@@ -285,19 +281,13 @@ export default {
       display: inline-block;
       margin: 0 10px;
     }
-    a, .link {
-      cursor: pointer;
-    }
-
-    .test {
-        margin: 30 auto;
-    }
 
     .tos {
         font-size: 14px;
         margin-top: 20px;
 
     }
+
     .tos-content {
         width: 100%;
     }
@@ -321,21 +311,6 @@ export default {
 
     .el-form-item:last-child {
         margin-bottom: 0;
-    }
-
-    .password {
-        .el-input__inner {
-            // border-bottom: 0 !important;
-            // border-radius: 4px 4px 0 0;
-        }
-    }
-
-    .el-progress {
-        margin-top: 3px;
-        .el-progress-bar__outer {
-            // border-radius: 0 0 4px 4px;
-            // background: #CCC;
-        }
     }
 
     .accept-checkbox {

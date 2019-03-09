@@ -9,6 +9,14 @@
                 >
                     {{ isEnrolled ? 'Unenroll':'Enroll Now' }}
                 </el-button>
+                <el-button
+                    v-if="isEnrolled"
+                    type="success"
+                    icon="el-icon-arrow-right"
+                    @click="$router.push('/paths#' + $route.params.slug)"
+                >
+                    Go to path
+                </el-button>
             </div>
             <div class="sprints block">
                 <el-row :gutter="10">

@@ -5,7 +5,7 @@
             :key="path._id"
             class="path-row"
         >
-            <h2 class="title">
+            <h2 :id="path.slug" class="title">
                 {{ path.name }}
 
                 <fa

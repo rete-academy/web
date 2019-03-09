@@ -78,7 +78,6 @@ export default {
                     if (!tempPaths.includes(o.path)) { tempPaths.push(o.path) }
                 })
 
-                // consola.info('tempath final ' + tempPaths.length)
                 return tempPaths.map(id => this.paths.find(p => p._id === id))
             }
 
@@ -89,7 +88,6 @@ export default {
     async asyncData({ params, store, error }) {
         try {
             await store.dispatch('paths/GET_PATHS')
-            return {}
         } catch (e) {
             error({ message: e, statusCode: 404 })
         }

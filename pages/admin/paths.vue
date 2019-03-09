@@ -41,72 +41,18 @@
                 label="Actions"
                 width="250"
             >
-                <template slot-scope="scopePath">
-                    <el-popover
-                        width="400"
-                        placement="left"
-                        trigger="click"
-                        @show="calculateSelections"
-                        @hide="handleReset"
-                    >
-                        <el-button
-                            slot="reference"
-                            size="mini"
-                            class="manage-popover"
-                            type="primary"
-                            plain
-                        >
-                            Manage Sprints ({{ scopePath.row.sprints.length }})
-                        </el-button>
-                        <el-table
-                            :ref="scopePath.row._id"
-                            :data="sprints"
-                            row-key="_id"
-                            @select="handleSelections"
-                            @select-all="handleSelections"
-                        >
-                            <el-table-column
-                                type="selection"
-                                width="40"
-                            />
-                            <el-table-column
-                                width="260"
-                                label="Sprint Name"
-                                property="name"
-                            />
-                            <el-table-column
-                                width="100"
-                                label="Materials"
-                            >
-                                <template slot-scope="scopeSprint">
-                                    {{ scopeSprint.row.materials.length }}
-                                </template>
-                            </el-table-column>
-                        </el-table>
-                        <div class="buttons">
-                            <el-button
-                                type="success"
-                                size="mini"
-                                :disabled="!changed"
-                                @click="handleSubmit(scopePath.row._id)"
-                            >
-                                Save
-                            </el-button>
-                            <el-button
-                                size="mini"
-                                @click="handleReset"
-                            >
-                                Reset
-                            </el-button>
-                        </div>
-                    </el-popover>
-
+                <template slot-scope="scope">
+                    <sprint-popover
+                        :data="scope.row"
+                        :selected="handleSelected"
+                        @submit="handleSubmit"
+                    />
                     <el-button
                         size="mini"
                         icon="el-icon-delete"
                         type="danger"
                         plain
-                        @click="handleDelete(scopePath.row._id)"
+                        @click="handleDelete(scope.row._id)"
                     />
                 </template>
             </el-table-column>
@@ -120,15 +66,15 @@
 import consola from 'consola'
 import { mapState } from 'vuex'
 import PathForm from '@/components/form/Path'
+import SprintPopover from '@/components/path/SprintPopover'
 
 export default {
     name: 'AdminPaths',
 
-    components: { PathForm },
+    components: { PathForm, SprintPopover },
 
     data() {
         return {
-            changed: false,
             loading: false,
             pathFormVisible: false,
             selectedSprints: null
@@ -141,6 +87,13 @@ export default {
     },
 
     created() {
+        this.$nuxt.$on('selected', (data) => {
+            this.selectedSprints = data
+        })
+
+        this.$nuxt.$on('submit', (id) => {
+            this.handleSubmit(id)
+        })
     },
 
     methods: {
@@ -148,28 +101,8 @@ export default {
             this.pathFormVisible = !this.pathFormVisible
         },
 
-        handleSelections(selection) {
-            this.changed = true
-            this.selectedSprints = selection
-        },
-
-        /*
-         * Calculate and pre-select the sprints that already included
-         * into this path.
-         */
-        calculateSelections() {
-            this.paths.forEach((p) => {
-                this.$refs[p._id].clearSelection()
-                p.sprints.forEach((s) => {
-                    const index = this.sprints.findIndex(e => e._id === s._id)
-                    this.$refs[p._id].toggleRowSelection(this.sprints[index], 'selected')
-                })
-            })
-        },
-
-        handleReset() {
-            this.calculateSelections()
-            this.changed = false
+        handleSelected(selections) {
+            this.selectedSprints = selections
         },
 
         async handleSubmit(id) {

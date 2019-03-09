@@ -1,6 +1,7 @@
 import consola from 'consola'
 import {
     CREATE_PATH,
+    UPDATE_PATH,
     DELETE_PATH,
     GET_PATHS,
     SET_PATHS,
@@ -21,6 +22,16 @@ export const actions = {
     async [CREATE_PATH]({ dispatch }, data) {
         try {
             const response = await this.$axios.post('/api/paths', data)
+            dispatch(GET_PATHS)
+            return response.data.message
+        } catch (error) {
+            throw error
+        }
+    },
+
+    async [UPDATE_PATH]({ dispatch }, { id, data }) {
+        try {
+            const response = await this.$axios.put(`/api/paths/${id}`, data)
             dispatch(GET_PATHS)
             return response.data.message
         } catch (error) {

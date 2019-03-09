@@ -1,13 +1,14 @@
 <template>
     <div class="material-row">
         <el-checkbox
+            :key="stepId"
             v-loading="loading"
-            :value="check(data._id)"
+            :value="isChecked"
             @change="updateStatus"
         >
-            {{ data.name | truncate(55) }}
+            {{ data.material.name | truncate(55) }}
         </el-checkbox>
-        <a :href="data.url" target="_blank">
+        <a :href="data.material.url" target="_blank">
             <fa icon="external-link-alt" />
         </a>
     </div>
@@ -32,23 +33,36 @@ export default {
         }
     },
 
-    methods: {
-        check(id) {
-            const found = this.$auth.user.progress.find(o => o.material === id)
+    computed: {
+        isChecked() {
+            const found = this.$auth.user.progress
+                .find(o => o.material === this.data.material._id &&
+                    o.sprint === this.data.sprint._id &&
+                    o.path === this.data.path._id)
             if (found) return !!found.status
             return false
         },
 
+        stepId() {
+            const found = this.$auth.user.progress
+                .find(o => o.material === this.data.material._id &&
+                    o.sprint === this.data.sprint._id &&
+                    o.path === this.data.path._id)
+            if (found) return found._id
+            return ''
+        }
+    },
+
+    methods: {
         updateStatus(status) {
-            consola.info('status is ' + status)
             this.loading = true
             this.$nuxt.$loading.start()
-
             this.$store.dispatch('materials/UPDATE_MATERIAL_STATUS', {
                 userId: this.$auth.user._id,
-                materialId: this.data._id,
-                status: status ? 1 : 0
-                // status: status
+                data: {
+                    id: this.stepId,
+                    status: status ? 1 : 0
+                }
             }).then(() => {
                 this.loading = false
                 this.$auth.fetchUser()

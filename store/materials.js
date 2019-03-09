@@ -55,9 +55,10 @@ export const actions = {
         }
     },
 
-    async [UPDATE_MATERIAL_STATUS]({ dispatch }, { userId, materialId, status }) {
+    async [UPDATE_MATERIAL_STATUS]({ dispatch }, { userId, data }) {
         try {
-            const response = await this.$axios.put(`/api/users/${userId}/materials/${materialId}`, { status })
+            const endpoint = `/api/users/${userId}/materials`
+            const response = await this.$axios.put(endpoint, data)
             dispatch(GET_MATERIALS)
             return response.data.message
         } catch (error) {

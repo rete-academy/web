@@ -41,7 +41,7 @@
                                 <material-row
                                     v-for="material in sprint.materials"
                                     :key="material._id"
-                                    :data="material"
+                                    :data="{ path, sprint, material }"
                                 />
                             </div>
                         </div>
@@ -53,6 +53,7 @@
 </template>
 
 <script>
+// import consola from 'consola'
 import { mapState } from 'vuex'
 import MaterialRow from '@/components/material/MaterialRow'
 // import consola from 'consola'
@@ -74,13 +75,13 @@ export default {
         myPaths() {
             if (this.$auth.user && this.$auth.user.progress && this.paths) {
                 const tempPaths = []
-                this.$auth.user.progress.forEach((o) => {
-                    if (!tempPaths.includes(o.path)) { tempPaths.push(o.path) }
-                })
-
+                for (const singleStep of this.$auth.user.progress) {
+                    if (!tempPaths.includes(singleStep.path)) {
+                        tempPaths.push(singleStep.path)
+                    }
+                }
                 return tempPaths.map(id => this.paths.find(p => p._id === id))
             }
-
             return []
         }
     },

@@ -9,11 +9,23 @@
             <p class="text">
                 Going to login page in <strong>{{ count }}</strong> seconds...
             </p>
+            <p class="text">
+                <nuxt-link to="/">
+                    Click here
+                </nuxt-link>
+                to go back to home page.
+            </p>
         </div>
         <div v-if="failed" class="invalid">
             <h2>Link was used or expired!</h2>
             <p class="text">
                 Going back to home page in <strong>{{ count }}</strong> seconds...
+            </p>
+            <p class="text">
+                <nuxt-link to="/">
+                    Click here
+                </nuxt-link>
+                to go back to home page.
             </p>
         </div>
         <div v-if="!success && !failed" class="nothing">

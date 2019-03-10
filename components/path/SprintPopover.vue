@@ -1,6 +1,6 @@
 <template>
     <el-popover
-        width="400"
+        width="500"
         placement="left"
         trigger="click"
         @show="calculateSelections"
@@ -27,20 +27,30 @@
                 width="40"
             />
             <el-table-column
-                width="260"
+                width="280"
                 label="Sprint Name"
                 property="name"
             />
             <el-table-column
+                align="center"
                 width="100"
+                label="Materials"
+            >
+                <template slot-scope="scope">
+                    {{ scope.row.materials.length }}
+                </template>
+            </el-table-column>
+            <el-table-column
+                width="80"
                 label="Position"
             >
                 <template slot-scope="scope">
                     <el-input
-                        :value="getPosition(data, scope.row)"
+                        v-model="position[scope.row._id]"
+                        size="mini"
                         placeholder="0"
+                        @change="changed = true"
                     />
-                    {{ scope.row.materials.length }}
                 </template>
             </el-table-column>
         </el-table>
@@ -62,8 +72,8 @@
         </div>
     </el-popover>
 </template>
-
 <script>
+// import consola from 'consola'
 import { mapState } from 'vuex'
 
 export default {
@@ -79,7 +89,8 @@ export default {
     data() {
         return {
             selectedSprints: null,
-            changed: false
+            changed: false,
+            position: {}
         }
     },
 
@@ -88,12 +99,24 @@ export default {
         ...mapState('sprints', ['sprints'])
     },
 
+    watch: {
+        position: {
+            handler(pos) {
+                this.changed = true
+                this.$emit('positions-changed', this.convertPositions(pos))
+            },
+            deep: true
+        }
+    },
+
     methods: {
-        getPosition(path, sprint) {
-            if (path.meta.position && path.meta.position[sprint._id]) {
-                return path.meta.position[sprint._id]
+        convertPositions(pos) {
+            const toNum = {}
+            for (const id in pos) {
+                toNum[id] = pos[id] ? parseInt(pos[id], 10) : 0
             }
-            return 0
+            // consola.info(toNum)
+            return toNum
         },
         /*
          * Calculate and pre-select the sprints that already included
@@ -101,16 +124,17 @@ export default {
          */
         calculateSelections() {
             this.$refs[this.data._id].clearSelection()
+            this.position = this.convertPositions(this.data.meta.position || {})
             this.data.sprints.forEach((s) => {
                 const index = this.sprints.findIndex(e => e._id === s._id)
                 this.$refs[this.data._id].toggleRowSelection(this.sprints[index], 'selected')
             })
         },
 
-        handleSelections(selection) {
+        handleSelections(selections) {
             this.changed = true
-            this.selectedSprints = selection
-            this.$nuxt.$emit('selected', selection)
+            this.selectedSprints = selections
+            this.$emit('selected', selections)
         },
 
         handleReset() {
@@ -119,11 +143,15 @@ export default {
         },
 
         handleSubmit(id) {
-            this.$nuxt.$emit('submit', id)
+            this.$emit('submit', id)
         }
     }
 }
 </script>
-
 <style lang="scss" scoped>
+.buttons {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
 </style>

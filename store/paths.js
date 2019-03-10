@@ -29,9 +29,9 @@ export const actions = {
         }
     },
 
-    async [UPDATE_PATH]({ dispatch }, { id, data }) {
+    async [UPDATE_PATH]({ dispatch }, { pathId, data }) {
         try {
-            const response = await this.$axios.put(`/api/paths/${id}`, data)
+            const response = await this.$axios.put(`/api/paths/${pathId}`, data)
             dispatch(GET_PATHS)
             return response.data.message
         } catch (error) {
@@ -51,10 +51,7 @@ export const actions = {
 
     async [GET_PATHS]({ commit }) {
         try {
-            const response = await this.$axios.get('/api/paths', {
-                // client_id: 'lcdCITZvyCq2POdcIPiqJrhbIEODUwpB',
-                // client_secret: 'YdgISicBRu4W6O3RL2U5ymPXEXhKEG3N796WFpsNtTcyTBbHijv1i8ZaIjTrFZUd'
-            })
+            const response = await this.$axios.get('/api/paths')
             commit(SET_PATHS, response.data.message)
             consola.trace(response.data.message)
             return response.data.message
@@ -78,9 +75,8 @@ export const actions = {
 
     async [ADD_SPRINTS]({ dispatch }, { pathId, sprintIds }) {
         try {
-            const response = await this.$axios.put(`/api/paths/${pathId}/add-sprints`, {
-                id: sprintIds
-            })
+            const endpoint = `/api/paths/${pathId}/add-sprints`
+            const response = await this.$axios.put(endpoint, { id: sprintIds })
             dispatch(GET_PATHS)
             consola.trace(response.data.message)
             return response.data.message
@@ -91,11 +87,9 @@ export const actions = {
     },
 
     async [REMOVE_SPRINTS]({ dispatch }, { pathId, sprintIds }) {
-        consola.info('sprintIds ', sprintIds)
         try {
-            const response = await this.$axios.put(`/api/paths/${pathId}/remove-sprints`, {
-                id: sprintIds
-            })
+            const endpoint = `/api/paths/${pathId}/remove-sprints`
+            const response = await this.$axios.put(endpoint, { id: sprintIds })
             dispatch(GET_PATHS)
             consola.trace(response.data.message)
             return response.data.message
@@ -107,9 +101,8 @@ export const actions = {
 
     async [ENROLL]({ dispatch }, { pathId, userIds }) {
         try {
-            const response = await this.$axios.put(`/api/paths/${pathId}/enroll`, {
-                id: userIds
-            })
+            const endpoint = `/api/paths/${pathId}/enroll`
+            const response = await this.$axios.put(endpoint, { id: userIds })
             dispatch(GET_PATHS)
             consola.trace(response.data.message)
             return response.data.message
@@ -121,9 +114,8 @@ export const actions = {
 
     async [UNENROLL]({ dispatch }, { pathId, userIds }) {
         try {
-            const response = await this.$axios.put(`/api/paths/${pathId}/unenroll`, {
-                id: userIds
-            })
+            const endpoint = `/api/paths/${pathId}/unenroll`
+            const response = await this.$axios.put(endpoint, { id: userIds })
             dispatch(GET_PATHS)
             consola.trace(response.data.message)
             return response.data.message

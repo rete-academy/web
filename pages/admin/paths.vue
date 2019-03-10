@@ -44,7 +44,8 @@
                 <template slot-scope="scope">
                     <sprint-popover
                         :data="scope.row"
-                        :selected="handleSelected"
+                        @selected="handleSelected"
+                        @positions-changed="handlePositions"
                         @submit="handleSubmit"
                     />
                     <el-button
@@ -77,23 +78,14 @@ export default {
         return {
             loading: false,
             pathFormVisible: false,
-            selectedSprints: null
+            selectedSprints: null,
+            changedPositions: {}
         }
     },
 
     computed: {
         ...mapState('paths', ['paths']),
         ...mapState('sprints', ['sprints'])
-    },
-
-    created() {
-        this.$nuxt.$on('selected', (data) => {
-            this.selectedSprints = data
-        })
-
-        this.$nuxt.$on('submit', (id) => {
-            this.handleSubmit(id)
-        })
     },
 
     methods: {
@@ -105,18 +97,33 @@ export default {
             this.selectedSprints = selections
         },
 
+        handlePositions(positions) {
+            this.changedPositions = positions
+        },
+
         async handleSubmit(id) {
             try {
                 this.loading = true
                 this.$nuxt.$loading.start()
                 const currentSprints = this.paths.find(p => p._id === id).sprints
 
-                const removed = currentSprints.filter(c =>
-                    !this.selectedSprints.find(o => o._id === c._id))
-                const added = this.selectedSprints.filter(s =>
-                    !currentSprints.find(o => o._id === s._id))
+                let removed, added
+                if (this.selectedSprints) {
+                    removed = currentSprints.filter(c =>
+                        !this.selectedSprints.find(o => o._id === c._id))
+                    added = this.selectedSprints.filter(s =>
+                        !currentSprints.find(o => o._id === s._id))
+                }
+
+                if (this.changedPositions) {
+                    await this.$store.dispatch('paths/UPDATE_PATH', {
+                        pathId: id,
+                        data: { meta: { position: this.changedPositions } }
+                    })
+                }
 
                 if (removed && removed.length > 0) {
+                    consola.info('removed?', removed)
                     await this.$store.dispatch('paths/REMOVE_SPRINTS', {
                         pathId: id,
                         sprintIds: removed.map(o => o._id)
@@ -185,11 +192,6 @@ export default {
 .paths-table {
     margin-bottom: 20px;
     width: 100%;
-}
-.buttons {
-    display: flex;
-    justify-content: center;
-    margin-top: 10px;
 }
 .manage-popover {
     min-width: 160p;

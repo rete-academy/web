@@ -3,7 +3,8 @@ import {
     FORGOT,
     RESET,
     SIGN_UP,
-    CONFIRM_EMAIL
+    CONFIRM_EMAIL,
+    RESEND_CONFIRM
 } from '@/common/types'
 
 export const state = () => ({
@@ -24,6 +25,16 @@ export const actions = {
     async [CONFIRM_EMAIL]({ commmit }, code) {
         try {
             const response = await this.$axios.put(`/api/users/confirm/${code}`)
+            return response.data.message
+        } catch (error) {
+            throw error
+        }
+    },
+
+    async [RESEND_CONFIRM]({ commmit }, email) {
+        try {
+            const endpoint = '/api/users/profile/send-confirm'
+            const response = await this.$axios.post(endpoint, { email })
             return response.data.message
         } catch (error) {
             throw error

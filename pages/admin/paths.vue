@@ -107,7 +107,7 @@ export default {
                 this.$nuxt.$loading.start()
                 const currentSprints = this.paths.find(p => p._id === id).sprints
 
-                let removed, added
+                let removed, added // need to find better way
                 if (this.selectedSprints) {
                     removed = currentSprints.filter(c =>
                         !this.selectedSprints.find(o => o._id === c._id))
@@ -123,7 +123,6 @@ export default {
                 }
 
                 if (removed && removed.length > 0) {
-                    consola.info('removed?', removed)
                     await this.$store.dispatch('paths/REMOVE_SPRINTS', {
                         pathId: id,
                         sprintIds: removed.map(o => o._id)

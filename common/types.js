@@ -1,6 +1,7 @@
 // ##### General
 export const REGISTER = 'REGISTER'
 export const CONFIRM_EMAIL = 'CONFIRM_EMAIL'
+export const RESEND_CONFIRM = 'RESEND_CONFIRM'
 export const SIGN_UP = 'SIGN_UP'
 export const LOGIN = 'LOGIN'
 export const LOGOUT = 'LOGOUT'

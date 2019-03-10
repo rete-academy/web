@@ -9,7 +9,9 @@
                 {{ profile.name }} <fa icon="chevron-down" />
             </span>
             <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item>My Profile</el-dropdown-item>
+                <el-dropdown-item command="profile">
+                    My Profile
+                </el-dropdown-item>
                 <el-dropdown-item>Preferences</el-dropdown-item>
                 <el-dropdown-item divided command="logout">
                     Logout
@@ -55,7 +57,7 @@ export default {
         handleCommand(command) {
             switch (command) {
             case 'profile':
-                this.$router.push('/profile')
+                this.$router.push('/settings/profile')
                 break
             case 'logout':
                 this.logOut()

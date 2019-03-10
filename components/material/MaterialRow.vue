@@ -82,7 +82,6 @@ export default {
 .material-row {
     display: flex;
     justify-content: space-between;
-    // width: 100%;
 
     a {
         font-size: 12px;

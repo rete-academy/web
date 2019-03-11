@@ -7,7 +7,7 @@
             :disabled="isNew"
             @change="updateStatus"
         >
-            {{ data.material.name | truncate(55) }}
+            {{ data.material.name | truncate(40) }}
         </el-checkbox>
         <div class="tools">
             <span v-if="isNew" class="new">
@@ -18,6 +18,11 @@
                 icon="download"
                 class="copy link"
                 @click="copy"
+            />
+            <fa
+                icon="comment-alt"
+                class="comment link"
+                @click="comment"
             />
             <a :href="data.material.url" target="_blank">
                 <fa icon="external-link-alt" />
@@ -116,6 +121,10 @@ export default {
                 consola.error(e.message)
                 this.$message.error(e.message)
             })
+        },
+
+        comment() {
+            consola.info('open comment panel')
         }
     }
 }
@@ -137,12 +146,17 @@ export default {
     border-radius: 4px;
 
     .tools {
-        .new {
+        .new, .copy {
             color: #8BC34A;
         }
-        .copy {
-            margin: 0 10px;
+        .copy, .comment {
+            margin-right: 10px;
         }
     }
+        .tiny-dot {
+            margin: 0;
+            top: 3px !important;
+            right: 15px !important;
+        }
 }
 </style>

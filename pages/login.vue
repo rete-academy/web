@@ -144,7 +144,11 @@ export default {
                             type: 'success',
                             message: 'Login successful!'
                         })
-                        this.$router.push('/')
+                        if (this.$route.query.prevPath) {
+                            this.$router.push(this.$route.query.prevPath)
+                        } else {
+                            this.$router.push('/')
+                        }
                     }).catch((e) => {
                         this.$nuxt.$loading.fail()
                         consola.error(e.message)

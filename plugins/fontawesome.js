@@ -9,6 +9,8 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import {
     faChevronDown,
     faCog,
+    faCopy,
+    faDownload,
     faExternalLinkAlt,
     faEye,
     faEyeSlash,
@@ -46,6 +48,8 @@ import { FontAwesomeIcon, FontAwesomeLayers } from '@fortawesome/vue-fontawesome
 library.add(
     faChevronDown,
     faCog,
+    faCopy,
+    faDownload,
     faExternalLinkAlt,
     faEye,
     faEyeSlash,

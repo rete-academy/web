@@ -135,6 +135,11 @@ export default {
                         showClose: true,
                         duration: 1000
                     })
+                } else {
+                    this.$router.push({
+                        name: 'login',
+                        query: { prevPath: this.$route.fullPath }
+                    })
                 }
                 this.$nuxt.$loading.finish()
             } catch (e) {

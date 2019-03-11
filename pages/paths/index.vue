@@ -7,18 +7,14 @@
         >
             <h2 :id="path.slug" class="title">
                 {{ path.name }}
-
-                <fa
-                    icon="cog"
-                    class="actions"
-                />
+                <fa icon="cog" class="actions" />
             </h2>
-            <p>{{ path.description }}</p>
             <div class="progress-wrapper">
                 <div class="progress-inner">
                     <el-steps
                         :active="1"
                         :space="500"
+                        :align-center="true"
                     >
                         <el-step
                             v-for="sprint in path.sprints"
@@ -26,7 +22,6 @@
                             :title="'Sprint: ' + sprint.name"
                             :description="sprint.description"
                             class="sprint"
-                            :align-center="true"
                         />
                     </el-steps>
 
@@ -37,7 +32,6 @@
                             class="sprint"
                         >
                             <div class="materials-list">
-                                <h4>Materials</h4>
                                 <material-row
                                     v-for="material in sprint.materials"
                                     :key="material._id"
@@ -56,18 +50,13 @@
 // import consola from 'consola'
 import { mapState } from 'vuex'
 import MaterialRow from '@/components/material/MaterialRow'
-// import consola from 'consola'
-// import CardItem from '~/components/CardItem.vue'
 
 export default {
     name: 'MyPaths',
 
     auth: true,
 
-    components: {
-        // CardItem,
-        MaterialRow
-    },
+    components: { MaterialRow },
 
     computed: {
         ...mapState('paths', ['paths']),
@@ -113,7 +102,7 @@ h2 {
 }
 .progress-wrapper {
     width: 100%;
-    height: 50vh;
+    height: auto;
     margin: 40px auto 80px;
     padding: 20px 10px 10px;
     border-radius: 4px;
@@ -122,6 +111,10 @@ h2 {
     background: #F5F5F5;
 }
 .progress-inner {
+}
+.el-steps {
+    text-align: center;
+    margin-left: 10px;
 }
 .sprint {
     min-width: 500px;
@@ -133,7 +126,7 @@ h2 {
 
 .materials-list {
     width: 470px;
-    padding: 0 10px 10px;
+    padding: 10px;
     border-radius: 4px;
     background: #EEEEEE;
 

@@ -4,7 +4,9 @@ import {
     RESET,
     SIGN_UP,
     CONFIRM_EMAIL,
-    RESEND_CONFIRM
+    RESEND_CONFIRM,
+    UPDATE_STATUS,
+    UPDATE_PROGRESS
 } from '@/common/types'
 
 export const state = () => ({
@@ -54,6 +56,26 @@ export const actions = {
         try {
             const response = await this.$axios
                 .post(`/api/password/reset?token=${token}`, { password })
+            return response.data.message
+        } catch (error) {
+            throw error
+        }
+    },
+
+    async [UPDATE_STATUS]({ dispatch }, { userId, data }) {
+        try {
+            const endpoint = `/api/users/${userId}/update-status`
+            const response = await this.$axios.put(endpoint, data)
+            return response.data.message
+        } catch (error) {
+            throw error
+        }
+    },
+
+    async [UPDATE_PROGRESS]({ dispatch }, { userId, data }) {
+        try {
+            const endpoint = `/api/users/${userId}/update-progress`
+            const response = await this.$axios.put(endpoint, data)
             return response.data.message
         } catch (error) {
             throw error

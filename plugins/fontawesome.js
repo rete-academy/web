@@ -30,6 +30,7 @@ import {
     faJournalWhills,
     faGlobe,
     faHeart,
+    faMinus,
     faPlayCircle,
     faSave,
     faStar,
@@ -42,7 +43,8 @@ import {
     faUser,
     faUserPlus,
     faUserMinus,
-    faUserTimes
+    faUserTimes,
+    faWindowMinimize
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon, FontAwesomeLayers } from '@fortawesome/vue-fontawesome'
 
@@ -70,6 +72,7 @@ library.add(
     faJournalWhills,
     faGlobe,
     faHeart,
+    faMinus,
     faPlayCircle,
     faSave,
     faSortDown,
@@ -82,7 +85,8 @@ library.add(
     faUser,
     faUserPlus,
     faUserMinus,
-    faUserTimes
+    faUserTimes,
+    faWindowMinimize
 )
 
 Vue.component('fa', FontAwesomeIcon)

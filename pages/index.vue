@@ -12,23 +12,21 @@
 
 <script>
 import { mapState } from 'vuex'
-import CardItem from '~/components/CardItem.vue'
+import CardItem from '~/components/path/CardItem.vue'
 
 export default {
     name: 'Home',
 
     auth: false,
 
-    components: {
-        CardItem
-    },
+    components: { CardItem },
 
     computed: {
         ...mapState('paths', ['paths'])
     },
 
     created() {
-        this.$store.dispatch('paths/GET_PATHS')
+        if (this.paths.length === 0) this.$store.dispatch('paths/GET_PATHS')
     },
 
     methods: {

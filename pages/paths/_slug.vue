@@ -66,7 +66,7 @@
             </div>
         </div>
         <div class="path-image is-extra-large">
-            <img :src="image" class="image">
+            <img :src="image || 'http://placeimg.com/600/600/tech'" class="image">
         </div>
     </div>
 </template>

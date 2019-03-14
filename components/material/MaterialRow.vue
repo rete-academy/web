@@ -2,7 +2,6 @@
     <div class="material-row">
         <el-checkbox
             :key="stepId"
-            v-loading="loading"
             :value="isChecked"
             :disabled="isNew"
             @change="updateStatus"
@@ -22,7 +21,8 @@
             <fa
                 icon="comment-alt"
                 class="comment link"
-                @click="comment"
+                :class="currentId === data.material._id ? 'open' : ''"
+                @click="openChat(data.material._id)"
             />
             <a :href="data.material.url" target="_blank">
                 <fa icon="external-link-alt" />
@@ -33,6 +33,7 @@
 
 <script>
 import consola from 'consola'
+import { mapGetters } from 'vuex'
 
 export default {
     name: 'MaterialRow',
@@ -45,12 +46,12 @@ export default {
     },
 
     data() {
-        return {
-            loading: false
-        }
+        return {}
     },
 
     computed: {
+        ...mapGetters('conversations', ['chatVisible', 'currentId']),
+
         isChecked() {
             const found = this.$auth.user.progress
                 .find(o => o.material === this.data.material._id &&
@@ -81,7 +82,6 @@ export default {
 
     methods: {
         updateStatus(status) {
-            this.loading = true
             this.$nuxt.$loading.start()
             this.$store.dispatch('users/UPDATE_STATUS', {
                 userId: this.$auth.user._id,
@@ -90,11 +90,9 @@ export default {
                     status: status ? 1 : 0
                 }
             }).then(() => {
-                this.loading = false
                 this.$auth.fetchUser()
                 this.$nuxt.$loading.finish()
             }).catch((e) => {
-                this.loading = false
                 this.$nuxt.$loading.fail()
                 consola.error(e.message)
                 this.$message.error(e.message)
@@ -112,19 +110,21 @@ export default {
                     status: 0
                 }
             }).then(() => {
-                this.loading = false
                 this.$auth.fetchUser()
                 this.$nuxt.$loading.finish()
             }).catch((e) => {
-                this.loading = false
                 this.$nuxt.$loading.fail()
                 consola.error(e.message)
                 this.$message.error(e.message)
             })
         },
 
-        comment() {
-            consola.info('open comment panel')
+        openChat(id) {
+            this.$emit('chat-open', this.data.material)
+            this.$store.commit('conversations/SET_VISIBLE', {
+                visible: true,
+                material: id
+            })
         }
     }
 }
@@ -152,11 +152,10 @@ export default {
         .copy, .comment {
             margin-right: 10px;
         }
-    }
-        .tiny-dot {
-            margin: 0;
-            top: 3px !important;
-            right: 15px !important;
+
+        .open {
+            color: #8BC34A;
         }
+    }
 }
 </style>

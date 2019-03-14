@@ -39,7 +39,9 @@ p {
 .el-container {
     min-height: 100vh;
 }
-
+.el-main {
+    padding-bottom: 0;
+}
 .el-dropdown-link {
     color: $--color-primary;
     cursor: pointer;

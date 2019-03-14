@@ -36,6 +36,7 @@
                                     v-for="material in sprint.materials"
                                     :key="material._id"
                                     :data="{ path, sprint, material }"
+                                    @chat-open="handleChat"
                                 />
                             </div>
                         </div>
@@ -43,23 +44,38 @@
                 </div>
             </div>
         </div>
+        <chat-box
+            :visible="chatVisible"
+            :data="currentMaterial"
+        />
     </section>
 </template>
 
 <script>
 // import consola from 'consola'
-import { mapState } from 'vuex'
+import { mapGetters } from 'vuex'
 import MaterialRow from '@/components/material/MaterialRow'
+import ChatBox from '@/components/material/ChatBox'
 
 export default {
     name: 'MyPaths',
 
     auth: true,
 
-    components: { MaterialRow },
+    components: {
+        ChatBox,
+        MaterialRow
+    },
+
+    data() {
+        return {
+            currentMaterial: {}
+        }
+    },
 
     computed: {
-        ...mapState('paths', ['paths']),
+        ...mapGetters('conversations', ['chatVisible', 'currentId']),
+        ...mapGetters('paths', ['paths']),
 
         myPaths() {
             if (this.$auth.user && this.$auth.user.progress && this.paths) {
@@ -86,6 +102,10 @@ export default {
     methods: {
         openSinglePath(p) {
             this.$router.push(`/paths/${p.slug}`)
+        },
+
+        handleChat(material) {
+            this.currentMaterial = material
         }
     }
 }
@@ -101,7 +121,7 @@ h2 {
     }
 }
 .progress-wrapper {
-    width: 100%;
+    width: auto;
     height: auto;
     margin: 40px auto 80px;
     padding: 20px 10px 10px;
@@ -122,6 +142,7 @@ h2 {
 
 .sprint-content {
     display: flex;
+    height: 500vh;
 }
 
 .materials-list {

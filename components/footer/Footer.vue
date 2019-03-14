@@ -19,9 +19,7 @@ export default {
     name: 'Footer',
 
     computed: {
-        version() {
-            return process.env.version
-        }
+        version() { return process.env.version }
     }
 }
 </script>

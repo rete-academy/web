@@ -18,6 +18,11 @@ export const state = () => ({
     path: {}
 })
 
+export const getters = {
+    paths: state => state.paths,
+    path: state => state.path
+}
+
 export const actions = {
     async [CREATE_PATH]({ dispatch }, data) {
         try {

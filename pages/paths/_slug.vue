@@ -147,21 +147,6 @@ export default {
                 this.$message.error(e.message)
             }
         }
-
-        /*
-        async getSinglePath(slug) {
-            try {
-                this.$nuxt.$loading.start()
-                const response = await this.$store.dispatch('paths/GET_PATH', slug)
-                this.$nuxt.$loading.finish()
-                return response
-            } catch (e) {
-                this.$nuxt.$loading.fail()
-                this.$message.error(e.message)
-            }
-        },
-        */
-
     }
 }
 </script>
@@ -279,6 +264,7 @@ export default {
     }
     .image {
         width: 100%;
+        border-radius: 5px;
     }
     .block {
         width: 100%;

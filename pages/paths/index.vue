@@ -74,8 +74,11 @@ export default {
     },
 
     computed: {
-        ...mapGetters('conversations', ['chatVisible', 'currentId']),
         ...mapGetters('paths', ['paths']),
+        ...mapGetters('conversations', [
+            'chatVisible',
+            'currentId'
+        ]),
 
         myPaths() {
             if (this.$auth.user && this.$auth.user.progress && this.paths) {
@@ -104,8 +107,15 @@ export default {
             this.$router.push(`/paths/${p.slug}`)
         },
 
-        handleChat(material) {
-            this.currentMaterial = material
+        handleChat(m) {
+            this.currentMaterial = m
+            if (m.conversation) {
+                this.$store.dispatch('conversations/GET_CONVERSATION', m.conversation)
+            } else {
+                this.$store.dispatch('conversations/CREATE_CONVERSATION', {
+                    material: m._id
+                })
+            }
         }
     }
 }
@@ -142,7 +152,6 @@ h2 {
 
 .sprint-content {
     display: flex;
-    height: 500vh;
 }
 
 .materials-list {

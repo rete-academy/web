@@ -6,7 +6,9 @@ module.exports = {
     mode: 'universal',
 
     env: {
-        version: pkg.version
+        version: pkg.version,
+        // SOCKET_HOST_URL: process.env.SOCKET_HOST_URL || 'http://localhost:3000'
+        SOCKET_HOST_URL: 'http://localhost:8000'
     },
 
     axios: {
@@ -39,11 +41,16 @@ module.exports = {
         // '@/plugins/axios',
         '@/plugins/element-ui',
         '@/plugins/filters',
-        '@/plugins/fontawesome'
+        '@/plugins/fontawesome',
+        '@/plugins/chat-scroll.js',
+        {
+            src: '@/plugins/socket.io.js',
+            ssr: false // <-- this line is required
+        }
     ],
 
     modules: [
-    // Doc: https://axios.nuxtjs.org/usage
+        // Doc: https://axios.nuxtjs.org/usage
         '@nuxtjs/auth',
         '@nuxtjs/axios',
         '@nuxtjs/dotenv',

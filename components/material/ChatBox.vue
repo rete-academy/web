@@ -22,24 +22,34 @@
             </div>
         </div>
         <div class="container">
-            <div class="chat-container">
+            <div
+                v-chat-scroll="{
+                    always: false,
+                    smooth: true
+                }"
+                class="chat-container"
+            >
                 <div
-                    v-for="n in 30"
-                    :key="n"
+                    v-for="message in messages"
+                    :ref="message._id"
+                    :key="message._id"
                     class="message"
                 >
-                    <img class="avatar" src="https://placeimg.com/50/50/people?1">
+                    <img
+                        class="avatar"
+                        src="https://placeimg.com/50/50/people?1"
+                    >
                     <div class="text">
                         <p class="info">
                             <span class="name">
-                                <strong>Sang Dang</strong>
+                                <strong>{{ message.user.name }}</strong>
                             </span>
                             <span class="date">
                                 23/03/2016 20:40
                             </span>
                         </p>
                         <p class="content">
-                            A message number {{ n }} Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in v
+                            {{ message.content }}
                         </p>
                     </div>
                 </div>
@@ -47,8 +57,9 @@
         </div>
         <div class="chat-input">
             <el-input
-                v-model="message"
+                v-model="inputMessage"
                 placeholder="Type message, enter to send..."
+                @keyup.enter.native="sendMessage"
             />
         </div>
     </div>
@@ -61,12 +72,6 @@ export default {
     name: 'ChatBox',
 
     props: {
-        /*
-        visible: {
-            type: Boolean,
-            default: false
-        },
-        */
         data: {
             type: Object,
             default: () => ({})
@@ -77,17 +82,38 @@ export default {
         return {
             display: 'none',
             bottom: '0px',
-            message: ''
+            inputMessage: ''
         }
     },
 
     computed: {
-        ...mapGetters('conversations', ['chatVisible', 'currentId'])
+        ...mapGetters('conversations', [
+            'chatVisible',
+            'isConnected',
+            'currentId',
+            'conversation'
+        ]),
+
+        messages() {
+            if (this.data && this.chatVisible) {
+                return this.conversation.messages
+            }
+            return []
+        }
+    },
+
+    sockets: {
+        connect() {
+            consola.info('socket connected')
+        },
+
+        customEmit(val) {
+            consola.info('this emittt')
+        }
     },
 
     watch: {
         chatVisible() {
-            consola.info('received', this.visible)
             if (this.chatVisible) {
                 this.display = 'block'
                 this.bottom = '0px'
@@ -98,11 +124,31 @@ export default {
         }
     },
 
+    updated() {
+        // consola.info('chat box got updated', this.messages.length)
+        // const elem = this.$el
+        // elem.scrollTop = elem.clientHeight
+    },
+
     methods: {
         closeChat() {
             this.$store.commit('conversations/SET_VISIBLE', {
                 visible: false,
                 material: ''
+            })
+        },
+
+        sendMessage() {
+            // consola.info('sending message')
+            // this.$socket.emit('chat_message', this.inputMessage)
+            this.$store.dispatch('conversations/ADD_MESSAGE', {
+                id: this.conversation._id,
+                data: {
+                    user: this.$auth.user._id,
+                    content: this.inputMessage
+                }
+            }).then(() => {
+                this.inputMessage = ''
             })
         }
     }
@@ -140,7 +186,7 @@ export default {
 }
 
 .chat-container {
-    max-height: 420px;
+    height: 420px;
     overflow: auto;
 }
 

@@ -23,10 +23,7 @@
         </div>
         <div class="container">
             <div
-                v-chat-scroll="{
-                    always: false,
-                    smooth: true
-                }"
+                v-chat-scroll="{ always: false, smooth: true }"
                 class="chat-container"
             >
                 <div

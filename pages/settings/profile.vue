@@ -64,9 +64,10 @@ export default {
             try {
                 this.$nuxt.$loading.start()
                 if (this.$auth.user) {
-                    await this.$store.dispatch('users/RESEND_CONFIRM', {
-                        email: this.profile.email
-                    })
+                    await this.$store.dispatch(
+                        'users/RESEND_CONFIRM',
+                        this.profile.email
+                    )
                     await this.$auth.fetchUser()
                     this.$message({
                         type: 'success',

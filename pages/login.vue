@@ -133,8 +133,6 @@ export default {
                             username: this.input.email,
                             password: this.input.password,
                             grant_type: 'password'
-                            // client_id: 'gi4ylF2Pk',
-                            // client_secret: 'pYEpKMZK5bdaf14Ta090n10wi8uy5bAij8'
                         }
                     }).then(() => {
                         this.$nuxt.$loading.finish()

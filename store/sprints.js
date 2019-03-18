@@ -5,12 +5,19 @@ import {
     GET_SPRINTS,
     SET_SPRINTS,
     ADD_MATERIALS,
-    REMOVE_MATERIALS
-} from '@/common/types'
+    REMOVE_MATERIALS,
+    SET_SELECTED_SRPINT
+} from '@/store/types'
 
 export const state = () => ({
-    sprints: []
+    sprints: [],
+    selectedSprint: ''
 })
+
+export const getters = {
+    sprints: state => state.sprints,
+    selectedSprint: state => state.selectedSprint
+}
 
 export const actions = {
     async [CREATE_SPRINT]({ dispatch }, data) {
@@ -73,5 +80,8 @@ export const actions = {
 export const mutations = {
     [SET_SPRINTS](state, data) {
         state.sprints = data
+    },
+    [SET_SELECTED_SRPINT](state, data) {
+        state.selectedSprint = data
     }
 }

@@ -4,6 +4,7 @@
         :modal="true"
         :show-close="false"
         :close-on-click-modal="false"
+        :close-on-press-escape="false"
         :visible.sync="visible"
         width="60%"
         class="custom-dialog"

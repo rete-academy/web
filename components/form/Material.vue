@@ -4,28 +4,28 @@
         :modal="true"
         :show-close="false"
         :close-on-click-modal="false"
+        :close-on-press-escape="false"
         :visible.sync="visible"
         width="60%"
         class="custom-dialog"
     >
-        <el-form ref="form" :model="form" label-width="120px">
-            <el-form-item label="Material URL">
-                <el-input
-                    v-model="form.url"
-                    placeholder="url"
-                    :disabled="loading"
-                    clearable
-                >
-                    <i
-                        slot="suffix"
-                        class="el-input__icon "
-                        :class="loading ? 'el-icon-loading' : ''"
-                    >&nbsp;</i>
-                </el-input>
-            </el-form-item>
-
+        <el-form ref="form" :model="form" label-width="150px">
             <el-row :gutter="20">
                 <el-col :span="18">
+                    <el-form-item label="Material URL">
+                        <el-input
+                            v-model="form.url"
+                            placeholder="Paste material URL here..."
+                            :disabled="loading"
+                            clearable
+                        >
+                            <i
+                                slot="suffix"
+                                class="el-input__icon "
+                                :class="loading ? 'el-icon-loading' : ''"
+                            >&nbsp;</i>
+                        </el-input>
+                    </el-form-item>
                     <el-form-item v-if="fetched" label="Title">
                         <el-input
                             v-model="form.name"
@@ -43,6 +43,19 @@
                     </el-form-item>
                 </el-col>
                 <el-col :span="6">
+                    <el-select
+                        v-model="localSelected"
+                        placeholder="Select sprint"
+                        clearable
+                        filterable
+                    >
+                        <el-option
+                            v-for="sprint in sprints"
+                            :key="sprint._id"
+                            :label="sprint.name"
+                            :value="sprint._id"
+                        />
+                    </el-select>
                     <img :src="form.image" class="material-image">
                 </el-col>
             </el-row>
@@ -52,7 +65,7 @@
                     type="success"
                     @click="onSubmit"
                 >
-                    <fa icon="save" /> Add Material
+                    Add Material
                 </el-button>
                 <el-button
                     size="small"
@@ -68,6 +81,7 @@
 
 <script>
 import consola from 'consola'
+import { mapGetters } from 'vuex'
 
 export default {
     name: 'MaterialForm',
@@ -94,6 +108,20 @@ export default {
             loading: false,
             fetched: false,
             validUrl: false
+        }
+    },
+
+    computed: {
+        ...mapGetters('sprints', ['sprints', 'selectedSprint']),
+
+        localSelected: {
+            get() {
+                return this.selectedSprint
+            },
+            set(newValue) {
+                consola.info(newValue)
+                this.$store.commit('sprints/SET_SELECTED_SRPINT', newValue)
+            }
         }
     },
 
@@ -128,6 +156,12 @@ export default {
         }
     },
 
+    created() {
+        if (this.sprints.length === 0) {
+            this.$store.dispatch('sprints/GET_SPRINTS')
+        }
+    },
+
     methods: {
         handleClose() {
             this.form = {
@@ -142,7 +176,13 @@ export default {
         onSubmit() {
             this.$nuxt.$loading.start()
             this.$store.dispatch('materials/CREATE_MATERIAL', this.form)
-                .then(() => {
+                .then((result) => {
+                    if (this.localSelected) {
+                        this.$store.dispatch('sprints/ADD_MATERIALS', {
+                            sprintId: this.localSelected,
+                            materialIds: result._id
+                        })
+                    }
                     this.handleClose()
                     this.$nuxt.$loading.finish()
                 }).catch((e) => {

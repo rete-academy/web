@@ -8,7 +8,7 @@ import {
     ADD_MESSAGE,
     SOCKET_CONNECT,
     SOCKET_CHAT_MESSAGE
-} from '@/common/types'
+} from '@/store/types'
 
 export const state = () => ({
     isConnected: false,
@@ -68,7 +68,7 @@ export const mutations = {
     },
 
     [SOCKET_CHAT_MESSAGE](state, data) {
-        consola.info('=== Received message from server', data)
+        // consola.info('=== Received message from server', data)
         state.conversation = data
     },
 

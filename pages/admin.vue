@@ -1,39 +1,35 @@
 <template>
     <div class="admin wrapper">
-        <el-row :gutter="10">
-            <el-col :xs="7" :sm="6" :md="5" :lg="4" :xl="3">
-                <el-menu
-                    class="el-menu-vertical"
-                    :collapse="false"
-                    router
-                    @open="handleOpen"
-                    @close="handleClose"
-                >
-                    <el-menu-item index="/admin/paths">
-                        <fa icon="university" />
-                        <span slot="title">
-                            Paths
-                        </span>
-                    </el-menu-item>
-                    <el-menu-item index="/admin/sprints">
-                        <fa icon="tasks" />
-                        <span slot="title">Sprints</span>
-                    </el-menu-item>
+        <el-menu
+            class="admin-sub-menu"
+            mode="horizontal"
+            router
+            :default-active="activeIndex"
+            @open="handleOpen"
+            @close="handleClose"
+        >
+            <el-menu-item index="/admin/paths">
+                <fa icon="university" />
+                <span slot="title">
+                    Paths
+                </span>
+            </el-menu-item>
+            <el-menu-item index="/admin/sprints">
+                <fa icon="tasks" />
+                <span slot="title">Sprints</span>
+            </el-menu-item>
 
-                    <el-menu-item index="/admin/materials">
-                        <fa icon="journal-whills" />
-                        <span slot="title">Materials</span>
-                    </el-menu-item>
+            <el-menu-item index="/admin/materials">
+                <fa icon="journal-whills" />
+                <span slot="title">Materials</span>
+            </el-menu-item>
 
-                    <el-menu-item index="/admin/settings">
-                        <fa icon="cog" />
-                        <span slot="title">Settings</span>
-                    </el-menu-item>
-                </el-menu>
-            </el-col>
-            <el-col :xs="17" :sm="18" :md="19" :lg="20" :xl="21">
-                <nuxt-child class="main-content" />
-            </el-col>
+            <el-menu-item index="/admin/settings">
+                <fa icon="cog" />
+                <span slot="title">Settings</span>
+            </el-menu-item>
+        </el-menu>
+        <nuxt-child class="main-content" />
         </el-row>
     </div>
 </template>
@@ -44,6 +40,7 @@ export default {
 
     data() {
         return {
+            activeIndex: '/admin/paths',
             materialFormVisible: false
         }
     },
@@ -65,15 +62,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.el-menu-vertical:not(.el-menu--collapse) {
-    width: 100%;
-    min-height: 400px;
-}
 .main-content {
     width: 100%;
 }
 .el-menu-item {
-    font-size: 15px;
+    font-size: 12px;
 
     span {
         margin-left: 10px;

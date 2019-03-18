@@ -34,7 +34,7 @@
                 >
                     <img
                         class="avatar"
-                        src="https://placeimg.com/50/50/people?1"
+                        :src="avatar(message.user)"
                     >
                     <div class="text">
                         <p class="info">
@@ -102,10 +102,6 @@ export default {
     sockets: {
         connect() {
             consola.info('socket connected')
-        },
-
-        customEmit(val) {
-            consola.info('this emittt')
         }
     },
 
@@ -121,18 +117,19 @@ export default {
         }
     },
 
-    updated() {
-        // consola.info('chat box got updated', this.messages.length)
-        // const elem = this.$el
-        // elem.scrollTop = elem.clientHeight
-    },
-
     methods: {
         closeChat() {
             this.$store.commit('conversations/SET_VISIBLE', {
                 visible: false,
                 material: ''
             })
+        },
+
+        avatar(user) {
+            if (user.avatar && user.avatar.location) {
+                return user.avatar.location
+            }
+            return ''
         },
 
         sendMessage() {

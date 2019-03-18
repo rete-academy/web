@@ -7,8 +7,8 @@ module.exports = {
 
     env: {
         version: pkg.version,
-        // SOCKET_HOST_URL: process.env.SOCKET_HOST_URL || 'http://localhost:3000'
-        SOCKET_HOST_URL: 'http://localhost:8000'
+        SOCKET_HOST_URL: process.env.SOCKET_HOST_URL || 'http://localhost:8000'
+        // SOCKET_HOST_URL: 'http://localhost:8000'
     },
 
     axios: {
@@ -30,6 +30,7 @@ module.exports = {
     loading: {
         color: '#FFEB3B',
         height: '5px',
+        duration: 1000,
         continuous: true
     },
 
@@ -63,6 +64,12 @@ module.exports = {
             logout: '/',
             callback: '/login',
             home: '/'
+        },
+        token: {
+            prefix: 'access_token.'
+        },
+        refresh_token: {
+            prefix: 'refresh_token.'
         },
         strategies: {
             local: {

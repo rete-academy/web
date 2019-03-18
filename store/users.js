@@ -3,18 +3,37 @@ import {
     FORGOT,
     RESET,
     SIGN_UP,
+    FETCH_USER,
+    SET_USER,
     CONFIRM_EMAIL,
     RESEND_CONFIRM,
+    // UPLOAD_AVATAR,
     UPDATE_STATUS,
     UPDATE_PROGRESS
-} from '@/common/types'
+} from '@/store/types'
 
 export const state = () => ({
+    profile: {},
     paths: [],
     path: {}
 })
 
+export const getters = {
+    profile: state => state.profile,
+    paths: state => state.paths,
+    path: state => state.path
+}
+
 export const actions = {
+    async [FETCH_USER]({ commit }) {
+        try {
+            await this.$auth.fetchUser()
+            commit(SET_USER, this.$auth.user)
+        } catch (error) {
+            throw error
+        }
+    },
+
     async [SIGN_UP]({ commmit }, data) {
         try {
             const response = await this.$axios.post('/api/users', data)
@@ -84,4 +103,7 @@ export const actions = {
 }
 
 export const mutations = {
+    [SET_USER](state, data) {
+        state.profile = data
+    }
 }

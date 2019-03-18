@@ -1,43 +1,67 @@
 <template>
     <div class="profile wrapper">
-        <h1>Hi, {{ profile.name }}</h1>
-        <el-form
-            ref="profileForm"
-            :model="profile"
-            label-width="180px"
-            label-position="top"
-        >
-            <el-form-item label="Email" class="email">
-                <el-row :gutter="5">
-                    <el-col :span="18">
-                        <el-input v-model="profile.email" />
-                    </el-col>
-                    <el-col :span="6">
-                        <el-button
-                            v-if="!profile.meta.confirm"
-                            type="text"
-                            @click="resendConfirm"
-                        >
-                            Resend Confirmation
-                        </el-button>
-                    </el-col>
-                </el-row>
-            </el-form-item>
-            <el-form-item>
-                <el-button
-                    type="success"
-                    @click="updateProfile"
+        <div class="avatar">
+            <el-upload
+                class="avatar-uploader"
+                list-type="picture"
+                :action="uploadEndpoint"
+                :auto-upload="false"
+                :headers="uploadHeaders"
+                :show-file-list="false"
+                :on-change="onChange"
+            >
+                <img
+                    v-if="hasAvatar"
+                    :src="profileImage"
+                    class="avatar"
                 >
-                    Update Profile
-                </el-button>
-            </el-form-item>
-        </el-form>
+                <fa
+                    v-else
+                    icon="upload"
+                    class="avatar-uploader-icon"
+                />
+            </el-upload>
+        </div>
+        <div class="content">
+            <h1>Hi, {{ profile.name }}</h1>
+            <el-form
+                ref="profileForm"
+                :model="profile"
+                label-width="180px"
+                label-position="top"
+            >
+                <el-form-item label="Email" class="email">
+                    <el-row :gutter="5">
+                        <el-col :span="18">
+                            <el-input v-model="profile.email" />
+                        </el-col>
+                        <el-col :span="6">
+                            <el-button
+                                v-if="!profile.meta.confirm"
+                                type="text"
+                                @click="resendConfirm"
+                            >
+                                Resend Confirmation
+                            </el-button>
+                        </el-col>
+                    </el-row>
+                </el-form-item>
+                <el-form-item>
+                    <el-button
+                        type="success"
+                        @click="updateProfile"
+                    >
+                        Update Profile
+                    </el-button>
+                </el-form-item>
+            </el-form>
+        </div>
     </div>
 </template>
 
 <script>
-// import consola from 'consola'
-// import { mapState } from 'vuex'
+import consola from 'consola'
+import { mapGetters } from 'vuex'
 
 export default {
 
@@ -45,20 +69,78 @@ export default {
 
     data() {
         return {
-            profile: {},
-            activeItems: []
+            file: null,
+            defaultAvatar: ''
         }
     },
 
     computed: {
+        ...mapGetters('users', ['profile']),
+
+        hasAvatar() {
+            if ((this.profile.avatar && this.profile.avatar.location &&
+                this.profile.avatar.location.length > 0) || this.file) {
+                return true
+            }
+            return false
+        },
+
+        profileImage() {
+            if (this.hasAvatar && !this.file) {
+                return this.profile.avatar.location
+            } else if (this.file) {
+                return this.file.url
+            }
+            return ''
+        },
+
+        uploadEndpoint() {
+            const baseUrl = process.env.API_URL || 'http://localhost:8000'
+            return `${baseUrl}/api/users/${this.profile._id}/avatar`
+        },
+
+        uploadHeaders() {
+            return {
+                // 'Content-Type': 'application/x-www-form-urlencoded',
+                Authorization: this.$auth.getToken('local')
+            }
+        }
     },
 
-    created() {
-        this.profile = { ...this.$auth.user }
+    async asyncData({ store, error }) {
+        try {
+            return await store.dispatch('users/FETCH_USER')
+        } catch (e) {
+            error({ message: e, statusCode: 404 })
+        }
     },
 
     methods: {
-        async updateProfile() {},
+        onChange(file) {
+            this.file = file
+        },
+
+        async updateProfile() {
+            if (this.file) {
+                await this.submitUpload()
+            }
+        },
+
+        async submitUpload() {
+            try {
+                this.$nuxt.$loading.start()
+                const formData = new FormData()
+                formData.append('avatar', this.file.raw)
+                await this.$axios.post(this.uploadEndpoint, formData, {
+                    headers: this.uploadHeaders
+                })
+                await this.$store.dispatch('users/FETCH_USER')
+                this.$nuxt.$loading.finish()
+            } catch (error) {
+                consola.error(error.message)
+                this.$nuxt.$loading.fail()
+            }
+        },
 
         async resendConfirm() {
             try {
@@ -89,118 +171,52 @@ export default {
 <style lang="scss" scoped>
 .profile {
     display: flex;
-    flex-direction: column;
     justify-content: space-between;
-    max-width: 600px;
     margin: 0 auto 50px;
 
-    .project-content {
-        padding: 20px !important;
-        height: auto;
+    .avatar {
+        width: 300px;
+        height: 300px;
 
-        .project-head {
-
-            color: #FFF;
-
-            .desc {
-                color: #FFF;
-                font-size: 90%;
-                margin-bottom: 10px;
-            }
-        }
-
-        .block {
-            display: block;
+        img {
             width: 100%;
-            clear: both;
+            border-radius: 4px;
         }
 
-        .wide-title {
-            float: left;
-            display: block;
-            width: 100%;
-            clear: both;
-            color: #EEE;
-            border-bottom: 1px solid #CCCCCC50;
-        }
-
-        .short-title {
-            display: inline-block;
-            line-height: 38px;
-            margin: 0 10px 0 0;
+        .el-upload {
+            border: 1px dashed #d9d9d9;
+            border-radius: 4px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
 
             &:hover {
-                cursor: pointer;
+                border-color: #409EFF;
             }
         }
 
-        .sort-icon {
-            &:hover {
-                cursor: pointer;
-            }
-        }
+        .avatar-uploader-icon {
+            font-size: 28px;
+            color: #8c939d;
+            width: 36px;
+            height: 36px;
+            padding: 124px;
+            border: 1px dashed #d9d9d9;
+            border-radius: 4px;
+            line-height: 298px;
+            text-align: center;
+          }
+          .avatar {
+            width: 298px;
+            height: 298px;
+            display: block;
+          }
     }
 
-    .right {
-        float:right;
+    .content {
+        width: auto;
+        margin-left: 20px;
+        flex: 1;
     }
-
-    .report-btn {
-        margin-left: 10px;
-        width: 110px;
-    }
-
-    .download-link {
-        font-size: 90%;
-        font-weight: bold;
-        color: #FFF;
-    }
-    .download-button {
-        width: 110px;
-    }
-
-    .file-name {
-        margin: 0;
-        font-weight: bold;
-    }
-    .file-description {
-        font-size: 90%;
-        margin: 0;
-        line-height: 14px;
-    }
-
-    .switch-text {
-        font-size: 80% !important;
-        margin-left: 5px;
-    }
-
-    .attachments-buttons {
-        display: flex;
-        justify-content: flex-end;
-
-        .delete-btn {
-            margin-left: 10px;
-        }
-    }
-
-    .el-table {
-        margin-bottom: 35px;
-        clear: both;
-
-    }
-
-    h1 small {
-        display: block;
-        color: #999;
-        font-size: 55%;
-        font-weight: 200 !important;
-    }
-    .image {
-        width: 100%;
-    }
-    .block {
-        width: 100%;
-    }
-
 }
 </style>

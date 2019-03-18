@@ -11,7 +11,7 @@ import {
     REMOVE_SPRINTS,
     ENROLL,
     UNENROLL
-} from '@/common/types'
+} from '@/store/types'
 
 export const state = () => ({
     paths: [],

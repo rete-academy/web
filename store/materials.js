@@ -6,7 +6,7 @@ import {
     SET_MATERIALS,
     GET_MATERIAL,
     SET_MATERIAL
-} from '@/common/types'
+} from '@/store/types'
 
 export const state = () => ({
     materials: [],

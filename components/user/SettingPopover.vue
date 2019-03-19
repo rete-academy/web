@@ -16,7 +16,7 @@
             <h3>Change Member Role</h3>
             <div class="user-info">
                 <img
-                    :src="data.avatar.location || defaultAvatar"
+                    :src="profileImage"
                     :alt="data.name"
                     class="avatar"
                 >
@@ -93,6 +93,14 @@ export default {
     },
 
     computed: {
+        profileImage() {
+            if (this.data.avatar && this.data.avatar.location &&
+                this.data.avatar.location.length > 0) {
+                return this.data.avatar.location
+            }
+            return this.defaultAvatar
+        },
+
         isAdmin() {
             if (this.$auth.user.role.includes(0)) return true
             return false

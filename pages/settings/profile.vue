@@ -101,7 +101,7 @@ export default {
 
         uploadHeaders() {
             return {
-                // 'Content-Type': 'application/x-www-form-urlencoded',
+                'Content-Type': 'application/x-www-form-urlencoded',
                 Authorization: this.$auth.getToken('local')
             }
         }

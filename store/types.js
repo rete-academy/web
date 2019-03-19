@@ -11,6 +11,8 @@ export const CHECK_AUTH = 'CHECK_AUTH'
 export const SET_AUTH = 'SET_AUTH'
 export const FETCH_USER = 'FETCH_USER'
 export const SET_USER = 'SET_USER'
+export const GET_USERS = 'GET_USERS'
+export const SET_USERS = 'SET_USERS'
 
 export const ENROLL = 'ENROLL'
 export const UNENROLL = 'UNENROLL'
@@ -44,6 +46,7 @@ export const UPDATE_STATUS = 'UPDATE_STATUS'
 export const UPLOAD_AVATAR = 'UPLOAD_AVATAR'
 
 export const CREATE_CONVERSATION = 'CREATE_CONVERSATION'
+export const JOIN_CONVERSATION = 'JOIN_CONVERSATION'
 export const GET_CONVERSATION = 'GET_CONVERSATION'
 export const SET_CONVERSATION = 'SET_CONVERSATION'
 export const ADD_MESSAGE = 'ADD_MESSAGE'
@@ -52,6 +55,7 @@ export const SET_VISIBLE = 'SET_VISIBLE'
 
 export const SOCKET_CONNECT = 'SOCKET_CONNECT'
 export const SOCKET_CHAT_MESSAGE = 'SOCKET_CHAT_MESSAGE'
+export const SOCKET_USER_ONLINE = 'SOCKET_USER_ONLINE'
 
 // Invitations
 export const SEND_INVITATION = 'SEND_INVITATION'

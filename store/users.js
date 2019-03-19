@@ -4,24 +4,28 @@ import {
     RESET,
     SIGN_UP,
     FETCH_USER,
+    GET_USERS,
     SET_USER,
+    SET_USERS,
     CONFIRM_EMAIL,
     RESEND_CONFIRM,
-    // UPLOAD_AVATAR,
     UPDATE_STATUS,
+    UPDATE_USER,
     UPDATE_PROGRESS
 } from '@/store/types'
 
 export const state = () => ({
     profile: {},
     paths: [],
-    path: {}
+    path: {},
+    users: []
 })
 
 export const getters = {
     profile: state => state.profile,
     paths: state => state.paths,
-    path: state => state.path
+    path: state => state.path,
+    users: state => state.users
 }
 
 export const actions = {
@@ -34,7 +38,7 @@ export const actions = {
         }
     },
 
-    async [SIGN_UP]({ commmit }, data) {
+    async [SIGN_UP]({ commit }, data) {
         try {
             const response = await this.$axios.post('/api/users', data)
             return response.data.message
@@ -43,7 +47,17 @@ export const actions = {
         }
     },
 
-    async [CONFIRM_EMAIL]({ commmit }, code) {
+    async [GET_USERS]({ commit }) {
+        try {
+            const { data } = await this.$axios.get('/api/users')
+            commit(SET_USERS, data.message)
+            return data.message
+        } catch (error) {
+            throw error
+        }
+    },
+
+    async [CONFIRM_EMAIL]({ commit }, code) {
         try {
             const response = await this.$axios.put(`/api/users/confirm/${code}`)
             return response.data.message
@@ -52,7 +66,7 @@ export const actions = {
         }
     },
 
-    async [RESEND_CONFIRM]({ commmit }, email) {
+    async [RESEND_CONFIRM]({ commit }, email) {
         try {
             const endpoint = '/api/users/profile/send-confirm'
             const response = await this.$axios.post(endpoint, { email })
@@ -62,7 +76,7 @@ export const actions = {
         }
     },
 
-    async [FORGOT]({ commmit }, email) {
+    async [FORGOT]({ commit }, email) {
         try {
             const response = await this.$axios.post('/api/password/forgot', { email })
             return response.data.message
@@ -71,10 +85,21 @@ export const actions = {
         }
     },
 
-    async [RESET]({ commmit }, { token, password }) {
+    async [RESET]({ commit }, { token, password }) {
         try {
-            const response = await this.$axios
-                .post(`/api/password/reset?token=${token}`, { password })
+            const endpoint = `/api/password/reset?token=${token}`
+            const response = await this.$axios.post(endpoint, { password })
+            return response.data.message
+        } catch (error) {
+            throw error
+        }
+    },
+
+    async [UPDATE_USER]({ dispatch }, { id, data }) {
+        try {
+            const response = await this.$axios.put(`/api/users/${id}`, data)
+            dispatch(GET_USERS)
+            dispatch(FETCH_USER)
             return response.data.message
         } catch (error) {
             throw error
@@ -105,5 +130,8 @@ export const actions = {
 export const mutations = {
     [SET_USER](state, data) {
         state.profile = data
+    },
+    [SET_USERS](state, data) {
+        state.users = data
     }
 }

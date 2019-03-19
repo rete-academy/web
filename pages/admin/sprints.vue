@@ -134,8 +134,6 @@ export default {
         ...mapState('materials', ['materials'])
     },
 
-    created() {},
-
     methods: {
         handleDialog() {
             this.pathFormVisible = !this.pathFormVisible

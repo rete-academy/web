@@ -13,6 +13,11 @@ export const state = () => ({
     material: {}
 })
 
+export const getters = {
+    materials: state => state.materials,
+    material: state => state.material
+}
+
 export const actions = {
     async [CREATE_MATERIAL]({ dispatch }, data) {
         try {

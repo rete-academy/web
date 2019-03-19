@@ -95,7 +95,7 @@ export default {
         },
 
         uploadEndpoint() {
-            const baseUrl = process.env.API_URL || 'http://localhost:8000'
+            const baseUrl = this.$axios.defaults.baseURL || 'http://localhost:8000'
             return `${baseUrl}/api/users/${this.profile._id}/avatar`
         },
 

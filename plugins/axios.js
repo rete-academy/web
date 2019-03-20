@@ -1,2 +1,1 @@
-export default function ({ $axios, redirect }) {
-}
+export default function ({ $axios, redirect }) {}

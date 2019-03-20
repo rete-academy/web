@@ -8,7 +8,6 @@ module.exports = {
     env: {
         version: pkg.version,
         SOCKET_HOST_URL: process.env.SOCKET_HOST_URL || 'http://localhost:8000'
-        // SOCKET_HOST_URL: 'http://localhost:8000'
     },
 
     axios: {
@@ -38,7 +37,8 @@ module.exports = {
         'element-ui/lib/theme-chalk/index.css'
     ],
 
-    plugins: [ // load before mounting the App
+    // These plugins load before mounting the App
+    plugins: [
         // '@/plugins/axios',
         '@/plugins/element-ui',
         '@/plugins/filters',
@@ -51,7 +51,6 @@ module.exports = {
     ],
 
     modules: [
-        // Doc: https://axios.nuxtjs.org/usage
         '@nuxtjs/auth',
         '@nuxtjs/axios',
         '@nuxtjs/dotenv',
@@ -91,6 +90,11 @@ module.exports = {
         // port: 8080, // default: 3000
         timing: false
     },
+
+    serverMiddleware: [
+        // Will register redirect-ssl npm package
+        'redirect-ssl'
+    ],
 
     build: {
         transpile: [/^element-ui/],

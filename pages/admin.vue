@@ -29,6 +29,7 @@
                 <span slot="title">Settings</span>
             </el-menu-item>
         </el-menu>
+
         <nuxt-child class="main-content" />
         </el-row>
     </div>
@@ -43,7 +44,7 @@ export default {
 
     data() {
         return {
-            activeIndex: '/admin/paths',
+            activeIndex: this.$route.fullPath,
             materialFormVisible: false
         }
     },
@@ -67,6 +68,13 @@ export default {
         }
     },
 
+    mounted() {
+        if (this.activeIndex === '/admin') {
+            this.$router.push('/admin/paths')
+            this.activeIndex = '/admin/paths'
+        }
+    },
+
     methods: {
         handleClose() {},
         handleOpen() {}
@@ -79,7 +87,7 @@ export default {
     width: 100%;
 }
 .el-menu-item {
-    font-size: 12px;
+    font-size: 14px;
 
     span {
         margin-left: 10px;

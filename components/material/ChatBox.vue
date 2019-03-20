@@ -132,18 +132,19 @@ export default {
             return ''
         },
 
-        sendMessage() {
+        async sendMessage() {
             // consola.info('sending message')
             // this.$socket.emit('chat_message', this.inputMessage)
-            this.$store.dispatch('conversations/ADD_MESSAGE', {
-                id: this.conversation._id,
-                data: {
-                    user: this.$auth.user._id,
-                    content: this.inputMessage
-                }
-            }).then(() => {
+            if (this.inputMessage.length > 0) {
+                await this.$store.dispatch('conversations/ADD_MESSAGE', {
+                    id: this.conversation._id,
+                    data: {
+                        user: this.$auth.user._id,
+                        content: this.inputMessage
+                    }
+                })
                 this.inputMessage = ''
-            })
+            }
         }
     }
 }

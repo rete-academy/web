@@ -24,7 +24,10 @@
                 <template slot-scope="scope">
                     <p class="material-name">
                         <span class="icon">
-                            <fa :icon="isAdmin(scope.row) ? 'star' : 'user'" />
+                            <fa
+                                :icon="isAdmin(scope.row) ? 'star' : 'user'"
+                                class="success"
+                            />
                         </span>
                         <span class="name">
                             {{ scope.row.name }}
@@ -192,5 +195,8 @@ export default {
 }
 .manage-popover {
     min-width: 160px;
+}
+.success {
+    color: green;
 }
 </style>

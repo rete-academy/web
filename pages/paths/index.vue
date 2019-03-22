@@ -12,7 +12,6 @@
             <div class="progress-wrapper">
                 <div class="progress-inner">
                     <el-steps
-                        :active="1"
                         :space="500"
                         :align-center="true"
                     >
@@ -69,6 +68,7 @@ export default {
 
     data() {
         return {
+            activeStep: 0,
             currentMaterial: {}
         }
     },
@@ -84,11 +84,15 @@ export default {
             if (this.$auth.user && this.$auth.user.progress && this.paths) {
                 const tempPaths = []
                 for (const singleStep of this.$auth.user.progress) {
-                    if (!tempPaths.includes(singleStep.path)) {
-                        tempPaths.push(singleStep.path)
-                    }
+                    const had = tempPaths.includes(singleStep.path)
+                    const found = this.paths.find(p => p._id === singleStep.path)
+                    if (found && !had) { tempPaths.push(singleStep.path) }
                 }
                 return tempPaths.map(id => this.paths.find(p => p._id === id))
+                // TODO: Make an easier way to detect current active sprint.
+                // const currentSprints = foundPath.sprints.map(e => e._id)
+                // consola.info(currentSprints)
+                // if (foundPath) return foundPath
             }
             return []
         }
@@ -96,6 +100,7 @@ export default {
 
     async asyncData({ params, store, error }) {
         try {
+            // make sure the paths are up to date
             await store.dispatch('paths/GET_PATHS')
         } catch (e) {
             error({ message: e, statusCode: 404 })
@@ -107,13 +112,13 @@ export default {
             this.$router.push(`/paths/${p.slug}`)
         },
 
-        handleChat(m) {
-            this.currentMaterial = m
-            if (m.conversation) {
-                this.$store.dispatch('conversations/GET_CONVERSATION', m.conversation)
+        handleChat(material) {
+            this.currentMaterial = material
+            if (material.conversation) {
+                this.$store.dispatch('conversations/GET_CONVERSATION', material.conversation)
             } else {
                 this.$store.dispatch('conversations/CREATE_CONVERSATION', {
-                    material: m._id
+                    material: material._id
                 })
             }
         }

@@ -54,6 +54,7 @@ module.exports = {
         '@nuxtjs/auth',
         '@nuxtjs/axios',
         '@nuxtjs/dotenv',
+        '@nuxtjs/google-analytics',
         '@nuxtjs/pwa'
     ],
 
@@ -73,8 +74,16 @@ module.exports = {
         strategies: {
             local: {
                 endpoints: {
-                    login: { url: '/oauth/token', method: 'post', propertyName: 'access_token' },
-                    user: { url: '/api/users/profile', method: 'get', propertyName: 'message.profile' },
+                    login: {
+                        url: '/oauth/token',
+                        method: 'post',
+                        propertyName: 'access_token'
+                    },
+                    user: {
+                        url: '/api/users/profile',
+                        method: 'get',
+                        propertyName: 'message.profile'
+                    },
                     logout: false
                 }
             }
@@ -84,6 +93,11 @@ module.exports = {
     router: {
         // Set up auth module global
         middleware: ['auth']
+    },
+
+    googleAnalytics: {
+        id: 'UA-3449304-35',
+        dev: false
     },
 
     server: {

@@ -51,7 +51,27 @@
                     </el-form-item>
                 </el-col>
                 <el-col :span="6">
-                    <img :src="form.image" class="image">
+                    <el-upload
+                        class="image-uploader"
+                        list-type="picture"
+                        :action="uploadEndpoint"
+                        :auto-upload="true"
+                        :http-request="submitUpload"
+                        :headers="uploadHeaders"
+                        :show-file-list="false"
+                        :on-change="onChange"
+                    >
+                        <img
+                            v-if="hasImage"
+                            :src="form.image"
+                            class="image"
+                        >
+                        <fa
+                            v-else
+                            icon="upload"
+                            class="avatar-uploader-icon"
+                        />
+                    </el-upload>
                 </el-col>
             </el-row>
             <el-form-item>
@@ -94,10 +114,32 @@ export default {
                 name: '',
                 slug: '',
                 description: '',
-                image: 'http://www.markweb.in/primehouseware/images/noimage.png'
+                image: ''
             },
+            file: null,
             loading: false,
             taken: false
+        }
+    },
+
+    computed: {
+        hasImage() {
+            if (this.form.image || this.file) {
+                return true
+            }
+            return false
+        },
+
+        uploadEndpoint() {
+            const baseUrl = this.$axios.defaults.baseURL || 'http://localhost:8000'
+            return `${baseUrl}/api/path/avatar`
+        },
+
+        uploadHeaders() {
+            return {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                Authorization: this.$auth.getToken('local')
+            }
         }
     },
 
@@ -110,6 +152,10 @@ export default {
     },
 
     methods: {
+        onChange(file) {
+            this.file = file
+        },
+
         handleClose() {
             this.form = {
                 name: '',
@@ -133,6 +179,27 @@ export default {
                 }).catch((err) => {
                     consola.error(err)
                 })
+            }
+        },
+
+        async submitUpload() {
+            try {
+                this.$nuxt.$loading.start()
+                const formData = new FormData()
+                formData.append('image', this.file.raw)
+                await this.$axios.post(this.uploadEndpoint, formData, {
+                    headers: this.uploadHeaders
+                })
+                // await this.$store.dispatch('users/FETCH_USER')
+                this.$nuxt.$loading.finish()
+                this.$message({
+                    message: 'Uploaded succesfully!',
+                    type: 'success'
+                })
+            } catch (error) {
+                consola.error(error.message)
+                this.$nuxt.$loading.fail()
+                this.$message.error(`Oops, ${error.message}`)
             }
         },
 

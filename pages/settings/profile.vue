@@ -5,7 +5,8 @@
                 class="avatar-uploader"
                 list-type="picture"
                 :action="uploadEndpoint"
-                :auto-upload="false"
+                :auto-upload="true"
+                :http-request="submitUpload"
                 :headers="uploadHeaders"
                 :show-file-list="false"
                 :on-change="onChange"
@@ -136,9 +137,14 @@ export default {
                 })
                 await this.$store.dispatch('users/FETCH_USER')
                 this.$nuxt.$loading.finish()
+                this.$message({
+                    message: 'Uploaded succesfully!',
+                    type: 'success'
+                })
             } catch (error) {
                 consola.error(error.message)
                 this.$nuxt.$loading.fail()
+                this.$message.error(`Oops, ${error.message}`)
             }
         },
 

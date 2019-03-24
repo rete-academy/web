@@ -1,6 +1,6 @@
 {
-  "name": "rete.academy",
-  "version": "1.1.0",
+  "name": "rete-academy-web",
+  "version": "1.1.1",
   "description": "Another way to learn",
   "author": "Sang Dang",
   "private": true,
@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.15",
+    "@fortawesome/free-regular-svg-icons": "^5.8.1",
     "@fortawesome/free-solid-svg-icons": "^5.7.2",
     "@fortawesome/vue-fontawesome": "^0.1.5",
     "@nuxtjs/auth": "^4.5.3",
@@ -38,6 +39,7 @@
     "node-sass": "^4.11.0",
     "npm": "^6.8.0",
     "nuxt": "^2.4.0",
+    "nuxt-clipboard2": "^0.2.1",
     "redirect-ssl": "^1.4.0",
     "sass-loader": "^7.1.0",
     "socket.io-client": "^2.2.0",

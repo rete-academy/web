@@ -65,7 +65,7 @@ code {
     }
 }
 
-.time {
+p.time, p.small {
     font-size: 11px;
     color: #999;
 }
@@ -104,6 +104,16 @@ a, .link, .el-dropdown-link {
     justify-content: space-between;
     align-items: center;
     margin: 20px auto;
+
+    .left {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .el-dropdown {
+            margin-left: 20px;
+        }
+    }
 }
 
 .sprints-list {

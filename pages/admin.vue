@@ -24,6 +24,10 @@
                 <fa icon="user" />
                 <span slot="title">Users</span>
             </el-menu-item>
+            <el-menu-item index="/admin/files">
+                <fa icon="folder" />
+                <span slot="title">Files</span>
+            </el-menu-item>
             <el-menu-item index="/admin/settings">
                 <fa icon="cog" />
                 <span slot="title">Settings</span>
@@ -62,6 +66,9 @@ export default {
             }
             if (store.getters['users/users'].length === 0) {
                 await store.dispatch('users/GET_USERS')
+            }
+            if (store.getters['files/files'].length === 0) {
+                await store.dispatch('files/GET_FILES')
             }
         } catch (e) {
             error({ message: e, statusCode: 404 })

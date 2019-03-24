@@ -26,6 +26,7 @@ import {
     faFileWord,
     faFilePowerpoint,
     faFileVideo,
+    faFolder,
     faEnvelope,
     faJournalWhills,
     faGlobe,
@@ -47,6 +48,7 @@ import {
     faUserTimes,
     faWindowMinimize
 } from '@fortawesome/free-solid-svg-icons'
+// } from '@fortawesome/free-regular-svg-icons'
 import { FontAwesomeIcon, FontAwesomeLayers } from '@fortawesome/vue-fontawesome'
 
 library.add(
@@ -69,6 +71,7 @@ library.add(
     faFileWord,
     faFilePowerpoint,
     faFileVideo,
+    faFolder,
     faEnvelope,
     faJournalWhills,
     faGlobe,

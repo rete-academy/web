@@ -41,6 +41,10 @@ export const SET_MATERIALS = 'SET_MATERIALS'
 export const GET_MATERIAL = 'GET_MATERIAL'
 export const SET_MATERIAL = 'SET_MATERIAL'
 
+export const GET_FILES = 'GET_FILES'
+export const SET_FILES = 'SET_FILES'
+export const DELETE_FILES = 'DELETE_FILES'
+
 export const UPDATE_PROGRESS = 'UPDATE_PROGRESS'
 export const UPDATE_STATUS = 'UPDATE_STATUS'
 export const UPLOAD_AVATAR = 'UPLOAD_AVATAR'

@@ -33,7 +33,7 @@
                             {{ scope.row.name }}
                         </span>
                     </p>
-                    <p class="time">
+                    <p class="small">
                         Sign up time: {{ scope.row.createdTime | convertTime('HH:mm DD.MM.YYYY') }}
                     </p>
                 </template>

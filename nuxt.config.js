@@ -55,7 +55,8 @@ module.exports = {
         '@nuxtjs/axios',
         '@nuxtjs/dotenv',
         '@nuxtjs/google-analytics',
-        '@nuxtjs/pwa'
+        '@nuxtjs/pwa',
+        'nuxt-clipboard2'
     ],
 
     auth: {

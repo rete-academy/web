@@ -13,7 +13,7 @@
         </div>
         <el-table
             v-loading="loading"
-            :data="materials"
+            :data="paginated[currentPage-1]"
             class="material-table"
             width="100%"
             border
@@ -64,6 +64,16 @@
             </el-table-column>
         </el-table>
 
+        <el-pagination
+            v-if="paginated.length > 1"
+            background
+            class="pagination"
+            layout="prev, pager, next"
+            :total="total"
+            :page-size="pageSize"
+            :current-page.sync="currentPage"
+        />
+
         <material-form :visible.sync="materialFormVisible" />
     </div>
 </template>
@@ -71,6 +81,7 @@
 <script>
 import consola from 'consola'
 import { mapState } from 'vuex'
+import { chunk, flatten } from 'lodash'
 import MaterialForm from '@/components/form/Material'
 
 export default {
@@ -80,6 +91,10 @@ export default {
 
     data() {
         return {
+            selection: 'name',
+            currentPage: 1,
+            pageSize: 7,
+            filter: '',
             selectedSprints: null,
             selectedMaterials: null,
             changed: false,
@@ -91,12 +106,42 @@ export default {
     computed: {
         ...mapState('paths', ['paths']),
         ...mapState('sprints', ['sprints']),
-        ...mapState('materials', ['materials'])
+        ...mapState('materials', ['materials']),
+
+        paginated() {
+            return chunk(this.materials.filter(o => this.matched(o.name)), this.pageSize)
+        },
+
+        total() {
+            // we need to do total this way to reflect correct total entries
+            // after user filtering the results.
+            return flatten(this.paginated).length
+        }
     },
 
-    created() {},
+    watch: {
+        currentPage() {
+            if (this.currentPage > 1) {
+                this.$router.push({ query: { page: this.currentPage } })
+            } else {
+                this.$router.push({ query: {} })
+            }
+        }
+    },
+
+    created() {
+        if (this.$route.query.page && this.$route.query.page < this.paginated.length) {
+            this.currentPage = parseInt(this.$route.query.page, 10)
+        } else {
+            this.$router.push({ query: {} })
+        }
+    },
 
     methods: {
+        matched(str) {
+            return str.toLowerCase().indexOf(this.filter.toLowerCase()) !== -1
+        },
+
         handleMaterialDialog() {
             this.materialFormVisible = !this.materialFormVisible
         },

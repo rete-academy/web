@@ -13,8 +13,8 @@
         </div>
         <el-table
             v-loading="loading"
+            :data="paginated[currentPage-1]"
             class="paths-table"
-            :data="paths"
             width="100%"
             border
         >
@@ -59,6 +59,16 @@
             </el-table-column>
         </el-table>
 
+        <el-pagination
+            v-if="paginated.length > 1"
+            background
+            class="pagination"
+            layout="prev, pager, next"
+            :total="total"
+            :page-size="pageSize"
+            :current-page.sync="currentPage"
+        />
+
         <path-form :visible.sync="pathFormVisible" />
     </div>
 </template>
@@ -66,6 +76,7 @@
 <script>
 import consola from 'consola'
 import { mapState } from 'vuex'
+import { chunk, flatten } from 'lodash'
 import PathForm from '@/components/form/Path'
 import SprintPopover from '@/components/path/SprintPopover'
 
@@ -76,6 +87,10 @@ export default {
 
     data() {
         return {
+            selection: 'name',
+            currentPage: 1,
+            pageSize: 7,
+            filter: '',
             loading: false,
             pathFormVisible: false,
             selectedSprints: null,
@@ -85,10 +100,41 @@ export default {
 
     computed: {
         ...mapState('paths', ['paths']),
-        ...mapState('sprints', ['sprints'])
+        ...mapState('sprints', ['sprints']),
+
+        paginated() {
+            return chunk(this.paths.filter(o => this.matched(o.name)), this.pageSize)
+        },
+
+        total() {
+            // we need to do total this way to reflect correct total entries
+            // after user filtering the results.
+            return flatten(this.paginated).length
+        }
+    },
+
+    watch: {
+        currentPage() {
+            if (this.currentPage > 1) {
+                this.$router.push({ query: { page: this.currentPage } })
+            } else {
+                this.$router.push({ query: {} })
+            }
+        }
+    },
+
+    created() {
+        if (this.$route.query.page && this.$route.query.page < this.paginated.length) {
+            this.currentPage = parseInt(this.$route.query.page, 10)
+        } else {
+            this.$router.push({ query: {} })
+        }
     },
 
     methods: {
+        matched(str) {
+            return str.toLowerCase().indexOf(this.filter.toLowerCase()) !== -1
+        },
         handleDialog() {
             this.pathFormVisible = !this.pathFormVisible
         },

@@ -41,7 +41,7 @@
         </div>
 
         <el-table
-            :data="files"
+            :data="paginatedFiles[currentPage - 1]"
             class="file-table"
             width="100%"
             border
@@ -125,13 +125,23 @@
                 </template>
             </el-table-column>
         </el-table>
+
+        <el-pagination
+            v-if="paginatedFiles.length > 1"
+            background
+            class="pagination"
+            layout="prev, pager, next"
+            :total="total"
+            :page-size="pageSize"
+            :current-page.sync="currentPage"
+        />
         <!-- material-form :visible.sync="userFormVisible" / -->
     </div>
 </template>
-
 <script>
 import consola from 'consola'
 import { mapGetters } from 'vuex'
+import { chunk, flatten } from 'lodash'
 // import SettingPopover from '@/components/user/SettingPopover'
 // import MaterialForm from '@/components/form/Material'
 
@@ -147,6 +157,10 @@ export default {
             selectedFileIds: [],
             changed: false,
             loading: false,
+            selection: 'name',
+            currentPage: 1,
+            pageSize: 7,
+            filter: '',
             userFormVisible: false
         }
     },
@@ -154,6 +168,16 @@ export default {
     computed: {
         ...mapGetters('users', ['users']),
         ...mapGetters('files', ['files']),
+
+        paginatedFiles() {
+            return chunk(this.files.filter(o => this.matched(o.data.originalname)), this.pageSize)
+        },
+
+        total() {
+            // we need to do total this way to reflect correct total entries
+            // after user filtering the results.
+            return flatten(this.paginatedFiles).length
+        },
 
         uploadEndpoint() {
             const baseUrl = this.$axios.defaults.baseURL || 'http://localhost:8000'
@@ -178,15 +202,27 @@ export default {
         }
     }, */
 
-    methods: {
-        handleCommand(command) {
-            switch (command) {
-            case 'delete':
-                this.deleteFiles(this.selectedFileIds)
-                break
-            default:
-                break
+    watch: {
+        currentPage() {
+            if (this.currentPage > 1) {
+                this.$router.push({ query: { page: this.currentPage } })
+            } else {
+                this.$router.push({ query: {} })
             }
+        }
+    },
+
+    created() {
+        if (this.$route.query.page && this.$route.query.page < this.paginatedFiles.length) {
+            this.currentPage = parseInt(this.$route.query.page, 10)
+        } else {
+            this.$router.push({ query: {} })
+        }
+    },
+
+    methods: {
+        matched(str) {
+            return str.toLowerCase().indexOf(this.filter.toLowerCase()) !== -1
         },
 
         selectionChange(selection) {
@@ -195,6 +231,28 @@ export default {
 
         selectText(id) {
             this.$refs[id].select()
+        },
+
+        isAdmin(user) {
+            if (user && user.role) {
+                if (user.role.reduce((i, j) => i * j) === 0) return true
+                return false
+            }
+            return false
+        },
+
+        onChange(file) {
+            this.file = file
+        },
+
+        handleCommand(command) {
+            switch (command) {
+            case 'delete':
+                this.deleteFiles(this.selectedFileIds)
+                break
+            default:
+                break
+            }
         },
 
         copyText(id) {
@@ -215,18 +273,6 @@ export default {
             range.select();
             consola.info(this.$refs[id])
             */
-        },
-
-        isAdmin(user) {
-            if (user && user.role) {
-                if (user.role.reduce((i, j) => i * j) === 0) return true
-                return false
-            }
-            return false
-        },
-
-        onChange(file) {
-            this.file = file
         },
 
         async submitUpload() {
@@ -299,6 +345,7 @@ export default {
             case 'png':
             case 'jpg':
             case 'gif':
+            case 'svg':
             case 'jpeg':
                 return 'file-image'
             case 'pdf':
@@ -336,6 +383,7 @@ export default {
 
             switch (fileName[fileName.length - 1]) {
             case 'png':
+            case 'svg':
             case 'jpg':
             case 'gif':
             case 'jpeg':
@@ -347,7 +395,6 @@ export default {
     }
 }
 </script>
-
 <style lang="scss" scoped>
 .paths-table {
     margin-bottom: 20px;

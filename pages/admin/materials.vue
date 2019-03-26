@@ -6,9 +6,9 @@
                 type="success"
                 icon="el-icon-plus"
                 class="create-new-btn right"
-                @click="handleMaterialDialog"
+                @click="handleDialog"
             >
-                Create New Material
+                Add New Material
             </el-button>
         </div>
         <el-table
@@ -67,14 +67,14 @@
         <el-pagination
             v-if="paginated.length > 1"
             background
-            class="pagination"
             layout="prev, pager, next"
             :total="total"
             :page-size="pageSize"
             :current-page.sync="currentPage"
+            class="pagination"
         />
 
-        <material-form :visible.sync="materialFormVisible" />
+        <material-form :visible.sync="formVisible" />
     </div>
 </template>
 
@@ -82,7 +82,7 @@
 import consola from 'consola'
 import { mapState } from 'vuex'
 import { chunk, flatten } from 'lodash'
-import MaterialForm from '@/components/form/Material'
+import MaterialForm from '@/components/material/MaterialForm'
 
 export default {
     name: 'AdminMaterials',
@@ -99,7 +99,7 @@ export default {
             selectedMaterials: null,
             changed: false,
             loading: false,
-            materialFormVisible: false
+            formVisible: false
         }
     },
 
@@ -109,7 +109,8 @@ export default {
         ...mapState('materials', ['materials']),
 
         paginated() {
-            return chunk(this.materials.filter(o => this.matched(o.name)), this.pageSize)
+            return chunk(this.materials
+                .filter(o => this.matched(o.name)), this.pageSize)
         },
 
         total() {
@@ -142,8 +143,8 @@ export default {
             return str.toLowerCase().indexOf(this.filter.toLowerCase()) !== -1
         },
 
-        handleMaterialDialog() {
-            this.materialFormVisible = !this.materialFormVisible
+        handleDialog() {
+            this.formVisible = !this.formVisible
         },
 
         handleSelections(selection) {

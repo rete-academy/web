@@ -6,7 +6,7 @@
         :close-on-click-modal="false"
         :close-on-press-escape="false"
         :visible.sync="visible"
-        width="60%"
+        width="50%"
         class="custom-dialog"
     >
         <el-form ref="form" :model="form" label-width="150px">
@@ -119,7 +119,6 @@ export default {
                 return this.selectedSprint
             },
             set(newValue) {
-                consola.info(newValue)
                 this.$store.commit('sprints/SET_SELECTED_SRPINT', newValue)
             }
         }
@@ -146,7 +145,6 @@ export default {
                         this.loading = false
                         this.$nuxt.$loading.finish()
                     }
-                    consola.info(res.data)
                 }).catch((error) => {
                     this.loading = false
                     this.$nuxt.$loading.fail()
@@ -170,6 +168,7 @@ export default {
                 description: '',
                 image: ''
             }
+            this.fetched = false
             this.$emit('update:visible', false)
         },
 
@@ -203,6 +202,7 @@ export default {
 
 <style lang="scss" scoped>
 .material-image {
+    margin-top: 20px;
     width: 100%;
 }
 </style>

@@ -69,7 +69,7 @@
             :current-page.sync="currentPage"
         />
 
-        <path-form :visible.sync="pathFormVisible" />
+        <path-form :visible.sync="formVisible" />
     </div>
 </template>
 
@@ -77,7 +77,7 @@
 import consola from 'consola'
 import { mapState } from 'vuex'
 import { chunk, flatten } from 'lodash'
-import PathForm from '@/components/form/Path'
+import PathForm from '@/components/path/PathForm'
 import SprintPopover from '@/components/path/SprintPopover'
 
 export default {
@@ -92,7 +92,7 @@ export default {
             pageSize: 7,
             filter: '',
             loading: false,
-            pathFormVisible: false,
+            formVisible: false,
             selectedSprints: null,
             changedPositions: {}
         }
@@ -124,7 +124,8 @@ export default {
     },
 
     created() {
-        if (this.$route.query.page && this.$route.query.page < this.paginated.length) {
+        if (this.$route.query.page &&
+            this.$route.query.page < this.paginated.length) {
             this.currentPage = parseInt(this.$route.query.page, 10)
         } else {
             this.$router.push({ query: {} })
@@ -135,8 +136,9 @@ export default {
         matched(str) {
             return str.toLowerCase().indexOf(this.filter.toLowerCase()) !== -1
         },
+
         handleDialog() {
-            this.pathFormVisible = !this.pathFormVisible
+            this.formVisible = !this.formVisible
         },
 
         handleSelected(selections) {

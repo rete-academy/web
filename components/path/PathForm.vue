@@ -6,7 +6,7 @@
         :close-on-click-modal="false"
         :close-on-press-escape="false"
         :visible.sync="visible"
-        width="60%"
+        width="50%"
         class="custom-dialog"
     >
         <el-form ref="form" :model="form" label-width="120px">

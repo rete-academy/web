@@ -25,8 +25,8 @@
                     <p class="material-name">
                         <span class="icon">
                             <fa
-                                :icon="isAdmin(scope.row) ? 'star' : 'user'"
-                                class="success"
+                                :icon="isAdmin(scope.row) ? 'user-shield' : 'user'"
+                                class="user-role"
                             />
                         </span>
                         <span class="name">
@@ -196,7 +196,7 @@ export default {
 .manage-popover {
     min-width: 160px;
 }
-.success {
-    color: green;
+.user-role {
+    width: 18px;
 }
 </style>

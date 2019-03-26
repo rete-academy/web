@@ -52,23 +52,6 @@
                 width="36"
             />
             <el-table-column
-                label="Preview"
-                width="77px"
-            >
-                <template slot-scope="scope">
-                    <img
-                        v-if="isImage(scope.row.data.originalname)"
-                        :src="scope.row.data.location"
-                        class="preview"
-                    >
-                    <fa
-                        v-else
-                        :icon="detectIcon(scope.row.data.originalname)"
-                        class="preview"
-                    />
-                </template>
-            </el-table-column>
-            <el-table-column
                 label="Name"
                 width="320"
             >
@@ -102,6 +85,23 @@
             <el-table-column label="Created">
                 <template slot-scope="scope">
                     {{ scope.row.createdTime | convertTime('HH:mm DD.MM.YYYY') }}
+                </template>
+            </el-table-column>
+            <el-table-column
+                label="Preview"
+                width="77px"
+            >
+                <template slot-scope="scope">
+                    <img
+                        v-if="isImage(scope.row.data.originalname)"
+                        :src="scope.row.data.location"
+                        class="preview"
+                    >
+                    <fa
+                        v-else
+                        :icon="detectIcon(scope.row.data.originalname)"
+                        class="preview"
+                    />
                 </template>
             </el-table-column>
             <el-table-column

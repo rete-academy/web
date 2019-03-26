@@ -6,7 +6,7 @@
                 type="success"
                 icon="el-icon-plus"
                 class="create-new-btn"
-                @click="handleSprintDialog"
+                @click="handleDialog"
             >
                 Create New Sprint
             </el-button>
@@ -41,64 +41,19 @@
                 label="Actions"
                 width="250"
             >
-                <template slot-scope="scopeSprint">
-                    <el-popover
-                        width="400"
-                        placement="left"
-                        trigger="click"
-                        @show="calculateSelections"
-                        @hide="handleReset"
-                    >
-                        <el-button
-                            slot="reference"
-                            size="mini"
-                            class="manage-popover"
-                            type="primary"
-                            plain
-                        >
-                            Manage Materials ({{ scopeSprint.row.materials.length }})
-                        </el-button>
-                        <el-table
-                            :ref="scopeSprint.row._id"
-                            :data="materials"
-                            row-key="_id"
-                            @select="handleSelections"
-                            @select-all="handleSelections"
-                        >
-                            <el-table-column
-                                type="selection"
-                                width="40"
-                            />
-                            <el-table-column
-                                width="360"
-                                label="Material Name"
-                                property="name"
-                            />
-                        </el-table>
-                        <div class="buttons">
-                            <el-button
-                                type="success"
-                                size="mini"
-                                :disabled="!changed"
-                                @click="handleSubmit(scopeSprint.row._id)"
-                            >
-                                Save
-                            </el-button>
-                            <el-button
-                                size="mini"
-                                @click="handleReset"
-                            >
-                                Reset
-                            </el-button>
-                        </div>
-                    </el-popover>
-
+                <template slot-scope="scope">
+                    <material-popover
+                        :data="scope.row"
+                        @selected="handleSelected"
+                        @positions-changed="handlePositions"
+                        @submit="handleSubmit"
+                    />
                     <el-button
                         size="mini"
                         icon="el-icon-delete"
                         type="danger"
                         plain
-                        @click="handleDelete(scopeSprint.row._id)"
+                        @click="handleDelete(scope.row._id)"
                     />
                 </template>
             </el-table-column>
@@ -114,7 +69,7 @@
             :current-page.sync="currentPage"
         />
 
-        <sprint-form :visible.sync="sprintFormVisible" />
+        <sprint-form :visible.sync="formVisible" />
     </div>
 </template>
 
@@ -122,12 +77,16 @@
 import consola from 'consola'
 import { mapState } from 'vuex'
 import { chunk, flatten } from 'lodash'
-import SprintForm from '@/components/form/Sprint'
+import MaterialPopover from '@/components/sprint/MaterialPopover'
+import SprintForm from '@/components/sprint/SprintForm'
 
 export default {
     name: 'AdminSprints',
 
-    components: { SprintForm },
+    components: {
+        SprintForm,
+        MaterialPopover
+    },
 
     data() {
         return {
@@ -139,7 +98,8 @@ export default {
             selectedMaterials: null,
             changed: false,
             loading: false,
-            sprintFormVisible: false
+            formVisible: false,
+            changedPositions: {}
         }
     },
 
@@ -170,7 +130,8 @@ export default {
     },
 
     created() {
-        if (this.$route.query.page && this.$route.query.page < this.paginated.length) {
+        if (this.$route.query.page &&
+            this.$route.query.page < this.paginated.length) {
             this.currentPage = parseInt(this.$route.query.page, 10)
         } else {
             this.$router.push({ query: {} })
@@ -183,16 +144,15 @@ export default {
         },
 
         handleDialog() {
-            this.pathFormVisible = !this.pathFormVisible
+            this.formVisible = !this.formVisible
         },
 
-        handleSprintDialog() {
-            this.sprintFormVisible = !this.sprintFormVisible
+        handleSelected(selections) {
+            this.selectedMaterials = selections
         },
 
-        handleSelections(selection) {
-            this.changed = true
-            this.selectedMaterials = selection
+        handlePositions(positions) {
+            this.changedPositions = positions
         },
 
         /*

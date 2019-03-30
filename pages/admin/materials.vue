@@ -19,6 +19,10 @@
             border
         >
             <el-table-column
+                type="selection"
+                width="36"
+            />
+            <el-table-column
                 label="Name"
                 width="320"
             >
@@ -52,7 +56,6 @@
                         type="warning"
                         plain
                     />
-
                     <el-button
                         size="mini"
                         icon="el-icon-delete"

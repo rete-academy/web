@@ -22,17 +22,16 @@
             <el-button
                 size="mini"
                 type="success"
-                @click="$router.push('/login')"
+                @click="$router.push('/signup')"
             >
-                Login
+                Đăng Ký Học
             </el-button>
             <el-button
                 size="mini"
                 type="info"
-                plain
-                @click="$router.push('/signup')"
+                @click="$router.push('/login')"
             >
-                Sign Up
+                Login
             </el-button>
         </div>
     </div>

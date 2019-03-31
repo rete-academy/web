@@ -4,10 +4,16 @@
         :body-style="{ padding: '0px' }"
         shadow="hover"
     >
-        <div class="image-content">
+        <div
+            class="image-content"
+            :style="{ width: width + 'px', height: width + 'px'}"
+        >
             <img :src="path.image" class="image">
         </div>
-        <div style="padding: 15px 10px;">
+        <div
+            v-if="!plain"
+            style="padding: 15px 10px;"
+        >
             <span class="title">{{ path.name }}</span>
             <div class="bottom clearfix">
                 <time class="time">
@@ -19,7 +25,7 @@
 </template>
 
 <script>
-// import consola from 'consola'
+import consola from 'consola'
 
 export default {
     name: 'CardItem',
@@ -28,6 +34,14 @@ export default {
         data: {
             type: Object,
             default: () => ({})
+        },
+        plain: {
+            type: Boolean,
+            default: false
+        },
+        width: {
+            type: Number,
+            default: 300
         }
     },
 
@@ -40,6 +54,10 @@ export default {
         path() {
             return { ...this.data }
         }
+    },
+
+    created() {
+        consola.info(this.plain)
     },
 
     methods: {
@@ -57,14 +75,10 @@ export default {
 <style lang="scss" scoped>
 .card-item {
     text-align: center;
-    max-width: 300px;
-    max-height: 366px;
     border-radius: 5px;
 
     .image-content {
         background: #FFF;
-        width: 300px;
-        height: 300px;
         display: flex;
         align-items: center;
 

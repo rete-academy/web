@@ -50,6 +50,10 @@ import {
     faUserTimes,
     faWindowMinimize
 } from '@fortawesome/free-solid-svg-icons'
+import {
+    faFacebook,
+    faTwitter
+} from '@fortawesome/free-brands-svg-icons'
 // } from '@fortawesome/free-regular-svg-icons'
 import { FontAwesomeIcon, FontAwesomeLayers } from '@fortawesome/vue-fontawesome'
 
@@ -95,7 +99,10 @@ library.add(
     faUserMinus,
     faUserShield,
     faUserTimes,
-    faWindowMinimize
+    faWindowMinimize,
+
+    faFacebook,
+    faTwitter
 )
 
 Vue.component('fa', FontAwesomeIcon)

@@ -7,8 +7,19 @@
             <img src="@/assets/images/rete-logo-icon.png" class="logo-icon">
         </router-link>
         <div class="nav-content">
-            <router-link class="item" to="/paths">
-                Your Paths
+            <router-link
+                v-if="!isLoggedIn"
+                class="item"
+                to="/paths"
+            >
+                Danh sách khoá học
+            </router-link>
+            <router-link
+                v-else
+                class="item"
+                to="/my-paths"
+            >
+                Khoá học của tôi
             </router-link>
             <!-- router-link class="item" to="/" disabled>
                 Events
@@ -59,6 +70,10 @@ export default {
         user() {
             if (this.$auth.user) return this.$auth.user
             return {}
+        },
+
+        isLoggedIn() {
+            return this.$auth.loggedIn
         }
     },
 

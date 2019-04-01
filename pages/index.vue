@@ -205,13 +205,16 @@ export default {
 .why {
     background: #F1F1F1;
     .third {
-        width: 25%;
+        width: 22%;
         padding: 20px;
         margin: 20px;
         text-align: center;
 
         h3 {
             font-size: 28px;
+        }
+        .text {
+            padding: 0 20px;
         }
     }
 }

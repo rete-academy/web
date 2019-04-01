@@ -89,7 +89,7 @@ export default {
         profileImage() {
             if (this.hasAvatar && !this.file) {
                 return this.profile.avatar.location
-            } else if (this.file) {
+            } if (this.file) {
                 return this.file.url
             }
             return ''

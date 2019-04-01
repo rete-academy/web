@@ -183,10 +183,8 @@ export default {
                 this.loading = true
                 this.$nuxt.$loading.start()
                 const currentMaterials = this.sprints.find(s => s._id === id).materials
-                const removed = currentMaterials.filter(c =>
-                    !this.selectedMaterials.find(o => o._id === c._id))
-                const added = this.selectedMaterials.filter(s =>
-                    !currentMaterials.find(o => o._id === s._id))
+                const removed = currentMaterials.filter(c => !this.selectedMaterials.find(o => o._id === c._id))
+                const added = this.selectedMaterials.filter(s => !currentMaterials.find(o => o._id === s._id))
 
                 if (removed && removed.length > 0) {
                     await this.$store.dispatch('sprints/REMOVE_MATERIALS', {

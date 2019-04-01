@@ -65,7 +65,7 @@ export default {
             // consola.info(slug)
             this.$router.push({
                 path: `/paths/${slug}`,
-                params: { slug: slug }
+                params: { slug }
             })
         }
     }

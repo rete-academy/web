@@ -1,24 +1,33 @@
 module.exports = {
     root: true,
-    env: {
-        browser: true,
-        node: true
-    },
     parserOptions: {
-        parser: 'babel-eslint'
+        parser: 'babel-eslint',
+        sourceType: 'module'
     },
     extends: [
+        'plugin:vue/base',
         '@nuxtjs'
     ],
+    /*
+    env: {
+        browser: true,
+        node: true,
+    },
+    plugins: [
+        'vue',
+    ],
+    */
     // add your custom rules here
     rules: {
         indent: ['error', 4],
+        // allow state shadow
+        'no-shadow': ['error', { builtinGlobals: false, allow: ['state'] }],
         'vue/html-indent': ['error', 4, {
-            'attribute': 1,
-            'baseIndent': 1,
-            'closeBracket': 0,
-            'alignAttributesVertically': true,
-            'ignores': []
+            attribute: 1,
+            baseIndent: 1,
+            closeBracket: 0,
+            alignAttributesVertically: true,
+            ignores: []
         }]
     }
 }

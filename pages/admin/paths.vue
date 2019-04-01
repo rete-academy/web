@@ -159,12 +159,11 @@ export default {
                 this.$nuxt.$loading.start()
                 const currentSprints = this.paths.find(p => p._id === id).sprints
 
-                let removed, added // need to find better way
+                let removed; let
+                    added // need to find better way
                 if (this.selectedSprints) {
-                    removed = currentSprints.filter(c =>
-                        !this.selectedSprints.find(o => o._id === c._id))
-                    added = this.selectedSprints.filter(s =>
-                        !currentSprints.find(o => o._id === s._id))
+                    removed = currentSprints.filter(c => !this.selectedSprints.find(o => o._id === c._id))
+                    added = this.selectedSprints.filter(s => !currentSprints.find(o => o._id === s._id))
                 }
 
                 if (this.changedPositions) {

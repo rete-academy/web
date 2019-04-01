@@ -25,18 +25,12 @@
             <el-form-item label="Password" prop="password" required>
                 <el-input
                     v-model="input.password"
-                    :type="currentType"
+                    type="password"
                     class="password clear"
                     placeholder="Your Password"
+                    show-password
                     @keyup.native.enter="onSubmit"
-                >
-                    <fa
-                        slot="suffix"
-                        class="el-input__icon eye-icon"
-                        :icon="passwordIcon"
-                        @click="handleIconClick"
-                    />
-                </el-input>
+                />
             </el-form-item>
             <el-form-item>
                 <el-button
@@ -145,7 +139,7 @@ export default {
                         if (this.$route.query.prevPath) {
                             this.$router.push(this.$route.query.prevPath)
                         } else {
-                            this.$router.push('/')
+                            this.$router.push('/my-paths')
                         }
                     }).catch((e) => {
                         this.$nuxt.$loading.fail()

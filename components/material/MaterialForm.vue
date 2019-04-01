@@ -135,7 +135,8 @@ export default {
                     {
                         q: this.form.url,
                         key: '5c6e71509eafb0595e5860fe9c5eaba82fb617087dbc1'
-                    }).then((res) => {
+                    }
+                ).then((res) => {
                     if (res) {
                         this.fetched = true
                         this.form.name = res.data.title

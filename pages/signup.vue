@@ -1,6 +1,11 @@
 <template>
     <div class="sign-up-form form-wrapper">
-        <img class="logo" src="@/assets/images/rete-logo-big.jpg">
+        <router-link
+            class="logo"
+            to="/"
+        >
+            <img class="logo" src="@/assets/images/rete-logo-big.jpg">
+        </router-link>
         <h2 v-if="!finished">
             Sign Up
         </h2>

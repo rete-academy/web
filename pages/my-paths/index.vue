@@ -75,10 +75,7 @@ export default {
 
     computed: {
         ...mapGetters('paths', ['paths']),
-        ...mapGetters('conversations', [
-            'chatVisible',
-            'currentId'
-        ]),
+        ...mapGetters('conversations', ['chatVisible', 'currentId']),
 
         myPaths() {
             if (this.$auth.user && this.$auth.user.progress && this.paths) {

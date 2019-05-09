@@ -104,6 +104,7 @@
 </template>
 
 <script>
+import consola from 'consola'
 import { mapGetters } from 'vuex'
 import CardItem from '~/components/path/CardItem.vue'
 
@@ -118,6 +119,7 @@ export default {
 
     data() {
         return {
+            doStuff: null,
             form: {
                 email: ''
             }
@@ -133,7 +135,17 @@ export default {
     },
 
     created() {
+        this.doStuff = function (arg) {
+            consola.info('Run at ', arg)
+        }
+
+        this.doStuff('created')
+
         if (this.paths.length === 0) this.$store.dispatch('paths/GET_PATHS')
+    },
+
+    mounted() {
+        this.doStuff('mounted')
     },
 
     methods: {

@@ -1,6 +1,7 @@
-# rete.academy
+rete-web
+==
 
-> My luminous Nuxt.js project
+> Web application for Rete Academy
 
 ## Build Setup
 

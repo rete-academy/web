@@ -6,6 +6,8 @@ module.exports = {
   mode: 'universal',
 
   env: {
+    clientId: process.env.CLIENT_ID,
+    clientSecret: process.env.CLIENT_SECRET,
     version: pkg.version,
     SOCKET_HOST_URL: process.env.SOCKET_HOST_URL || 'http://localhost:8000'
   },

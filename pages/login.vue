@@ -101,13 +101,6 @@ export default {
     }
   },
 
-  mounted() {
-    consola.info({
-      client_id: process.env.CLIENT_ID,
-      client_secret: process.env.CLIENT_SECRET
-    })
-  },
-
   methods: {
     handleIconClick() {
       this.showPassword = !this.showPassword
@@ -138,8 +131,8 @@ export default {
             data: {
               username: this.input.email,
               password: this.input.password,
-              client_id: process.env.CLIENT_ID,
-              client_secret: process.env.CLIENT_SECRET,
+              client_id: process.env.clientId,
+              client_secret: process.env.clientSecret,
               grant_type: 'password'
             }
           }).then(() => {

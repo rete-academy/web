@@ -101,6 +101,13 @@ export default {
     }
   },
 
+  mounted() {
+    consola.info({
+      client_id: process.env.CLIENT_ID,
+      client_secret: process.env.CLIENT_SECRET
+    })
+  },
+
   methods: {
     handleIconClick() {
       this.showPassword = !this.showPassword

@@ -1,27 +1,27 @@
 <template>
-    <div class="flex-nav">
-        <router-link
-            class="logo"
-            to="/"
-        >
-            <img src="@/assets/images/rete-logo-icon.png" class="logo-icon">
-        </router-link>
-        <div class="nav-content">
-            <router-link
-                v-if="!isLoggedIn"
-                class="item"
-                to="/paths"
-            >
-                Danh sách khoá học
-            </router-link>
-            <router-link
-                v-else
-                class="item"
-                to="/my-paths"
-            >
-                Khoá học của tôi
-            </router-link>
-            <!-- router-link class="item" to="/" disabled>
+  <div class="flex-nav">
+    <router-link
+      class="logo"
+      to="/"
+    >
+      <img src="@/assets/images/rete-logo-icon.png" class="logo-icon">
+    </router-link>
+    <div class="nav-content">
+      <router-link
+        v-if="!isLoggedIn"
+        class="item"
+        to="/paths"
+      >
+        Danh sách khoá học
+      </router-link>
+      <router-link
+        v-else
+        class="item"
+        to="/my-paths"
+      >
+        Khoá học của tôi
+      </router-link>
+      <!-- router-link class="item" to="/" disabled>
                 Events
             </router-link>
             <router-link class="item" to="/">
@@ -30,17 +30,17 @@
             <router-link class="item" to="/">
                 Dashboard
             </router-link -->
-            <router-link
-                v-if="isAdmin(user)"
-                class="item"
-                to="/admin"
-            >
-                Admin Panel
-            </router-link>
-        </div>
-
-        <avatar />
+      <router-link
+        v-if="isAdmin(user)"
+        class="item"
+        to="/admin"
+      >
+        Admin Panel
+      </router-link>
     </div>
+
+    <avatar />
+  </div>
 </template>
 
 <script>
@@ -50,74 +50,74 @@ import Avatar from '@/components/header/Avatar'
 // import errorHandler from '@/common/error.handler'
 
 export default {
-    name: 'NavBar',
+  name: 'NavBar',
 
-    components: { Avatar },
+  components: { Avatar },
 
-    mixins: [
-        // checkAuth,
-        // displayName
-    ],
+  mixins: [
+    // checkAuth,
+    // displayName
+  ],
 
-    data() {
-        return {
-            language: 'fi',
-            visible: false
-        }
-    },
-
-    computed: {
-        user() {
-            if (this.$auth.user) return this.$auth.user
-            return {}
-        },
-
-        isLoggedIn() {
-            return this.$auth.loggedIn
-        }
-    },
-
-    watch: {
-        language() {
-            this.changeLanguage(this.language)
-        }
-    },
-
-    created() {
-    },
-
-    methods: {
-        isAdmin(user) {
-            if (user.role) return user.role.includes(0)
-            return false
-        },
-
-        goTo(string) {
-            this.$router.push(string)
-            this.visible = false
-        },
-
-        handleCommand(command) {
-            switch (command) {
-            case 'profile':
-                this.$router.push('/profile')
-                break
-            case 'signout':
-                this.signOut()
-                break
-            default:
-                break
-            }
-        },
-
-        changeLanguage(language) {
-            this.$i18n.locale = language
-            this.language = language
-            this.visible = false
-        },
-
-        signOut() { }
+  data() {
+    return {
+      language: 'fi',
+      visible: false
     }
+  },
+
+  computed: {
+    user() {
+      if (this.$auth.user) return this.$auth.user
+      return {}
+    },
+
+    isLoggedIn() {
+      return this.$auth.loggedIn
+    }
+  },
+
+  watch: {
+    language() {
+      this.changeLanguage(this.language)
+    }
+  },
+
+  created() {
+  },
+
+  methods: {
+    isAdmin(user) {
+      if (user.role) return user.role.includes(0)
+      return false
+    },
+
+    goTo(string) {
+      this.$router.push(string)
+      this.visible = false
+    },
+
+    handleCommand(command) {
+      switch (command) {
+      case 'profile':
+        this.$router.push('/profile')
+        break
+      case 'signout':
+        this.signOut()
+        break
+      default:
+        break
+      }
+    },
+
+    changeLanguage(language) {
+      this.$i18n.locale = language
+      this.language = language
+      this.visible = false
+    },
+
+    signOut() { }
+  }
 }
 </script>
 

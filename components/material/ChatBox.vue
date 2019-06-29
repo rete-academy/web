@@ -1,152 +1,152 @@
 <template>
-    <div
-        class="chat-box"
-        :style="{
-            display: display,
-            bottom: bottom
-        }"
-    >
-        <div class="mini-nav">
-            <strong>{{ data.name | truncate(25) }}</strong>
-            <div class="icons">
-                <!-- fa
+  <div
+    class="chat-box"
+    :style="{
+      display: display,
+      bottom: bottom
+    }"
+  >
+    <div class="mini-nav">
+      <strong>{{ data.name | truncate(25) }}</strong>
+      <div class="icons">
+        <!-- fa
                     icon="window-minimize"
                     class="minimize"
                     @click="minimizeChat"
                 / -->
-                <fa
-                    icon="times"
-                    class="close"
-                    @click="closeChat"
-                />
-            </div>
-        </div>
-        <div class="container">
-            <div
-                v-chat-scroll="{ always: false, smooth: true }"
-                class="chat-container"
-            >
-                <div
-                    v-for="message in messages"
-                    :ref="message._id"
-                    :key="message._id"
-                    class="message"
-                >
-                    <img
-                        class="avatar"
-                        :src="avatar(message.user)"
-                    >
-                    <div class="text">
-                        <p class="info">
-                            <span class="name">
-                                <strong>{{ message.user.name }}</strong>
-                            </span>
-                            <span class="date">
-                                23/03/2016 20:40
-                            </span>
-                        </p>
-                        <p class="content">
-                            {{ message.content }}
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="chat-input">
-            <el-input
-                v-model="inputMessage"
-                placeholder="Type message, enter to send..."
-                @keyup.enter.native="sendMessage"
-            />
-        </div>
+        <fa
+          icon="times"
+          class="close"
+          @click="closeChat"
+        />
+      </div>
     </div>
+    <div class="container">
+      <div
+        v-chat-scroll="{ always: false, smooth: true }"
+        class="chat-container"
+      >
+        <div
+          v-for="message in messages"
+          :ref="message._id"
+          :key="message._id"
+          class="message"
+        >
+          <img
+            class="avatar"
+            :src="avatar(message.user)"
+          >
+          <div class="text">
+            <p class="info">
+              <span class="name">
+                <strong>{{ message.user.name }}</strong>
+              </span>
+              <span class="date">
+                23/03/2016 20:40
+              </span>
+            </p>
+            <p class="content">
+              {{ message.content }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="chat-input">
+      <el-input
+        v-model="inputMessage"
+        placeholder="Type message, enter to send..."
+        @keyup.enter.native="sendMessage"
+      />
+    </div>
+  </div>
 </template>
 <script>
 import consola from 'consola'
 import { mapGetters } from 'vuex'
 
 export default {
-    name: 'ChatBox',
+  name: 'ChatBox',
 
-    props: {
-        data: {
-            type: Object,
-            default: () => ({})
-        }
-    },
-
-    data() {
-        return {
-            display: 'none',
-            bottom: '0px',
-            inputMessage: ''
-        }
-    },
-
-    computed: {
-        ...mapGetters('conversations', [
-            'chatVisible',
-            'isConnected',
-            'currentId',
-            'conversation'
-        ]),
-
-        messages() {
-            if (this.data && this.chatVisible) {
-                return this.conversation.messages
-            }
-            return []
-        }
-    },
-
-    sockets: {
-        connect() {
-            consola.info('socket connected')
-        }
-    },
-
-    watch: {
-        chatVisible() {
-            if (this.chatVisible) {
-                this.display = 'block'
-                this.bottom = '0px'
-            } else {
-                this.display = 'none'
-                this.bottom = '0px'
-            }
-        }
-    },
-
-    methods: {
-        closeChat() {
-            this.$store.commit('conversations/SET_VISIBLE', {
-                visible: false,
-                material: ''
-            })
-        },
-
-        avatar(user) {
-            if (user.avatar && user.avatar.location) {
-                return user.avatar.location
-            }
-            return ''
-        },
-
-        async sendMessage() {
-            // consola.info('sending message')
-            // this.$socket.emit('chat_message', this.inputMessage)
-            if (this.inputMessage.length > 0) {
-                await this.$store.dispatch('conversations/ADD_MESSAGE', {
-                    id: this.conversation._id,
-                    data: {
-                        user: this.$auth.user._id,
-                        content: this.inputMessage
-                    }
-                })
-                this.inputMessage = ''
-            }
-        }
+  props: {
+    data: {
+      type: Object,
+      default: () => ({})
     }
+  },
+
+  data() {
+    return {
+      display: 'none',
+      bottom: '0px',
+      inputMessage: ''
+    }
+  },
+
+  computed: {
+    ...mapGetters('conversations', [
+      'chatVisible',
+      'isConnected',
+      'currentId',
+      'conversation'
+    ]),
+
+    messages() {
+      if (this.data && this.chatVisible) {
+        return this.conversation.messages
+      }
+      return []
+    }
+  },
+
+  sockets: {
+    connect() {
+      consola.info('socket connected')
+    }
+  },
+
+  watch: {
+    chatVisible() {
+      if (this.chatVisible) {
+        this.display = 'block'
+        this.bottom = '0px'
+      } else {
+        this.display = 'none'
+        this.bottom = '0px'
+      }
+    }
+  },
+
+  methods: {
+    closeChat() {
+      this.$store.commit('conversations/SET_VISIBLE', {
+        visible: false,
+        material: ''
+      })
+    },
+
+    avatar(user) {
+      if (user.avatar && user.avatar.location) {
+        return user.avatar.location
+      }
+      return ''
+    },
+
+    async sendMessage() {
+      // consola.info('sending message')
+      // this.$socket.emit('chat_message', this.inputMessage)
+      if (this.inputMessage.length > 0) {
+        await this.$store.dispatch('conversations/ADD_MESSAGE', {
+          id: this.conversation._id,
+          data: {
+            user: this.$auth.user._id,
+            content: this.inputMessage
+          }
+        })
+        this.inputMessage = ''
+      }
+    }
+  }
 }
 </script>
 <style lang="scss" scoped>

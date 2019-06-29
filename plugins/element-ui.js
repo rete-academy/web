@@ -7,5 +7,5 @@ import '@/assets/scss/global.scss'
 import '@/assets/scss/responsive.scss'
 
 export default () => {
-    Vue.use(Element, { locale })
+  Vue.use(Element, { locale })
 }

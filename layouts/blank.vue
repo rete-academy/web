@@ -1,13 +1,13 @@
 <template>
-    <el-container>
-        <el-main>
-            <nuxt />
-        </el-main>
-    </el-container>
+  <el-container>
+    <el-main>
+      <nuxt />
+    </el-main>
+  </el-container>
 </template>
 
 <script>
 export default {
-    name: 'Blank'
+  name: 'Blank'
 }
 </script>

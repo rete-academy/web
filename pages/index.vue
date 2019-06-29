@@ -1,81 +1,81 @@
 <template>
-    <div class="landing">
-        <section class="container intro">
-            <h1 class="flash">
-                “Khai dân trí, chấn dân khí, hậu dân sinh”
-                <small>– Phan Châu Trinh</small>
-            </h1>
-            <el-button
-                type="success"
-                class="jumbo-btn"
-                @click="goTo('')"
-            >
-                Chọn Khoá Học
-            </el-button>
-        </section>
+  <div class="landing">
+    <section class="container intro">
+      <h1 class="flash">
+        “Khai dân trí, chấn dân khí, hậu dân sinh”
+        <small>– Phan Châu Trinh</small>
+      </h1>
+      <el-button
+        type="success"
+        class="jumbo-btn"
+        @click="goTo('')"
+      >
+        Chọn Khoá Học
+      </el-button>
+    </section>
 
-        <section class="container who">
-            <div class="featured-paths">
-                <card-item
-                    v-for="path in paths"
-                    :key="path._id"
-                    :data="path"
-                    :width="150"
-                    class="path item"
-                    plain
-                    @click.native="goTo(path.slug)"
-                />
-            </div>
-            <div class="who-we-are">
-                <h3 class="title">
-                    Rete Academy là gì?
-                </h3>
-                <p class="text">
-                    Với niềm tin rằng, sự học chính là con đường duy nhất giúp người Việt, dù ở bất kỳ nơi nào trên thế giới, thoát khỏi đói nghèo, lạc hậu, sự ươn hèn và nhút nhát. Rete Academy ra đời với niềm tin đó và sẽ kiên trì đi theo tôn chỉ đó, mong sao cho có thể lan truyền lòng trân quý sự học đến với càng nhiều người càng tốt.
-                </p>
-            </div>
-        </section>
+    <section class="container who">
+      <div class="featured-paths">
+        <card-item
+          v-for="path in paths"
+          :key="path._id"
+          :data="path"
+          :width="150"
+          class="path item"
+          plain
+          @click.native="goTo(path.slug)"
+        />
+      </div>
+      <div class="who-we-are">
+        <h3 class="title">
+          Rete Academy là gì?
+        </h3>
+        <p class="text">
+          Với niềm tin rằng, sự học chính là con đường duy nhất giúp người Việt, dù ở bất kỳ nơi nào trên thế giới, thoát khỏi đói nghèo, lạc hậu, sự ươn hèn và nhút nhát. Rete Academy ra đời với niềm tin đó và sẽ kiên trì đi theo tôn chỉ đó, mong sao cho có thể lan truyền lòng trân quý sự học đến với càng nhiều người càng tốt.
+        </p>
+      </div>
+    </section>
 
-        <section class="container why">
-            <div class="third">
-                <h3 class="title">
-                    Tài liệu luôn được cập nhật theo xu hướng
-                </h3>
-                <p class="text">
-                    Ngôn ngữ lập trình cũng như công nghệ thay đổi với tốc độ chóng mặt, chúng ta cần phải chuẩn bị cho điều đó ngay trong lúc học. Ở đây, tài liệu luôn được cập nhật từ nhu cầu thực tế từ các công ty, startups hàng đầu.
-                </p>
-            </div>
-            <div class="third">
-                <h3 class="title">
-                    Người có kinh nghiệm thực tiễn dựng giáo án
-                </h3>
-                <p class="text">
-                    Bạn có thể học thuộc lòng, nhưng không thể thể hiện sự tự tin thông qua sách vở. Bằng việc học và thực hành từ kinh nghiệm thực tế của người đi trước, bạn biết rõ điều gì chờ đợi mình phía trước.
-                </p>
-            </div>
-            <div class="third">
-                <h3 class="title">
-                    Cơ hội nghề nghiệp với dự án thật
-                </h3>
-                <p class="text">
-                    Tốn nhiều tháng liền để làm đồ án tốt nghiệp rồi vứt xó? Ở đây bạn có thể quên điều đó đi. Chúng ta sẽ làm dự án thật, với người thật, việc thật. Cơ hội nghề nghiệp sẽ được khai mở ngay khi bạn chưa tốt nghiệp.
-                </p>
-            </div>
-        </section>
-        <section class="container start">
-            <div class="half">
-                <h2 class="title">
-                    Bắt đầu ngay hôm nay
-                </h2>
-                <el-button
-                    type="success"
-                    class="jumbo-btn"
-                    @click="goTo('')"
-                >
-                    Chọn Khoá Học
-                </el-button>
-            </div>
-            <!-- div class="half">
+    <section class="container why">
+      <div class="third">
+        <h3 class="title">
+          Tài liệu luôn được cập nhật theo xu hướng
+        </h3>
+        <p class="text">
+          Ngôn ngữ lập trình cũng như công nghệ thay đổi với tốc độ chóng mặt, chúng ta cần phải chuẩn bị cho điều đó ngay trong lúc học. Ở đây, tài liệu luôn được cập nhật từ nhu cầu thực tế từ các công ty, startups hàng đầu.
+        </p>
+      </div>
+      <div class="third">
+        <h3 class="title">
+          Người có kinh nghiệm thực tiễn dựng giáo án
+        </h3>
+        <p class="text">
+          Bạn có thể học thuộc lòng, nhưng không thể thể hiện sự tự tin thông qua sách vở. Bằng việc học và thực hành từ kinh nghiệm thực tế của người đi trước, bạn biết rõ điều gì chờ đợi mình phía trước.
+        </p>
+      </div>
+      <div class="third">
+        <h3 class="title">
+          Cơ hội nghề nghiệp với dự án thật
+        </h3>
+        <p class="text">
+          Tốn nhiều tháng liền để làm đồ án tốt nghiệp rồi vứt xó? Ở đây bạn có thể quên điều đó đi. Chúng ta sẽ làm dự án thật, với người thật, việc thật. Cơ hội nghề nghiệp sẽ được khai mở ngay khi bạn chưa tốt nghiệp.
+        </p>
+      </div>
+    </section>
+    <section class="container start">
+      <div class="half">
+        <h2 class="title">
+          Bắt đầu ngay hôm nay
+        </h2>
+        <el-button
+          type="success"
+          class="jumbo-btn"
+          @click="goTo('')"
+        >
+          Chọn Khoá Học
+        </el-button>
+      </div>
+      <!-- div class="half">
                 <h3>Đăng ký nhận tin mới</h3>
                 <el-form
                     :inline="true"
@@ -99,8 +99,8 @@
                     </el-form-item>
                 </el-form>
             </div -->
-        </section>
-    </div>
+    </section>
+  </div>
 </template>
 
 <script>
@@ -109,53 +109,53 @@ import { mapGetters } from 'vuex'
 import CardItem from '~/components/path/CardItem.vue'
 
 export default {
-    name: 'Home',
+  name: 'Home',
 
-    layout: 'landing',
+  layout: 'landing',
 
-    auth: false,
+  auth: false,
 
-    components: { CardItem },
+  components: { CardItem },
 
-    data() {
-        return {
-            doStuff: null,
-            form: {
-                email: ''
-            }
-        }
-    },
-
-    computed: {
-        ...mapGetters('paths', ['paths']),
-
-        featuredPaths() {
-            return this.paths.filter(o => o.featured)
-        }
-    },
-
-    created() {
-        this.doStuff = function (arg) {
-            consola.info('Run at ', arg)
-        }
-
-        this.doStuff('created')
-
-        if (this.paths.length === 0) this.$store.dispatch('paths/GET_PATHS')
-    },
-
-    mounted() {
-        this.doStuff('mounted')
-    },
-
-    methods: {
-        goTo(slug) {
-            this.$router.push(`/paths/${slug}`)
-        },
-
-        onSubmit() {
-        }
+  data() {
+    return {
+      doStuff: null,
+      form: {
+        email: ''
+      }
     }
+  },
+
+  computed: {
+    ...mapGetters('paths', ['paths']),
+
+    featuredPaths() {
+      return this.paths.filter(o => o.featured)
+    }
+  },
+
+  created() {
+    this.doStuff = function (arg) {
+      consola.info('Run at ', arg)
+    }
+
+    this.doStuff('created')
+
+    if (this.paths.length === 0) this.$store.dispatch('paths/GET_PATHS')
+  },
+
+  mounted() {
+    this.doStuff('mounted')
+  },
+
+  methods: {
+    goTo(slug) {
+      this.$router.push(`/paths/${slug}`)
+    },
+
+    onSubmit() {
+    }
+  }
 }
 </script>
 

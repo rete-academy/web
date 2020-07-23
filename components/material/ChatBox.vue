@@ -61,9 +61,10 @@
     </div>
   </div>
 </template>
+
 <script>
-import consola from 'consola'
-import { mapGetters } from 'vuex'
+import consola from 'consola';
+import { mapGetters } from 'vuex';
 
 export default {
   name: 'ChatBox',
@@ -71,16 +72,16 @@ export default {
   props: {
     data: {
       type: Object,
-      default: () => ({})
-    }
+      default: () => ({}),
+    },
   },
 
   data() {
     return {
       display: 'none',
       bottom: '0px',
-      inputMessage: ''
-    }
+      inputMessage: '',
+    };
   },
 
   computed: {
@@ -88,48 +89,48 @@ export default {
       'chatVisible',
       'isConnected',
       'currentId',
-      'conversation'
+      'conversation',
     ]),
 
     messages() {
       if (this.data && this.chatVisible) {
-        return this.conversation.messages
+        return this.conversation.messages;
       }
-      return []
-    }
+      return [];
+    },
   },
 
   sockets: {
     connect() {
-      consola.info('socket connected')
-    }
+      consola.info('socket connected');
+    },
   },
 
   watch: {
     chatVisible() {
       if (this.chatVisible) {
-        this.display = 'block'
-        this.bottom = '0px'
+        this.display = 'block';
+        this.bottom = '0px';
       } else {
-        this.display = 'none'
-        this.bottom = '0px'
+        this.display = 'none';
+        this.bottom = '0px';
       }
-    }
+    },
   },
 
   methods: {
     closeChat() {
       this.$store.commit('conversations/SET_VISIBLE', {
         visible: false,
-        material: ''
-      })
+        material: '',
+      });
     },
 
     avatar(user) {
       if (user.avatar && user.avatar.location) {
-        return user.avatar.location
+        return user.avatar.location;
       }
-      return ''
+      return '';
     },
 
     async sendMessage() {
@@ -140,15 +141,16 @@ export default {
           id: this.conversation._id,
           data: {
             user: this.$auth.user._id,
-            content: this.inputMessage
-          }
-        })
-        this.inputMessage = ''
+            content: this.inputMessage,
+          },
+        });
+        this.inputMessage = '';
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>
+
 <style lang="scss" scoped>
 .mini-nav {
     display: flex;

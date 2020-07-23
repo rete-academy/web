@@ -9,7 +9,6 @@
     />
   </section>
 </template>
-
 <script>
 import { mapState } from 'vuex'
 import CardItem from '~/components/path/CardItem.vue'
@@ -36,6 +35,5 @@ export default {
   }
 }
 </script>
-
 <style lang="scss" scoped>
 </style>

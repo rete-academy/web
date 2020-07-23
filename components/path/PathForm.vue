@@ -94,9 +94,8 @@
     </el-form>
   </el-dialog>
 </template>
-
 <script>
-import consola from 'consola'
+import consola from 'consola';
 
 export default {
   name: 'PathForm',
@@ -104,8 +103,8 @@ export default {
   props: {
     visible: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
 
   data() {
@@ -114,46 +113,46 @@ export default {
         name: '',
         slug: '',
         description: '',
-        image: ''
+        image: '',
       },
       file: null,
       loading: false,
-      taken: false
-    }
+      taken: false,
+    };
   },
 
   computed: {
     hasImage() {
       if (this.form.image || this.file) {
-        return true
+        return true;
       }
-      return false
+      return false;
     },
 
     uploadEndpoint() {
-      const baseUrl = this.$axios.defaults.baseURL || 'http://localhost:8000'
-      return `${baseUrl}/api/path/avatar`
+      const baseUrl = this.$axios.defaults.baseURL || 'http://localhost:8000';
+      return `${baseUrl}/api/path/avatar`;
     },
 
     uploadHeaders() {
       return {
         'Content-Type': 'application/x-www-form-urlencoded',
-        Authorization: this.$auth.getToken('local')
-      }
-    }
+        Authorization: this.$auth.getToken('local'),
+      };
+    },
   },
 
   watch: {
-    'form.name': function () {
+    'form.name': () => {
       if (this.form.name) {
-        this.form.slug = this.slugify(this.form.name)
+        this.form.slug = this.slugify(this.form.name);
       }
-    }
+    },
   },
 
   methods: {
     onChange(file) {
-      this.file = file
+      this.file = file;
     },
 
     handleClose() {
@@ -161,82 +160,85 @@ export default {
         name: '',
         slug: '',
         description: '',
-        image: 'http://www.markweb.in/primehouseware/images/noimage.png'
-      }
-      this.$emit('update:visible', false)
+        image: 'http://www.markweb.in/primehouseware/images/noimage.png',
+      };
+      this.$emit('update:visible', false);
     },
 
     onSubmit() {
-      consola.info('Begin add new path')
-      this.$nuxt.$loading.start()
+      consola.info('Begin add new path');
+      this.$nuxt.$loading.start();
       if (!this.taken) {
         this.$store.dispatch('paths/CREATE_PATH', {
           name: this.form.name,
-          description: this.form.description
+          description: this.form.description,
         }).then(() => {
-          this.handleClose()
-          this.$nuxt.$loading.finish()
+          this.handleClose();
+          this.$nuxt.$loading.finish();
         }).catch((err) => {
-          consola.error(err)
-        })
+          consola.error(err);
+        });
       }
     },
 
     async submitUpload() {
       try {
-        this.$nuxt.$loading.start()
-        const formData = new FormData()
-        formData.append('image', this.file.raw)
+        this.$nuxt.$loading.start();
+        const formData = new FormData();
+        formData.append('image', this.file.raw);
         await this.$axios.post(this.uploadEndpoint, formData, {
-          headers: this.uploadHeaders
-        })
+          headers: this.uploadHeaders,
+        });
         // await this.$store.dispatch('users/FETCH_USER')
-        this.$nuxt.$loading.finish()
+        this.$nuxt.$loading.finish();
         this.$message({
           message: 'Uploaded succesfully!',
-          type: 'success'
-        })
+          type: 'success',
+        });
       } catch (error) {
-        consola.error(error.message)
-        this.$nuxt.$loading.fail()
-        this.$message.error(`Oops, ${error.message}`)
+        consola.error(error.message);
+        this.$nuxt.$loading.fail();
+        this.$message.error(`Oops, ${error.message}`);
       }
     },
 
     checkPathBySlug() {
-      this.$nuxt.$loading.start()
+      this.$nuxt.$loading.start();
       this.$store.dispatch('paths/GET_PATH', this.form.slug)
-        .then((path) => {
-          this.taken = true
-          this.$nuxt.$loading.finish()
+        .then(() => {
+          this.taken = true;
+          this.$nuxt.$loading.finish();
         })
         .catch((err) => {
-          this.taken = false
-          this.$nuxt.$loading.fail()
-          consola.error(err)
-        })
+          this.taken = false;
+          this.$nuxt.$loading.fail();
+          consola.error(err);
+        });
     },
 
+    // Consider to use slugify plugin, fucking stupid Sang
     slugify(str) {
-      str = str.replace(/^\s+|\s+$/g, '') // trim
-      str = str.toLowerCase()
+      let localStr;
+      localStr = str.replace(/^\s+|\s+$/g, '').toLowerCase(); // trim
 
       // remove accents, swap ñ for n, etc
-      const from = 'àáäâèéëêìíïîòóöôùúüûñç·/_,:;'
-      const to = 'aaaaeeeeiiiioooouuuunc------'
+      const from = 'àáäâèéëêìíïîòóöôùúüûñç·/_,:;';
+      const to = 'aaaaeeeeiiiioooouuuunc------';
+
       for (let i = 0, l = from.length; i < l; i++) {
-        str = str.replace(new RegExp(from.charAt(i), 'g'), to.charAt(i))
+        localStr = localStr.replace(new RegExp(from.charAt(i), 'g'), to.charAt(i));
       }
 
-      str = str.replace(/[^a-z0-9 -]/g, '') // remove invalid chars
+      localStr = localStr
+        .replace(/[^a-z0-9 -]/g, '') // remove invalid chars
         .replace(/\s+/g, '-') // collapse whitespace and replace by -
-        .replace(/-+/g, '-') // collapse dashes
+        .replace(/-+/g, '-'); // collapse dashes
 
-      return str
-    }
+      return localStr;
+    },
 
-  }
-}
+  },
+};
 </script>
 
 <style lang="scss" scoped>

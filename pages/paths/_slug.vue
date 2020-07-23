@@ -70,7 +70,6 @@
     </div>
   </div>
 </template>
-
 <script>
 // import consola from 'consola'
 // import { mapState } from 'vuex'
@@ -150,7 +149,6 @@ export default {
   }
 }
 </script>
-
 <style lang="scss" scoped>
 .single-path {
     display: flex;

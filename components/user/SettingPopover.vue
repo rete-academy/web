@@ -69,7 +69,7 @@
   </el-popover>
 </template>
 <script>
-import consola from 'consola'
+import consola from 'consola';
 // import { mapGetters } from 'vuex'
 
 export default {
@@ -78,8 +78,8 @@ export default {
   props: {
     data: {
       type: Object,
-      default: () => ({})
-    }
+      default: () => ({}),
+    },
   },
 
   data() {
@@ -88,62 +88,62 @@ export default {
       defaultAvatar: 'http://placeimg.com/300/300/people',
       selectedSprints: null,
       changed: false,
-      position: {}
-    }
+      position: {},
+    };
   },
 
   computed: {
     profileImage() {
-      if (this.data.avatar && this.data.avatar.location &&
-                this.data.avatar.location.length > 0) {
-        return this.data.avatar.location
+      if (this.data.avatar && this.data.avatar.location
+                && this.data.avatar.location.length > 0) {
+        return this.data.avatar.location;
       }
-      return this.defaultAvatar
+      return this.defaultAvatar;
     },
 
     isAdmin() {
-      if (this.$auth.user.role.includes(0)) return true
-      return false
-    }
+      if (this.$auth.user.role.includes(0)) return true;
+      return false;
+    },
   },
 
   methods: {
     isLower(role) {
       if (this.$auth.user.role[0] >= role) {
-        return true
+        return true;
       }
-      return false
+      return false;
     },
 
     calculateRoles() {
-      this.role = this.data.role[0]
+      this.role = this.data.role[0];
     },
 
     handleSelection(selected) {
-      this.changed = true
-      this.$emit('selected', selected)
+      this.changed = true;
+      this.$emit('selected', selected);
     },
 
     handleReset() {
-      this.calculateRoles()
-      this.changed = false
+      this.calculateRoles();
+      this.changed = false;
     },
 
-    async handleSubmit(id) {
+    async handleSubmit() {
       try {
-        this.$nuxt.$loading.start()
+        this.$nuxt.$loading.start();
         await this.$store.dispatch('users/UPDATE_USER', {
           id: this.data._id,
-          data: { role: [this.role] }
-        })
-        this.$nuxt.$loading.finish()
+          data: { role: [this.role] },
+        });
+        this.$nuxt.$loading.finish();
       } catch (error) {
-        this.$nuxt.$loading.fail()
-        consola.info(error.message)
+        this.$nuxt.$loading.fail();
+        consola.info(error.message);
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>
 <style lang="scss" scoped>
 .buttons {

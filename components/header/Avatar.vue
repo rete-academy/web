@@ -42,35 +42,35 @@ export default {
   name: 'Avatar',
 
   data() {
-    return { }
+    return { };
   },
 
   computed: {
     profile() {
-      if (this.$auth.user) return this.$auth.user
-      return {}
-    }
+      if (this.$auth.user) return this.$auth.user;
+      return {};
+    },
   },
 
   methods: {
     handleCommand(command) {
       switch (command) {
-      case 'profile':
-        this.$router.push('/settings/profile')
-        break
-      case 'logout':
-        this.logOut()
-        break
-      default:
-        break
+        case 'profile':
+          this.$router.push('/settings/profile');
+          break;
+        case 'logout':
+          this.logOut();
+          break;
+        default:
+          break;
       }
     },
 
     async logOut() {
-      await this.$auth.logout()
-    }
-  }
-}
+      await this.$auth.logout();
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>

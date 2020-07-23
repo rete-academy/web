@@ -18,7 +18,11 @@
       label-position="top"
       hide-required-asterisk
     >
-      <el-form-item label="Email" prop="email" required>
+      <el-form-item
+        label="Email"
+        prop="email"
+        required
+      >
         <el-input
           v-model="input.email"
           type="email"
@@ -27,7 +31,11 @@
           @keyup.native.enter="onSubmit"
         />
       </el-form-item>
-      <el-form-item label="Password" prop="password" required>
+      <el-form-item
+        label="Password"
+        prop="password"
+        required
+      >
         <el-input
           v-model="input.password"
           type="password"
@@ -66,7 +74,6 @@
     </el-form>
   </div>
 </template>
-
 <script>
 import consola from 'consola'
 
@@ -159,38 +166,37 @@ export default {
   }
 }
 </script>
-
 <style lang="scss" scoped>
 .login-form {
-    h2 {
-        text-align: center;
-        margin: 0 auto 20px;
+  h2 {
+    text-align: center;
+    margin: 0 auto 20px;
+  }
+
+  .eye-icon {
+    width: 1.25em;
+    margin-right: 5px;
+
+    &:hover {
+      cursor: pointer;
+      color: #CCCCCC;
     }
+  }
 
-    .eye-icon {
-        width: 1.25em;
-        margin-right: 5px;
+  hr {
+    width: 80%;
+    color: #CCC;
+    margin: 20px auto 10px;
+  }
 
-        &:hover {
-            cursor: pointer;
-            color: #CCCCCC;
-        }
+  .forgot-btn {
+    width: 100%;
+    margin: 10px auto 0;
+    font-size: 12px;
+
+    &:hover {
+      border: none;
     }
-
-    hr {
-        width: 80%;
-        color: #CCC;
-        margin: 20px auto 10px;
-    }
-
-    .forgot-btn {
-        width: 100%;
-        margin: 10px auto 0;
-        font-size: 12px;
-
-        &:hover {
-            border: none;
-        }
-    }
+  }
 }
 </style>

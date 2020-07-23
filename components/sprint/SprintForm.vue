@@ -46,9 +46,8 @@
     </el-form>
   </el-dialog>
 </template>
-
 <script>
-import consola from 'consola'
+import consola from 'consola';
 
 export default {
   name: 'SprintForm',
@@ -56,47 +55,47 @@ export default {
   props: {
     visible: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
 
   data() {
     return {
       form: {
         name: '',
-        description: ''
+        description: '',
       },
       loading: false,
-      taken: false
-    }
+      taken: false,
+    };
   },
 
   methods: {
     handleClose() {
       this.form = {
         name: '',
-        description: ''
-      }
-      this.$emit('update:visible', false)
+        description: '',
+      };
+      this.$emit('update:visible', false);
     },
 
     onSubmit() {
       // consola.info('Begin add new sprint')
-      this.$nuxt.$loading.start()
+      this.$nuxt.$loading.start();
       this.$store.dispatch('sprints/CREATE_SPRINT', {
         name: this.form.name,
-        description: this.form.description
+        description: this.form.description,
       }).then(() => {
-        this.handleClose()
-        this.$nuxt.$loading.finish()
+        this.handleClose();
+        this.$nuxt.$loading.finish();
       }).catch((e) => {
-        this.$nuxt.$loading.fail()
-        consola.error(e.message)
-        this.$message.error(e.message)
-      })
-    }
-  }
-}
+        this.$nuxt.$loading.fail();
+        consola.error(e.message);
+        this.$message.error(e.message);
+      });
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>

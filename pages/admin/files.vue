@@ -139,9 +139,9 @@
   </div>
 </template>
 <script>
-import consola from 'consola'
-import { mapGetters } from 'vuex'
-import { chunk, flatten } from 'lodash'
+import consola from 'consola';
+import { mapGetters } from 'vuex';
+import { chunk, flatten } from 'lodash';
 // import SettingPopover from '@/components/user/SettingPopover'
 // import MaterialForm from '@/components/form/Material'
 
@@ -161,8 +161,8 @@ export default {
       currentPage: 1,
       pageSize: 7,
       filter: '',
-      userFormVisible: false
-    }
+      userFormVisible: false,
+    };
   },
 
   computed: {
@@ -170,26 +170,26 @@ export default {
     ...mapGetters('files', ['files']),
 
     paginatedFiles() {
-      return chunk(this.files.filter(o => this.matched(o.data.originalname)), this.pageSize)
+      return chunk(this.files.filter((o) => this.matched(o.data.originalname)), this.pageSize);
     },
 
     total() {
       // we need to do total this way to reflect correct total entries
       // after user filtering the results.
-      return flatten(this.paginatedFiles).length
+      return flatten(this.paginatedFiles).length;
     },
 
     uploadEndpoint() {
-      const baseUrl = this.$axios.defaults.baseURL || 'http://localhost:8000'
-      return `${baseUrl}/api/files/upload`
+      const baseUrl = this.$axios.defaults.baseURL || 'http://localhost:8000';
+      return `${baseUrl}/api/files/upload`;
     },
 
     uploadHeaders() {
       return {
         'Content-Type': 'application/x-www-form-urlencoded',
-        Authorization: this.$auth.getToken('local')
-      }
-    }
+        Authorization: this.$auth.getToken('local'),
+      };
+    },
   },
 
   /* async asyncData({ store, error }) {
@@ -205,64 +205,64 @@ export default {
   watch: {
     currentPage() {
       if (this.currentPage > 1) {
-        this.$router.push({ query: { page: this.currentPage } })
+        this.$router.push({ query: { page: this.currentPage } });
       } else {
-        this.$router.push({ query: {} })
+        this.$router.push({ query: {} });
       }
-    }
+    },
   },
 
   created() {
     if (this.$route.query.page && this.$route.query.page < this.paginatedFiles.length) {
-      this.currentPage = parseInt(this.$route.query.page, 10)
+      this.currentPage = parseInt(this.$route.query.page, 10);
     } else {
-      this.$router.push({ query: {} })
+      this.$router.push({ query: {} });
     }
   },
 
   methods: {
     matched(str) {
-      return str.toLowerCase().indexOf(this.filter.toLowerCase()) !== -1
+      return str.toLowerCase().indexOf(this.filter.toLowerCase()) !== -1;
     },
 
     selectionChange(selection) {
-      this.selectedFileIds = selection.map(o => o._id)
+      this.selectedFileIds = selection.map((o) => o._id);
     },
 
     selectText(id) {
-      this.$refs[id].select()
+      this.$refs[id].select();
     },
 
     isAdmin(user) {
       if (user && user.role) {
-        if (user.role.reduce((i, j) => i * j) === 0) return true
-        return false
+        if (user.role.reduce((i, j) => i * j) === 0) return true;
+        return false;
       }
-      return false
+      return false;
     },
 
     onChange(file) {
-      this.file = file
+      this.file = file;
     },
 
     handleCommand(command) {
       switch (command) {
-      case 'delete':
-        this.deleteFiles(this.selectedFileIds)
-        break
-      default:
-        break
+        case 'delete':
+          this.deleteFiles(this.selectedFileIds);
+          break;
+        default:
+          break;
       }
     },
 
     copyText(id) {
-      this.$copyText(this.$refs[id].value)
-      this.$refs[id].select()
+      this.$copyText(this.$refs[id].value);
+      this.$refs[id].select();
       this.$notify({
         duration: 1200,
         message: 'File URL copied successfully',
-        type: 'success'
-      })
+        type: 'success',
+      });
       /*
             // this.$refs[id].$refs.input.selectionStart
             // this.$refs[id].$refs.input.selectionEnd
@@ -277,25 +277,25 @@ export default {
 
     async submitUpload() {
       try {
-        this.loading = true
-        this.$nuxt.$loading.start()
-        const formData = new FormData()
-        formData.append('files', this.file.raw)
+        this.loading = true;
+        this.$nuxt.$loading.start();
+        const formData = new FormData();
+        formData.append('files', this.file.raw);
         await this.$axios.post(this.uploadEndpoint, formData, {
-          headers: this.uploadHeaders
-        })
-        await this.$store.dispatch('files/GET_FILES')
-        this.loading = false
-        this.$nuxt.$loading.finish()
+          headers: this.uploadHeaders,
+        });
+        await this.$store.dispatch('files/GET_FILES');
+        this.loading = false;
+        this.$nuxt.$loading.finish();
         this.$message({
           message: 'Uploaded succesfully!',
-          type: 'success'
-        })
+          type: 'success',
+        });
       } catch (error) {
-        consola.error(error.message)
-        this.$nuxt.$loading.fail()
-        this.loading = false
-        this.$message.error(`Oops, ${error.message}`)
+        consola.error(error.message);
+        this.$nuxt.$loading.fail();
+        this.loading = false;
+        this.$message.error(`Oops, ${error.message}`);
       }
     },
 
@@ -309,91 +309,91 @@ export default {
             confirmButtonClass: 'el-button--danger',
             cancelButtonText: 'Cancel',
             type: 'warning',
-            center: true
-          }
+            center: true,
+          },
         ).then(async () => {
-          this.loading = true
-          this.$nuxt.$loading.start()
-          await this.$store.dispatch('files/DELETE_FILES', ids)
+          this.loading = true;
+          this.$nuxt.$loading.start();
+          await this.$store.dispatch('files/DELETE_FILES', ids);
           this.$message({
             type: 'success',
             message: 'Delete completed',
             showClose: true,
-            duration: 1000
-          })
-          this.loading = false
-          this.$nuxt.$loading.finish()
+            duration: 1000,
+          });
+          this.loading = false;
+          this.$nuxt.$loading.finish();
         }).catch(() => {
           this.$message({
             type: 'info',
             message: 'Delete canceled',
             showClose: true,
-            duration: 1000
-          })
-        })
+            duration: 1000,
+          });
+        });
       } catch (e) {
-        this.$nuxt.$loading.fail()
-        consola.error(e.message)
-        this.$message.error(e.message)
+        this.$nuxt.$loading.fail();
+        consola.error(e.message);
+        this.$message.error(e.message);
       }
     },
 
     detectIcon(file) {
-      const fileName = file.split('.')
+      const fileName = file.split('.');
 
       switch (fileName[fileName.length - 1]) {
-      case 'png':
-      case 'jpg':
-      case 'gif':
-      case 'svg':
-      case 'jpeg':
-        return 'file-image'
-      case 'pdf':
-        return 'file-pdf'
-      case 'txt':
-      case 'log':
-        return 'file-alt'
-      case 'json':
-        return 'file'
-      case 'mov':
-      case 'webm':
-      case 'mp4':
-      case 'avi':
-        return 'file-video'
-      case 'doc':
-      case 'docx':
-        return 'file-word'
-      case 'xls':
-      case 'xlsx':
-        return 'file-excel'
-      case 'ppt':
-      case 'pptx':
-        return 'file-powerpoint'
-      case 'zip':
-      case 'rar':
-      case '7z':
-        return 'file-archive'
-      default:
-        return 'file'
+        case 'png':
+        case 'jpg':
+        case 'gif':
+        case 'svg':
+        case 'jpeg':
+          return 'file-image';
+        case 'pdf':
+          return 'file-pdf';
+        case 'txt':
+        case 'log':
+          return 'file-alt';
+        case 'json':
+          return 'file';
+        case 'mov':
+        case 'webm':
+        case 'mp4':
+        case 'avi':
+          return 'file-video';
+        case 'doc':
+        case 'docx':
+          return 'file-word';
+        case 'xls':
+        case 'xlsx':
+          return 'file-excel';
+        case 'ppt':
+        case 'pptx':
+          return 'file-powerpoint';
+        case 'zip':
+        case 'rar':
+        case '7z':
+          return 'file-archive';
+        default:
+          return 'file';
       }
     },
 
     isImage(file) {
-      const fileName = file.split('.')
+      const fileName = file.split('.');
 
       switch (fileName[fileName.length - 1]) {
-      case 'png':
-      case 'svg':
-      case 'jpg':
-      case 'gif':
-      case 'jpeg':
-        return true
-      default:
-        return false
+        case 'png':
+        case 'svg':
+        case 'jpg':
+        case 'gif':
+        case 'jpeg':
+          return true;
+        default:
+          return false;
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>
 <style lang="scss" scoped>
 .paths-table {

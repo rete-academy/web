@@ -59,7 +59,6 @@
     </div>
   </div>
 </template>
-
 <script>
 import consola from 'consola'
 import { mapGetters } from 'vuex'
@@ -173,7 +172,6 @@ export default {
   }
 }
 </script>
-
 <style lang="scss" scoped>
 .profile {
     display: flex;

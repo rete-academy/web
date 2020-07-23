@@ -23,9 +23,8 @@
     </div>
   </el-card>
 </template>
-
 <script>
-import consola from 'consola'
+import consola from 'consola';
 
 export default {
   name: 'CardItem',
@@ -33,31 +32,31 @@ export default {
   props: {
     data: {
       type: Object,
-      default: () => ({})
+      default: () => ({}),
     },
     plain: {
       type: Boolean,
-      default: false
+      default: false,
     },
     width: {
       type: Number,
-      default: 300
-    }
+      default: 300,
+    },
   },
 
   data() {
     return {
-    }
+    };
   },
 
   computed: {
     path() {
-      return { ...this.data }
-    }
+      return { ...this.data };
+    },
   },
 
   created() {
-    consola.info(this.plain)
+    consola.info(this.plain);
   },
 
   methods: {
@@ -65,11 +64,11 @@ export default {
       // consola.info(slug)
       this.$router.push({
         path: `/paths/${slug}`,
-        params: { slug }
-      })
-    }
-  }
-}
+        params: { slug },
+      });
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>

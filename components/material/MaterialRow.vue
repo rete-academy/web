@@ -30,10 +30,9 @@
     </div>
   </div>
 </template>
-
 <script>
-import consola from 'consola'
-import { mapGetters } from 'vuex'
+import consola from 'consola';
+import { mapGetters } from 'vuex';
 
 export default {
   name: 'MaterialRow',
@@ -41,12 +40,12 @@ export default {
   props: {
     data: {
       type: Object,
-      default: () => ({})
-    }
+      default: () => ({}),
+    },
   },
 
   data() {
-    return {}
+    return {};
   },
 
   computed: {
@@ -54,80 +53,80 @@ export default {
 
     isChecked() {
       const found = this.$auth.user.progress
-        .find(o => o.material === this.data.material._id &&
-                    o.sprint === this.data.sprint._id &&
-                    o.path === this.data.path._id)
-      if (found) return !!found.status
-      return false
+        .find((o) => o.material === this.data.material._id
+                    && o.sprint === this.data.sprint._id
+                    && o.path === this.data.path._id);
+      if (found) return !!found.status;
+      return false;
     },
 
     stepId() {
       const found = this.$auth.user.progress
-        .find(o => o.material === this.data.material._id &&
-                    o.sprint === this.data.sprint._id &&
-                    o.path === this.data.path._id)
-      if (found) return found._id
-      return ''
+        .find((o) => o.material === this.data.material._id
+                    && o.sprint === this.data.sprint._id
+                    && o.path === this.data.path._id);
+      if (found) return found._id;
+      return '';
     },
 
     isNew() {
       const found = this.$auth.user.progress
-        .find(o => o.material === this.data.material._id &&
-                    o.sprint === this.data.sprint._id &&
-                    o.path === this.data.path._id)
-      if (found) return false
-      return true
-    }
+        .find((o) => o.material === this.data.material._id
+                    && o.sprint === this.data.sprint._id
+                    && o.path === this.data.path._id);
+      if (found) return false;
+      return true;
+    },
   },
 
   methods: {
     updateStatus(status) {
-      this.$nuxt.$loading.start()
+      this.$nuxt.$loading.start();
       this.$store.dispatch('users/UPDATE_STATUS', {
         userId: this.$auth.user._id,
         data: {
           id: this.stepId,
-          status: status ? 1 : 0
-        }
+          status: status ? 1 : 0,
+        },
       }).then(() => {
-        this.$auth.fetchUser()
-        this.$nuxt.$loading.finish()
+        this.$auth.fetchUser();
+        this.$nuxt.$loading.finish();
       }).catch((e) => {
-        this.$nuxt.$loading.fail()
-        consola.error(e.message)
-        this.$message.error(e.message)
-      })
+        this.$nuxt.$loading.fail();
+        consola.error(e.message);
+        this.$message.error(e.message);
+      });
     },
 
     copy() {
-      this.$nuxt.$loading.start()
+      this.$nuxt.$loading.start();
       this.$store.dispatch('users/UPDATE_PROGRESS', {
         userId: this.$auth.user._id,
         data: {
           path: this.data.path._id,
           sprint: this.data.sprint._id,
           material: this.data.material._id,
-          status: 0
-        }
+          status: 0,
+        },
       }).then(() => {
-        this.$auth.fetchUser()
-        this.$nuxt.$loading.finish()
+        this.$auth.fetchUser();
+        this.$nuxt.$loading.finish();
       }).catch((e) => {
-        this.$nuxt.$loading.fail()
-        consola.error(e.message)
-        this.$message.error(e.message)
-      })
+        this.$nuxt.$loading.fail();
+        consola.error(e.message);
+        this.$message.error(e.message);
+      });
     },
 
     openChat(id) {
-      this.$emit('chat-open', this.data.material)
+      this.$emit('chat-open', this.data.material);
       this.$store.commit('conversations/SET_VISIBLE', {
         visible: true,
-        material: id
-      })
-    }
-  }
-}
+        material: id,
+      });
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>

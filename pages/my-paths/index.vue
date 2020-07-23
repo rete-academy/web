@@ -49,7 +49,6 @@
     />
   </section>
 </template>
-
 <script>
 // import consola from 'consola'
 import { mapGetters } from 'vuex'
@@ -122,7 +121,6 @@ export default {
   }
 }
 </script>
-
 <style lang="scss" scoped>
 h2 {
     font-size: 32px;
@@ -141,8 +139,6 @@ h2 {
     overflow-y: hidden;
     overflow-x: scroll;
     background: #F5F5F5;
-}
-.progress-inner {
 }
 .el-steps {
     text-align: center;

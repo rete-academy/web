@@ -74,7 +74,7 @@
 </template>
 <script>
 // import consola from 'consola'
-import { mapState } from 'vuex'
+import { mapState } from 'vuex';
 
 export default {
   name: 'SprintPopover',
@@ -82,71 +82,72 @@ export default {
   props: {
     data: {
       type: Object,
-      default: () => ({})
-    }
+      default: () => ({}),
+    },
   },
 
   data() {
     return {
       selectedSprints: null,
       changed: false,
-      position: {}
-    }
+      position: {},
+    };
   },
 
   computed: {
     ...mapState('paths', ['paths']),
-    ...mapState('sprints', ['sprints'])
+    ...mapState('sprints', ['sprints']),
   },
 
   watch: {
     position: {
       handler(pos) {
-        this.changed = true
-        this.$emit('positions-changed', this.convertPositions(pos))
+        this.changed = true;
+        this.$emit('positions-changed', this.convertPositions(pos));
       },
-      deep: true
-    }
+      deep: true,
+    },
   },
 
   methods: {
     convertPositions(pos) {
-      const toNum = {}
+      const toNum = {};
+      // eslint-disable-next-line
       for (const id in pos) {
-        toNum[id] = pos[id] ? parseInt(pos[id], 10) : 0
+        toNum[id] = pos[id] ? parseInt(pos[id], 10) : 0;
       }
       // consola.info(toNum)
-      return toNum
+      return toNum;
     },
     /*
          * Calculate and pre-select the sprints that already included
          * into this path.
          */
     calculateSelections() {
-      this.$refs[this.data._id].clearSelection()
-      this.position = this.convertPositions(this.data.meta.position || {})
+      this.$refs[this.data._id].clearSelection();
+      this.position = this.convertPositions(this.data.meta.position || {});
       this.data.sprints.forEach((s) => {
-        const index = this.sprints.findIndex(e => e._id === s._id)
-        this.$refs[this.data._id].toggleRowSelection(this.sprints[index], 'selected')
-      })
+        const index = this.sprints.findIndex((e) => e._id === s._id);
+        this.$refs[this.data._id].toggleRowSelection(this.sprints[index], 'selected');
+      });
     },
 
     handleSelections(selections) {
-      this.changed = true
-      this.selectedSprints = selections
-      this.$emit('selected', selections)
+      this.changed = true;
+      this.selectedSprints = selections;
+      this.$emit('selected', selections);
     },
 
     handleReset() {
-      this.calculateSelections()
-      this.changed = false
+      this.calculateSelections();
+      this.changed = false;
     },
 
     handleSubmit(id) {
-      this.$emit('submit', id)
-    }
-  }
-}
+      this.$emit('submit', id);
+    },
+  },
+};
 </script>
 <style lang="scss" scoped>
 .buttons {

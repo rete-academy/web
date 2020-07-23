@@ -42,9 +42,8 @@
     <avatar />
   </div>
 </template>
-
 <script>
-import Avatar from '@/components/header/Avatar'
+import Avatar from '@/components/header/Avatar';
 // import { mapGetters } from 'vuex'
 // import { displayName } from '@/mixins'
 // import errorHandler from '@/common/error.handler'
@@ -62,25 +61,25 @@ export default {
   data() {
     return {
       language: 'fi',
-      visible: false
-    }
+      visible: false,
+    };
   },
 
   computed: {
     user() {
-      if (this.$auth.user) return this.$auth.user
-      return {}
+      if (this.$auth.user) return this.$auth.user;
+      return {};
     },
 
     isLoggedIn() {
-      return this.$auth.loggedIn
-    }
+      return this.$auth.loggedIn;
+    },
   },
 
   watch: {
     language() {
-      this.changeLanguage(this.language)
-    }
+      this.changeLanguage(this.language);
+    },
   },
 
   created() {
@@ -88,37 +87,37 @@ export default {
 
   methods: {
     isAdmin(user) {
-      if (user.role) return user.role.includes(0)
-      return false
+      if (user.role) return user.role.includes(0);
+      return false;
     },
 
     goTo(string) {
-      this.$router.push(string)
-      this.visible = false
+      this.$router.push(string);
+      this.visible = false;
     },
 
     handleCommand(command) {
       switch (command) {
-      case 'profile':
-        this.$router.push('/profile')
-        break
-      case 'signout':
-        this.signOut()
-        break
-      default:
-        break
+        case 'profile':
+          this.$router.push('/profile');
+          break;
+        case 'signout':
+          this.signOut();
+          break;
+        default:
+          break;
       }
     },
 
     changeLanguage(language) {
-      this.$i18n.locale = language
-      this.language = language
-      this.visible = false
+      this.$i18n.locale = language;
+      this.language = language;
+      this.visible = false;
     },
 
-    signOut() { }
-  }
-}
+    signOut() { },
+  },
+};
 </script>
 
 <style lang="scss" scoped>

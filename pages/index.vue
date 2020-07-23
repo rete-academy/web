@@ -102,7 +102,6 @@
     </section>
   </div>
 </template>
-
 <script>
 import consola from 'consola'
 import { mapGetters } from 'vuex'

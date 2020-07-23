@@ -47,7 +47,6 @@
     </el-form>
   </div>
 </template>
-
 <script>
 import consola from 'consola'
 import zxcvbn from 'zxcvbn'

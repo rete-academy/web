@@ -34,7 +34,6 @@
     </el-form>
   </div>
 </template>
-
 <script>
 import consola from 'consola'
 
@@ -87,7 +86,6 @@ export default {
   }
 }
 </script>
-
 <style lang="scss" scoped>
 .forgot-form {
     h2 {

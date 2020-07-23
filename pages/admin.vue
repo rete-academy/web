@@ -35,10 +35,8 @@
     </el-menu>
 
     <nuxt-child class="main-content" />
-    </el-row>
   </div>
 </template>
-
 <script>
 // import consola from 'consola'
 // import { mapGetters } from 'vuex'
@@ -88,7 +86,6 @@ export default {
   }
 }
 </script>
-
 <style lang="scss" scoped>
 // Test
 .main-content {

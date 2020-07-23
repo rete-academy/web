@@ -27,15 +27,14 @@
     </p>
   </div>
 </template>
-
 <script>
 export default {
   name: 'Footer',
 
   computed: {
-    version() { return process.env.version }
-  }
-}
+    version: () => process.env.version || '1.0.0',
+  },
+};
 </script>
 <style scoped>
 .social a {

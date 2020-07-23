@@ -101,11 +101,10 @@
     </div>
   </el-popover>
 </template>
-
 <script>
 // import consola from 'consola'
-import { chunk, flatten } from 'lodash'
-import { mapGetters } from 'vuex'
+import { chunk, flatten } from 'lodash';
+import { mapGetters } from 'vuex';
 
 export default {
   name: 'MaterialPopover',
@@ -113,8 +112,8 @@ export default {
   props: {
     data: {
       type: Object,
-      default: () => ({})
-    }
+      default: () => ({}),
+    },
   },
 
   data() {
@@ -125,8 +124,8 @@ export default {
       filter: '',
       selectedMaterials: null,
       changed: false,
-      position: {}
-    }
+      position: {},
+    };
   },
 
   computed: {
@@ -136,57 +135,58 @@ export default {
 
     paginated() {
       return chunk(this.materials
-        .filter(o => this.matched(o.name)), this.pageSize)
+        .filter((o) => this.matched(o.name)), this.pageSize);
     },
 
     total() {
       // we need to do total this way to reflect correct total entries
       // after user filtering the results.
-      return flatten(this.paginated).length
+      return flatten(this.paginated).length;
     },
 
     currentData() {
-      return this.paginated[this.currentPage - 1]
+      return this.paginated[this.currentPage - 1];
     },
 
     tableId() {
-      return this.data._id + this.currentPage
-    }
+      return this.data._id + this.currentPage;
+    },
   },
 
   watch: {
     position: {
       handler(pos) {
-        this.changed = true
-        this.$emit('positions-changed', this.convertPositions(pos))
+        this.changed = true;
+        this.$emit('positions-changed', this.convertPositions(pos));
       },
-      deep: true
+      deep: true,
     },
 
     filter() {
-    }
+    },
   },
 
   created() {
-    this.position = this.convertPositions(this.data.meta.position || {})
+    this.position = this.convertPositions(this.data.meta.position || {});
   },
 
   updated() {
-    this.calculateSelections()
+    this.calculateSelections();
   },
 
   methods: {
     matched(str) {
-      return str.toLowerCase().indexOf(this.filter.toLowerCase()) !== -1
+      return str.toLowerCase().indexOf(this.filter.toLowerCase()) !== -1;
     },
 
     convertPositions(pos) {
-      const toNum = {}
+      const toNum = {};
+      // eslint-disable-next-line
       for (const id in pos) {
-        toNum[id] = pos[id] ? parseInt(pos[id], 10) : 0
+        toNum[id] = pos[id] ? parseInt(pos[id], 10) : 0;
       }
       // consola.info(toNum)
-      return toNum
+      return toNum;
     },
 
     /*
@@ -196,27 +196,27 @@ export default {
     calculateSelections() {
       // this.$refs[tableId].clearSelection()
       this.data.materials.forEach((s) => {
-        const index = this.materials.findIndex(e => e._id === s._id)
-        this.$refs[this.tableId].toggleRowSelection(this.materials[index], 'selected')
-      })
+        const index = this.materials.findIndex((e) => e._id === s._id);
+        this.$refs[this.tableId].toggleRowSelection(this.materials[index], 'selected');
+      });
     },
 
     handleSelections(selections) {
-      this.changed = true
-      this.selectedSprints = selections
-      this.$emit('selected', selections)
+      this.changed = true;
+      this.selectedSprints = selections;
+      this.$emit('selected', selections);
     },
 
     handleReset() {
-      this.calculateSelections()
-      this.changed = false
+      this.calculateSelections();
+      this.changed = false;
     },
 
     handleSubmit(id) {
-      this.$emit('submit', id)
-    }
-  }
-}
+      this.$emit('submit', id);
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>

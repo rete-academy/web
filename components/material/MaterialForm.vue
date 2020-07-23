@@ -78,10 +78,9 @@
     </el-form>
   </el-dialog>
 </template>
-
 <script>
-import consola from 'consola'
-import { mapGetters } from 'vuex'
+import consola from 'consola';
+import { mapGetters } from 'vuex';
 
 export default {
   name: 'MaterialForm',
@@ -89,12 +88,12 @@ export default {
   props: {
     user: {
       type: Object,
-      default: () => ({})
+      default: () => ({}),
     },
     visible: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
 
   data() {
@@ -103,12 +102,11 @@ export default {
         url: '',
         name: '',
         description: '',
-        image: ''
+        image: '',
       },
       loading: false,
       fetched: false,
-      validUrl: false
-    }
+    };
   },
 
   computed: {
@@ -116,48 +114,46 @@ export default {
 
     localSelected: {
       get() {
-        return this.selectedSprint
+        return this.selectedSprint;
       },
       set(newValue) {
-        this.$store.commit('sprints/SET_SELECTED_SRPINT', newValue)
-      }
-    }
+        this.$store.commit('sprints/SET_SELECTED_SRPINT', newValue);
+      },
+    },
   },
 
   watch: {
-    'form.url': function () {
-      this.isValidUrl(this.form.url)
-      if (this.form.url && this.validUrl) {
-        this.loading = true
-        this.$nuxt.$loading.start()
-        this.$axios.post(
-          'https://api.linkpreview.net',
-          {
+    'form.url': () => {
+      if (this.form.url && this.isValidUrl(this.form.url)) {
+        this.loading = true;
+        this.$nuxt.$loading.start();
+        this.$axios
+          .post('https://api.linkpreview.net', {
             q: this.form.url,
-            key: '5c6e71509eafb0595e5860fe9c5eaba82fb617087dbc1'
-          }
-        ).then((res) => {
-          if (res) {
-            this.fetched = true
-            this.form.name = res.data.title
-            this.form.description = res.data.description
-            this.form.image = res.data.image
+            key: '5c6e71509eafb0595e5860fe9c5eaba82fb617087dbc1',
+          })
+          .then((res) => {
+            if (res) {
+              this.fetched = true;
+              this.form.name = res.data.title;
+              this.form.description = res.data.description;
+              this.form.image = res.data.image;
 
-            this.loading = false
-            this.$nuxt.$loading.finish()
-          }
-        }).catch((error) => {
-          this.loading = false
-          this.$nuxt.$loading.fail()
-          consola.error(error)
-        })
+              this.loading = false;
+              this.$nuxt.$loading.finish();
+            }
+          }).catch((error) => {
+            this.loading = false;
+            this.$nuxt.$loading.fail();
+            consola.error(error);
+          });
       }
-    }
+    },
   },
 
   created() {
     if (this.sprints.length === 0) {
-      this.$store.dispatch('sprints/GET_SPRINTS')
+      this.$store.dispatch('sprints/GET_SPRINTS');
     }
   },
 
@@ -167,38 +163,37 @@ export default {
         url: '',
         name: '',
         description: '',
-        image: ''
-      }
-      this.fetched = false
-      this.$emit('update:visible', false)
+        image: '',
+      };
+      this.fetched = false;
+      this.$emit('update:visible', false);
     },
 
     onSubmit() {
-      this.$nuxt.$loading.start()
+      this.$nuxt.$loading.start();
       this.$store.dispatch('materials/CREATE_MATERIAL', this.form)
         .then((result) => {
           if (this.localSelected) {
             this.$store.dispatch('sprints/ADD_MATERIALS', {
               sprintId: this.localSelected,
-              materialIds: result._id
-            })
+              materialIds: result._id,
+            });
           }
-          this.handleClose()
-          this.$nuxt.$loading.finish()
+          this.handleClose();
+          this.$nuxt.$loading.finish();
         }).catch((e) => {
-          this.$nuxt.$loading.fail()
-          consola.error(e.message)
-          this.$message.error(e.message)
-        })
+          this.$nuxt.$loading.fail();
+          consola.error(e.message);
+          this.$message.error(e.message);
+        });
     },
 
     isValidUrl(url) {
-      const regex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)/
-      this.validUrl = regex.test(url)
-      return this.validUrl
-    }
-  }
-}
+      const regex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)/;
+      return regex.test(url);
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>

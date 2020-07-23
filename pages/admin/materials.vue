@@ -80,7 +80,6 @@
     <material-form :visible.sync="formVisible" />
   </div>
 </template>
-
 <script>
 import consola from 'consola'
 import { mapState } from 'vuex'

@@ -121,8 +121,8 @@
   </div>
 </template>
 <script>
-import consola from 'consola'
-import zxcvbn from 'zxcvbn'
+import consola from 'consola';
+import zxcvbn from 'zxcvbn';
 
 export default {
   name: 'SignUpForm',
@@ -136,7 +136,7 @@ export default {
       input: {
         email: '',
         name: '',
-        password: ''
+        password: '',
       },
       acceptTos: true,
       dialogVisible: false,
@@ -150,26 +150,26 @@ export default {
         name: [{
           required: true,
           message: 'Name is required',
-          trigger: 'blur'
+          trigger: 'blur',
         }],
         email: [{
           type: 'email',
           message: 'Please input correct email address',
-          trigger: ['blur']
+          trigger: ['blur'],
         }],
         password: [{
           required: true,
           validator: this.checkPass,
-          trigger: ['blur', 'change']
-        }]
-      }
-    }
+          trigger: ['blur', 'change'],
+        }],
+      },
+    };
   },
 
   computed: {
     score() {
-      return zxcvbn(this.input.password).score
-    }
+      return zxcvbn(this.input.password).score;
+    },
   },
 
   created() {
@@ -179,56 +179,56 @@ export default {
 
   methods: {
     onAccept() {
-      this.acceptTos = true
-      this.dialogVisible = false
+      this.acceptTos = true;
+      this.dialogVisible = false;
     },
 
     onDecline() {
-      this.acceptTos = false
-      this.dialogVisible = false
+      this.acceptTos = false;
+      this.dialogVisible = false;
     },
 
     handleIconClick() {
-      this.showPassword = !this.showPassword
+      this.showPassword = !this.showPassword;
       if (this.showPassword) {
-        this.currentType = 'text'
-        this.passwordIcon = 'eye'
+        this.currentType = 'text';
+        this.passwordIcon = 'eye';
 
         const countDown = setInterval(() => {
-          this.count -= 1
+          this.count -= 1;
           if (this.count <= 0) {
-            clearInterval(countDown)
-            this.currentType = 'password'
-            this.passwordIcon = 'eye-slash'
-            this.count = 10
+            clearInterval(countDown);
+            this.currentType = 'password';
+            this.passwordIcon = 'eye-slash';
+            this.count = 10;
           }
-        }, 1000)
+        }, 1000);
       } else {
-        this.currentType = 'password'
-        this.passwordIcon = 'eye-slash'
+        this.currentType = 'password';
+        this.passwordIcon = 'eye-slash';
       }
     },
 
     checkPass(rule, value, callback) {
       if (!value) {
-        return callback(new Error('Please input password'))
+        callback(new Error('Please input password'));
       }
       setTimeout(() => {
         if (this.score < 2) {
-          callback(new Error('Password is too weak'))
+          callback(new Error('Password is too weak'));
         } else {
-          callback()
+          callback();
         }
-      }, 500)
+      }, 500);
     },
 
     openDialog(string) {
-      this.dialogVisible = true
+      this.dialogVisible = true;
       if (string === 'tos') {
-        this.link = process.env.VUE_APP_TOS_LINK
+        this.link = process.env.VUE_APP_TOS_LINK;
         // console.log(this.link, process.env.VUE_APP_TOS_LINK);
       } else {
-        this.link = process.env.VUE_APP_PRIVACY_LINK
+        this.link = process.env.VUE_APP_PRIVACY_LINK;
         // console.log(this.link, process.env.VUE_APP_PRIVACY_LINK);
       }
     },
@@ -244,34 +244,34 @@ export default {
                 confirmButtonText: 'OK',
                 cancelButtonText: 'Choose Stronger Password',
                 type: 'warning',
-                center: true
-              }
+                center: true,
+              },
             ).then(() => {
-              this.handleSignUp()
-            }).catch(() => {})
+              this.handleSignUp();
+            }).catch(() => {});
           } else {
-            this.handleSignUp()
+            this.handleSignUp();
           }
         }
-      })
+      });
     },
 
     handleSignUp() {
       if (this.acceptTos) {
-        this.$nuxt.$loading.start()
+        this.$nuxt.$loading.start();
         this.$store.dispatch('users/SIGN_UP', this.input)
           .then((res) => {
-            this.$nuxt.$loading.finish()
-            this.finished = true
-            consola.info(res)
+            this.$nuxt.$loading.finish();
+            this.finished = true;
+            consola.info(res);
           }).catch((err) => {
-            this.$nuxt.$loading.fail()
-            this.$message.error(err.message)
-          })
+            this.$nuxt.$loading.fail();
+            this.$message.error(err.message);
+          });
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

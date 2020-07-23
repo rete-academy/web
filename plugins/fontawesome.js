@@ -1,5 +1,5 @@
-import Vue from 'vue'
-import { library } from '@fortawesome/fontawesome-svg-core'
+import Vue from 'vue';
+import { library } from '@fortawesome/fontawesome-svg-core';
 
 // please note: the Font Awesome icon class is kebab-case
 // but we import and declare it here in camelCase
@@ -48,14 +48,14 @@ import {
   faUserMinus,
   faUserShield,
   faUserTimes,
-  faWindowMinimize
-} from '@fortawesome/free-solid-svg-icons'
+  faWindowMinimize,
+} from '@fortawesome/free-solid-svg-icons';
 import {
   faFacebook,
-  faTwitter
-} from '@fortawesome/free-brands-svg-icons'
+  faTwitter,
+} from '@fortawesome/free-brands-svg-icons';
 // } from '@fortawesome/free-regular-svg-icons'
-import { FontAwesomeIcon, FontAwesomeLayers } from '@fortawesome/vue-fontawesome'
+import { FontAwesomeIcon, FontAwesomeLayers } from '@fortawesome/vue-fontawesome';
 
 library.add(
   faChevronDown,
@@ -102,8 +102,8 @@ library.add(
   faWindowMinimize,
 
   faFacebook,
-  faTwitter
-)
+  faTwitter,
+);
 
-Vue.component('fa', FontAwesomeIcon)
-Vue.component('fa-layer', FontAwesomeLayers)
+Vue.component('fa', FontAwesomeIcon);
+Vue.component('fa-layer', FontAwesomeLayers);

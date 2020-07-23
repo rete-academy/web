@@ -44,47 +44,47 @@
 export default {
   name: 'AdminView',
 
-  data() {
-    return {
-      activeIndex: this.$route.fullPath,
-      materialFormVisible: false
+  async asyncData({ store, error }) {
+    try {
+      if (store.getters['paths/paths'].length === 0) {
+        await store.dispatch('paths/GET_PATHS');
+      }
+      if (store.getters['sprints/sprints'].length === 0) {
+        await store.dispatch('sprints/GET_SPRINTS');
+      }
+      if (store.getters['materials/materials'].length === 0) {
+        await store.dispatch('materials/GET_MATERIALS');
+      }
+      if (store.getters['users/users'].length === 0) {
+        await store.dispatch('users/GET_USERS');
+      }
+      if (store.getters['files/files'].length === 0) {
+        await store.dispatch('files/GET_FILES');
+      }
+    } catch (e) {
+      error({ message: e, statusCode: 404 });
     }
   },
 
-  async asyncData({ params, store, error }) {
-    try {
-      if (store.getters['paths/paths'].length === 0) {
-        await store.dispatch('paths/GET_PATHS')
-      }
-      if (store.getters['sprints/sprints'].length === 0) {
-        await store.dispatch('sprints/GET_SPRINTS')
-      }
-      if (store.getters['materials/materials'].length === 0) {
-        await store.dispatch('materials/GET_MATERIALS')
-      }
-      if (store.getters['users/users'].length === 0) {
-        await store.dispatch('users/GET_USERS')
-      }
-      if (store.getters['files/files'].length === 0) {
-        await store.dispatch('files/GET_FILES')
-      }
-    } catch (e) {
-      error({ message: e, statusCode: 404 })
-    }
+  data() {
+    return {
+      activeIndex: this.$route.fullPath,
+      materialFormVisible: false,
+    };
   },
 
   mounted() {
     if (this.activeIndex === '/admin') {
-      this.$router.push('/admin/paths')
-      this.activeIndex = '/admin/paths'
+      this.$router.push('/admin/paths');
+      this.activeIndex = '/admin/paths';
     }
   },
 
   methods: {
     handleClose() {},
-    handleOpen() {}
-  }
-}
+    handleOpen() {},
+  },
+};
 </script>
 <style lang="scss" scoped>
 // Test

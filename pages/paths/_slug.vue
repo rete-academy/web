@@ -82,37 +82,37 @@ export default {
 
   data() {
     return {
-      activeItems: []
-    }
+      activeItems: [],
+    };
   },
 
   computed: {
     totalMaterials() {
-      let sum = 0
+      let sum = 0;
       if (this.sprints && this.sprints.length > 0) {
         this.sprints.forEach((s) => {
           // consola.info(s.materials)
-          sum += s.materials.length
-        })
-        return sum
+          sum += s.materials.length;
+        });
+        return sum;
       }
-      return 0
+      return 0;
     },
 
     isEnrolled() {
       if (this.$auth.user && this.$auth.user.progress) {
-        return !!this.$auth.user.progress.find(o => o.path === this.$data._id)
+        return !!this.$auth.user.progress.find((o) => o.path === this.$data._id);
       }
-      return false
-    }
+      return false;
+    },
   },
 
   async asyncData({ params, store, error }) {
-    try {
-      return await store.dispatch('paths/GET_PATH', params.slug)
-    } catch (e) {
-      error({ message: e, statusCode: 404 })
+    if (error) {
+      error({ message: 'slug.vue', statusCode: 404 });
     }
+
+    return store.dispatch('paths/GET_PATH', params.slug);
   },
 
   methods: {
@@ -120,34 +120,34 @@ export default {
 
     async handleEnroll() {
       try {
-        this.$nuxt.$loading.start()
+        this.$nuxt.$loading.start();
         if (this.$auth.user) {
-          const ACTION = this.isEnrolled ? 'UNENROLL' : 'ENROLL'
+          const ACTION = this.isEnrolled ? 'UNENROLL' : 'ENROLL';
           await this.$store.dispatch(`paths/${ACTION}`, {
             pathId: this.$data._id,
-            userIds: this.$auth.user._id
-          })
-          await this.$auth.fetchUser()
+            userIds: this.$auth.user._id,
+          });
+          await this.$auth.fetchUser();
           this.$message({
             type: 'success',
             message: `${ACTION} successfully!`,
             showClose: true,
-            duration: 1000
-          })
+            duration: 1000,
+          });
         } else {
           this.$router.push({
             name: 'login',
-            query: { prevPath: this.$route.fullPath }
-          })
+            query: { prevPath: this.$route.fullPath },
+          });
         }
-        this.$nuxt.$loading.finish()
+        this.$nuxt.$loading.finish();
       } catch (e) {
-        this.$nuxt.$loading.fail()
-        this.$message.error(e.message)
+        this.$nuxt.$loading.fail();
+        this.$message.error(e.message);
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>
 <style lang="scss" scoped>
 .single-path {

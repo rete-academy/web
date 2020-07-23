@@ -13,11 +13,11 @@
 </template>
 
 <script>
-import NavBar from '@/components/header/NavBar'
-import FootBar from '@/components/footer/Footer'
+import NavBar from '@/components/header/NavBar';
+import FootBar from '@/components/footer/Footer';
 
 export default {
   name: 'Default',
-  components: { NavBar, FootBar }
-}
+  components: { NavBar, FootBar },
+};
 </script>

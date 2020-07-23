@@ -35,7 +35,7 @@
   </div>
 </template>
 <script>
-import consola from 'consola'
+import consola from 'consola';
 
 export default {
   name: 'ForgotPassword',
@@ -47,7 +47,7 @@ export default {
   data() {
     return {
       input: {
-        email: ''
+        email: '',
       },
       count: 10,
       res: '',
@@ -55,36 +55,36 @@ export default {
         email: [{
           type: 'email',
           message: 'Please input correct email',
-          trigger: ['blur']
-        }]
-      }
-    }
+          trigger: ['blur'],
+        }],
+      },
+    };
   },
 
   methods: {
     onSubmit() {
-      this.$nuxt.$loading.start()
+      this.$nuxt.$loading.start();
       this.$refs.forgotForm.validate((valid) => {
         if (valid) {
           this.$store.dispatch('users/FORGOT', this.input.email).then(() => {
-            this.$nuxt.$loading.finish()
+            this.$nuxt.$loading.finish();
             this.$message({
               showClose: true,
               duration: 500,
               type: 'success',
-              message: 'Reset successful!'
-            })
-            this.$router.push('/')
+              message: 'Reset successful!',
+            });
+            this.$router.push('/');
           }).catch((e) => {
-            this.$nuxt.$loading.fail()
-            consola.error(e.message)
-            this.$message.error(e.message)
-          })
+            this.$nuxt.$loading.fail();
+            consola.error(e.message);
+            this.$message.error(e.message);
+          });
         }
-      })
-    }
-  }
-}
+      });
+    },
+  },
+};
 </script>
 <style lang="scss" scoped>
 .forgot-form {

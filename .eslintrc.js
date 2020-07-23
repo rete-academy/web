@@ -2,23 +2,24 @@ module.exports = {
   root: true,
   parserOptions: {
     parser: 'babel-eslint',
-    sourceType: 'module',
+    // sourceType: 'module',
   },
-  extends: [
-    '@nuxtjs',
-    'airbnb-base',
+  extends: ['airbnb-base', 'plugin:vue/base'],
+  env: {
+    browser: true,
+    node: true,
+  },
+  plugins: [
+    'vue',
   ],
-  /*
-    env: {
-        browser: true,
-        node: true,
-    },
-    plugins: [
-        'vue',
-    ],
-    */
+  settings: {
+    // these modules are included in nuxt.js
+    'import/core-modules': ['vue', 'vuex'],
+  },
   // add your custom rules here
   rules: {
+    'max-len': 'off',
+
     // temporary allow dangle, bad decision in the past, at api level
     'no-underscore-dangle': 'off',
 

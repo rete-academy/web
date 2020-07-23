@@ -79,9 +79,9 @@
 </template>
 
 <script>
-import consola from 'consola'
-import { mapGetters } from 'vuex'
-import SettingPopover from '@/components/user/SettingPopover'
+import consola from 'consola';
+import { mapGetters } from 'vuex';
+import SettingPopover from '@/components/user/SettingPopover';
 // import MaterialForm from '@/components/form/Material'
 
 export default {
@@ -94,12 +94,12 @@ export default {
       selectedUsers: null,
       changed: false,
       loading: false,
-      userFormVisible: false
-    }
+      userFormVisible: false,
+    };
   },
 
   computed: {
-    ...mapGetters('users', ['users'])
+    ...mapGetters('users', ['users']),
   },
 
   created() {},
@@ -107,19 +107,19 @@ export default {
   methods: {
     isAdmin(user) {
       if (user && user.role) {
-        if (user.role.reduce((i, j) => i * j) === 0) return true
-        return false
+        if (user.role.reduce((i, j) => i * j) === 0) return true;
+        return false;
       }
-      return false
+      return false;
     },
 
     handleMaterialDialog() {
-      this.materialFormVisible = !this.materialFormVisible
+      this.materialFormVisible = !this.materialFormVisible;
     },
 
     handleSelected(selected) {
-      this.changed = true
-      consola.info(selected)
+      this.changed = true;
+      consola.info(selected);
     },
 
     /*
@@ -129,15 +129,15 @@ export default {
 
     async handleSubmit(id) {
       try {
-        this.loading = true
-        this.$nuxt.$loading.start()
-        await this.$store.dispatch('materials/UPDATE_USER', id)
-        this.loading = false
-        this.$nuxt.$loading.finish()
+        this.loading = true;
+        this.$nuxt.$loading.start();
+        await this.$store.dispatch('materials/UPDATE_USER', id);
+        this.loading = false;
+        this.$nuxt.$loading.finish();
       } catch (e) {
-        this.$nuxt.$loading.fail()
-        consola.error(e.message)
-        this.$message.error(e.message)
+        this.$nuxt.$loading.fail();
+        consola.error(e.message);
+        this.$message.error(e.message);
       }
     },
 
@@ -151,36 +151,36 @@ export default {
             confirmButtonClass: 'el-button--danger',
             cancelButtonText: 'Cancel',
             type: 'warning',
-            center: true
-          }
+            center: true,
+          },
         ).then(async () => {
-          this.loading = true
-          this.$nuxt.$loading.start()
-          await this.$store.dispatch('materials/DELETE_MATERIAL', id)
+          this.loading = true;
+          this.$nuxt.$loading.start();
+          await this.$store.dispatch('materials/DELETE_MATERIAL', id);
           this.$message({
             type: 'success',
             message: 'Delete completed',
             showClose: true,
-            duration: 1000
-          })
-          this.loading = false
-          this.$nuxt.$loading.finish()
+            duration: 1000,
+          });
+          this.loading = false;
+          this.$nuxt.$loading.finish();
         }).catch(() => {
           this.$message({
             type: 'info',
             message: 'Delete canceled',
             showClose: true,
-            duration: 1000
-          })
-        })
+            duration: 1000,
+          });
+        });
       } catch (e) {
-        this.$nuxt.$loading.fail()
-        consola.error(e.message)
-        this.$message.error(e.message)
+        this.$nuxt.$loading.fail();
+        consola.error(e.message);
+        this.$message.error(e.message);
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>

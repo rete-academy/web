@@ -78,18 +78,18 @@
 </template>
 
 <script>
-import consola from 'consola'
-import { mapState } from 'vuex'
-import { chunk, flatten } from 'lodash'
-import MaterialPopover from '@/components/sprint/MaterialPopover'
-import SprintForm from '@/components/sprint/SprintForm'
+import consola from 'consola';
+import { mapState } from 'vuex';
+import { chunk, flatten } from 'lodash';
+import MaterialPopover from '@/components/sprint/MaterialPopover';
+import SprintForm from '@/components/sprint/SprintForm';
 
 export default {
   name: 'AdminSprints',
 
   components: {
     SprintForm,
-    MaterialPopover
+    MaterialPopover,
   },
 
   data() {
@@ -103,8 +103,8 @@ export default {
       changed: false,
       loading: false,
       formVisible: false,
-      changedPositions: {}
-    }
+      changedPositions: {},
+    };
   },
 
   computed: {
@@ -113,50 +113,50 @@ export default {
     ...mapState('materials', ['materials']),
 
     paginated() {
-      return chunk(this.sprints.filter(o => this.matched(o.name)), this.pageSize)
+      return chunk(this.sprints.filter((o) => this.matched(o.name)), this.pageSize);
     },
 
     total() {
       // we need to do total this way to reflect correct total entries
       // after user filtering the results.
-      return flatten(this.paginated).length
-    }
+      return flatten(this.paginated).length;
+    },
   },
 
   watch: {
     currentPage() {
       if (this.currentPage > 1) {
-        this.$router.push({ query: { page: this.currentPage } })
+        this.$router.push({ query: { page: this.currentPage } });
       } else {
-        this.$router.push({ query: {} })
+        this.$router.push({ query: {} });
       }
-    }
+    },
   },
 
   created() {
-    if (this.$route.query.page &&
-            this.$route.query.page < this.paginated.length) {
-      this.currentPage = parseInt(this.$route.query.page, 10)
+    if (this.$route.query.page
+            && this.$route.query.page < this.paginated.length) {
+      this.currentPage = parseInt(this.$route.query.page, 10);
     } else {
-      this.$router.push({ query: {} })
+      this.$router.push({ query: {} });
     }
   },
 
   methods: {
     matched(str) {
-      return str.toLowerCase().indexOf(this.filter.toLowerCase()) !== -1
+      return str.toLowerCase().indexOf(this.filter.toLowerCase()) !== -1;
     },
 
     handleDialog() {
-      this.formVisible = !this.formVisible
+      this.formVisible = !this.formVisible;
     },
 
     handleSelected(selections) {
-      this.selectedMaterials = selections
+      this.selectedMaterials = selections;
     },
 
     handlePositions(positions) {
-      this.changedPositions = positions
+      this.changedPositions = positions;
     },
 
     /*
@@ -165,46 +165,47 @@ export default {
          */
     calculateSelections() {
       this.sprints.forEach((s) => {
-        this.$refs[s._id].clearSelection()
+        this.$refs[s._id].clearSelection();
         s.materials.forEach((m) => {
-          const index = this.materials.findIndex(e => e._id === m._id)
-          this.$refs[s._id].toggleRowSelection(this.materials[index], 'selected')
-        })
-      })
+          const index = this.materials.findIndex((e) => e._id === m._id);
+          this.$refs[s._id].toggleRowSelection(this.materials[index], 'selected');
+        });
+      });
     },
 
     handleReset() {
-      this.calculateSelections()
-      this.changed = false
+      this.calculateSelections();
+      this.changed = false;
     },
 
     async handleSubmit(id) {
       try {
-        this.loading = true
-        this.$nuxt.$loading.start()
-        const currentMaterials = this.sprints.find(s => s._id === id).materials
-        const removed = currentMaterials.filter(c => !this.selectedMaterials.find(o => o._id === c._id))
-        const added = this.selectedMaterials.filter(s => !currentMaterials.find(o => o._id === s._id))
+        this.loading = true;
+        this.$nuxt.$loading.start();
+
+        const currentMaterials = this.sprints.find((s) => s._id === id).materials;
+        const removed = currentMaterials.filter((c) => !this.selectedMaterials.find((o) => o._id === c._id));
+        const added = this.selectedMaterials.filter((s) => !currentMaterials.find((o) => o._id === s._id));
 
         if (removed && removed.length > 0) {
           await this.$store.dispatch('sprints/REMOVE_MATERIALS', {
             sprintId: id,
-            materialIds: removed.map(o => o._id)
-          })
+            materialIds: removed.map((o) => o._id),
+          });
         }
 
         if (added && added.length > 0) {
           await this.$store.dispatch('sprints/ADD_MATERIALS', {
             sprintId: id,
-            materialIds: added.map(o => o._id)
-          })
+            materialIds: added.map((o) => o._id),
+          });
         }
-        this.loading = false
-        this.$nuxt.$loading.finish()
+        this.loading = false;
+        this.$nuxt.$loading.finish();
       } catch (e) {
-        this.$nuxt.$loading.fail()
-        consola.error(e.message)
-        this.$message.error(e.message)
+        this.$nuxt.$loading.fail();
+        consola.error(e.message);
+        this.$message.error(e.message);
       }
     },
 
@@ -218,36 +219,36 @@ export default {
             confirmButtonClass: 'el-button--danger',
             cancelButtonText: 'Cancel',
             type: 'warning',
-            center: true
-          }
+            center: true,
+          },
         ).then(async () => {
-          this.loading = true
-          this.$nuxt.$loading.start()
-          await this.$store.dispatch('sprints/DELETE_SPRINT', id)
+          this.loading = true;
+          this.$nuxt.$loading.start();
+          await this.$store.dispatch('sprints/DELETE_SPRINT', id);
           this.$message({
             type: 'success',
             message: 'Delete completed',
             showClose: true,
-            duration: 500
-          })
-          this.loading = false
-          this.$nuxt.$loading.finish()
+            duration: 500,
+          });
+          this.loading = false;
+          this.$nuxt.$loading.finish();
         }).catch(() => {
           this.$message({
             type: 'info',
             message: 'Delete canceled',
             showClose: true,
-            duration: 500
-          })
-        })
+            duration: 500,
+          });
+        });
       } catch (e) {
-        this.$nuxt.$loading.fail()
-        consola.error(e.message)
-        this.$message.error(e.message)
+        this.$nuxt.$loading.fail();
+        consola.error(e.message);
+        this.$message.error(e.message);
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>

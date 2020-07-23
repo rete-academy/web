@@ -36,7 +36,7 @@
   </div>
 </template>
 <script>
-import consola from 'consola'
+import consola from 'consola';
 
 export default {
   name: 'Confirm',
@@ -50,44 +50,44 @@ export default {
       code: '',
       success: false,
       failed: false,
-      count: 5
-    }
+      count: 5,
+    };
   },
 
   mounted() {
-    this.code = this.$route.params.code || ''
+    this.code = this.$route.params.code || '';
 
     this.$nextTick(() => {
       if (this.code) {
-        this.$nuxt.$loading.start()
+        this.$nuxt.$loading.start();
 
         this.$store.dispatch('users/CONFIRM_EMAIL', this.code).then((res) => {
-          this.$nuxt.$loading.finish()
-          this.success = true
+          this.$nuxt.$loading.finish();
+          this.success = true;
           const countDown = setInterval(() => {
-            this.count -= 1
+            this.count -= 1;
             if (this.count <= 0) {
-              clearInterval(countDown)
-              this.$router.push('/login')
+              clearInterval(countDown);
+              this.$router.push('/login');
             }
-          }, 1000)
-          consola.info(res)
+          }, 1000);
+          consola.info(res);
         }).catch((err) => {
-          this.$nuxt.$loading.fail()
-          this.failed = true
+          this.$nuxt.$loading.fail();
+          this.failed = true;
           const countDown = setInterval(() => {
-            this.count -= 1
+            this.count -= 1;
             if (this.count <= 0) {
-              clearInterval(countDown)
-              this.$router.push('/')
+              clearInterval(countDown);
+              this.$router.push('/');
             }
-          }, 1000)
-          consola.error(err.message)
-        })
+          }, 1000);
+          consola.error(err.message);
+        });
       }
-    })
-  }
-}
+    });
+  },
+};
 </script>
 <style scoped lang="scss">
 .confirm {

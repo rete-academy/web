@@ -75,7 +75,7 @@
   </div>
 </template>
 <script>
-import consola from 'consola'
+import consola from 'consola';
 
 export default {
   name: 'SignIn',
@@ -86,7 +86,7 @@ export default {
     return {
       input: {
         email: '',
-        password: ''
+        password: '',
       },
       finished: false,
       showPassword: false,
@@ -98,40 +98,40 @@ export default {
         email: [{
           type: 'email',
           message: 'Please input correct email',
-          trigger: ['blur']
+          trigger: ['blur'],
         }],
         password: [{
           required: true,
-          trigger: ['blur']
-        }]
-      }
-    }
+          trigger: ['blur'],
+        }],
+      },
+    };
   },
 
   methods: {
     handleIconClick() {
-      this.showPassword = !this.showPassword
+      this.showPassword = !this.showPassword;
       if (this.showPassword) {
-        this.currentType = 'text'
-        this.passwordIcon = 'eye'
+        this.currentType = 'text';
+        this.passwordIcon = 'eye';
 
         const countDown = setInterval(() => {
-          this.count -= 1
+          this.count -= 1;
           if (this.count <= 0) {
-            clearInterval(countDown)
-            this.currentType = 'password'
-            this.passwordIcon = 'eye-slash'
-            this.count = 10
+            clearInterval(countDown);
+            this.currentType = 'password';
+            this.passwordIcon = 'eye-slash';
+            this.count = 10;
           }
-        }, 1000)
+        }, 1000);
       } else {
-        this.currentType = 'password'
-        this.passwordIcon = 'eye-slash'
+        this.currentType = 'password';
+        this.passwordIcon = 'eye-slash';
       }
     },
 
     onSubmit() {
-      this.$nuxt.$loading.start()
+      this.$nuxt.$loading.start();
       this.$refs.loginForm.validate((valid) => {
         if (valid) {
           this.$auth.loginWith('local', {
@@ -140,31 +140,31 @@ export default {
               password: this.input.password,
               client_id: process.env.clientId,
               client_secret: process.env.clientSecret,
-              grant_type: 'password'
-            }
+              grant_type: 'password',
+            },
           }).then(() => {
-            this.$nuxt.$loading.finish()
+            this.$nuxt.$loading.finish();
             this.$message({
               showClose: true,
               duration: 500,
               type: 'success',
-              message: 'Login successful!'
-            })
+              message: 'Login successful!',
+            });
             if (this.$route.query.prevPath) {
-              this.$router.push(this.$route.query.prevPath)
+              this.$router.push(this.$route.query.prevPath);
             } else {
-              this.$router.push('/my-paths')
+              this.$router.push('/my-paths');
             }
           }).catch((e) => {
-            this.$nuxt.$loading.fail()
-            consola.error(e.message)
-            this.$message.error(e.message)
-          })
+            this.$nuxt.$loading.fail();
+            consola.error(e.message);
+            this.$message.error(e.message);
+          });
         }
-      })
-    }
-  }
-}
+      });
+    },
+  },
+};
 </script>
 <style lang="scss" scoped>
 .login-form {

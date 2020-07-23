@@ -55,15 +55,15 @@ export default {
     return {
       loading: false,
       form: {
-        name: ''
-      }
-    }
+        name: '',
+      },
+    };
   },
 
   methods: {
-    handleCommand() {}
-  }
-}
+    handleCommand() {},
+  },
+};
 </script>
 
 <style lang="scss" scoped>

@@ -103,9 +103,9 @@
   </div>
 </template>
 <script>
-import consola from 'consola'
-import { mapGetters } from 'vuex'
-import CardItem from '~/components/path/CardItem.vue'
+import consola from 'consola';
+import { mapGetters } from 'vuex';
+import CardItem from '~/components/path/CardItem.vue';
 
 export default {
   name: 'Home',
@@ -120,42 +120,42 @@ export default {
     return {
       doStuff: null,
       form: {
-        email: ''
-      }
-    }
+        email: '',
+      },
+    };
   },
 
   computed: {
     ...mapGetters('paths', ['paths']),
 
     featuredPaths() {
-      return this.paths.filter(o => o.featured)
-    }
+      return this.paths.filter((o) => o.featured);
+    },
   },
 
   created() {
-    this.doStuff = function (arg) {
-      consola.info('Run at ', arg)
-    }
+    this.doStuff = (arg) => {
+      consola.info('Run at ', arg);
+    };
 
-    this.doStuff('created')
+    this.doStuff('created');
 
-    if (this.paths.length === 0) this.$store.dispatch('paths/GET_PATHS')
+    if (this.paths.length === 0) this.$store.dispatch('paths/GET_PATHS');
   },
 
   mounted() {
-    this.doStuff('mounted')
+    this.doStuff('mounted');
   },
 
   methods: {
     goTo(slug) {
-      this.$router.push(`/paths/${slug}`)
+      this.$router.push(`/paths/${slug}`);
     },
 
     onSubmit() {
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>

@@ -60,8 +60,8 @@
   </div>
 </template>
 <script>
-import consola from 'consola'
-import { mapGetters } from 'vuex'
+import consola from 'consola';
+import { mapGetters } from 'vuex';
 
 export default {
 
@@ -70,107 +70,104 @@ export default {
   data() {
     return {
       file: null,
-      defaultAvatar: ''
-    }
+      defaultAvatar: '',
+    };
   },
 
   computed: {
     ...mapGetters('users', ['profile']),
 
     hasAvatar() {
-      if ((this.profile.avatar && this.profile.avatar.location &&
-                this.profile.avatar.location.length > 0) || this.file) {
-        return true
+      if ((this.profile.avatar && this.profile.avatar.location
+                && this.profile.avatar.location.length > 0) || this.file) {
+        return true;
       }
-      return false
+      return false;
     },
 
     profileImage() {
       if (this.hasAvatar && !this.file) {
-        return this.profile.avatar.location
+        return this.profile.avatar.location;
       } if (this.file) {
-        return this.file.url
+        return this.file.url;
       }
-      return ''
+      return '';
     },
 
     uploadEndpoint() {
-      const baseUrl = this.$axios.defaults.baseURL || 'http://localhost:8000'
-      return `${baseUrl}/api/users/${this.profile._id}/avatar`
+      const baseUrl = this.$axios.defaults.baseURL || 'http://localhost:8000';
+      return `${baseUrl}/api/users/${this.profile._id}/avatar`;
     },
 
     uploadHeaders() {
       return {
         'Content-Type': 'application/x-www-form-urlencoded',
-        Authorization: this.$auth.getToken('local')
-      }
-    }
+        Authorization: this.$auth.getToken('local'),
+      };
+    },
   },
 
-  async asyncData({ store, error }) {
-    try {
-      return await store.dispatch('users/FETCH_USER')
-    } catch (e) {
-      error({ message: e, statusCode: 404 })
-    }
+  async asyncData({ store }) {
+    return store.dispatch('users/FETCH_USER');
+    // error({ message: e, statusCode: 404 });
   },
 
   methods: {
     onChange(file) {
-      this.file = file
+      this.file = file;
     },
 
     async updateProfile() {
       if (this.file) {
-        await this.submitUpload()
+        await this.submitUpload();
       }
     },
 
     async submitUpload() {
       try {
-        this.$nuxt.$loading.start()
-        const formData = new FormData()
-        formData.append('avatar', this.file.raw)
+        this.$nuxt.$loading.start();
+        const formData = new FormData();
+        formData.append('avatar', this.file.raw);
         await this.$axios.post(this.uploadEndpoint, formData, {
-          headers: this.uploadHeaders
-        })
-        await this.$store.dispatch('users/FETCH_USER')
-        this.$nuxt.$loading.finish()
+          headers: this.uploadHeaders,
+        });
+        await this.$store.dispatch('users/FETCH_USER');
+        this.$nuxt.$loading.finish();
         this.$message({
           message: 'Uploaded succesfully!',
-          type: 'success'
-        })
+          type: 'success',
+        });
       } catch (error) {
-        consola.error(error.message)
-        this.$nuxt.$loading.fail()
-        this.$message.error(`Oops, ${error.message}`)
+        consola.error(error.message);
+        this.$nuxt.$loading.fail();
+        this.$message.error(`Oops, ${error.message}`);
       }
     },
 
     async resendConfirm() {
       try {
-        this.$nuxt.$loading.start()
+        this.$nuxt.$loading.start();
         if (this.$auth.user) {
           await this.$store.dispatch(
             'users/RESEND_CONFIRM',
-            this.profile.email
-          )
-          await this.$auth.fetchUser()
+            this.profile.email,
+          );
+          await this.$auth.fetchUser();
           this.$message({
             type: 'success',
             message: 'Confirmation sent successfully!',
             showClose: true,
-            duration: 1000
-          })
+            duration: 1000,
+          });
         }
-        this.$nuxt.$loading.finish()
+        this.$nuxt.$loading.finish();
       } catch (e) {
-        this.$nuxt.$loading.fail()
-        this.$message.error(e.message)
+        this.$nuxt.$loading.fail();
+        this.$message.error(e.message);
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>
 <style lang="scss" scoped>
 .profile {

@@ -48,8 +48,8 @@
   </div>
 </template>
 <script>
-import consola from 'consola'
-import zxcvbn from 'zxcvbn'
+import consola from 'consola';
+import zxcvbn from 'zxcvbn';
 
 export default {
   name: 'ResetPassword',
@@ -62,7 +62,7 @@ export default {
     return {
       input: {
         password: '',
-        token: ''
+        token: '',
       },
       currentType: 'password',
       showPassword: false,
@@ -73,65 +73,66 @@ export default {
         password: [{
           required: true,
           validator: this.checkPass,
-          trigger: ['blur', 'change']
-        }]
-      }
-    }
+          trigger: ['blur', 'change'],
+        }],
+      },
+    };
   },
 
   computed: {
     score() {
-      return zxcvbn(this.input.password).score
-    }
+      return zxcvbn(this.input.password).score;
+    },
   },
 
   created() {
     if (this.$route.query.token) {
-      this.input.token = this.$route.query.token
+      this.input.token = this.$route.query.token;
     }
   },
 
   methods: {
     handleIconClick() {
-      this.showPassword = !this.showPassword
+      this.showPassword = !this.showPassword;
       if (this.showPassword) {
-        this.currentType = 'text'
-        this.passwordIcon = 'eye'
+        this.currentType = 'text';
+        this.passwordIcon = 'eye';
 
         const countDown = setInterval(() => {
-          this.count -= 1
+          this.count -= 1;
           if (this.count <= 0) {
-            clearInterval(countDown)
-            this.currentType = 'password'
-            this.passwordIcon = 'eye-slash'
-            this.count = 10
+            clearInterval(countDown);
+            this.currentType = 'password';
+            this.passwordIcon = 'eye-slash';
+            this.count = 10;
           }
-        }, 1000)
+        }, 1000);
       } else {
-        this.currentType = 'password'
-        this.passwordIcon = 'eye-slash'
+        this.currentType = 'password';
+        this.passwordIcon = 'eye-slash';
       }
     },
 
     checkPass(rule, value, callback) {
       if (!value) {
-        return callback(new Error('Please input password'))
+        callback(new Error('Please input password'));
       }
+
       setTimeout(() => {
         if (this.score < 2) {
-          callback(new Error('Password is too weak'))
+          callback(new Error('Password is too weak'));
         } else {
-          callback()
+          callback();
         }
-      }, 500)
+      }, 300);
     },
 
     onSubmit() {
-      this.$nuxt.$loading.start()
+      this.$nuxt.$loading.start();
       this.$refs.resetForm.validate((valid) => {
         if (valid) {
           if (this.score >= 3) {
-            this.handleReset()
+            this.handleReset();
           } else {
             this.$confirm(
               'Your password is quite weak. Continue?',
@@ -140,36 +141,36 @@ export default {
                 confirmButtonText: 'OK',
                 cancelButtonText: 'Choose Stronger Password',
                 type: 'warning',
-                center: true
-              }
+                center: true,
+              },
             ).then(() => {
-              this.handleReset()
-            }).catch(() => {})
+              this.handleReset();
+            }).catch(() => {});
           }
         }
-      })
+      });
     },
 
     handleReset() {
-      this.$nuxt.$loading.start()
+      this.$nuxt.$loading.start();
       this.$store.dispatch('users/RESET', {
         token: this.input.token,
-        password: this.input.password
+        password: this.input.password,
       }).then(() => {
-        this.$nuxt.$loading.finish()
+        this.$nuxt.$loading.finish();
         this.$message({
           showClose: true,
           duration: 500,
           type: 'success',
-          message: 'Reset successful!'
-        })
-        this.$router.push('/')
+          message: 'Reset successful!',
+        });
+        this.$router.push('/');
       }).catch((e) => {
-        this.$nuxt.$loading.fail()
-        consola.error(e.message)
-        this.$message.error(e.message)
-      })
-    }
-  }
-}
+        this.$nuxt.$loading.fail();
+        consola.error(e.message);
+        this.$message.error(e.message);
+      });
+    },
+  },
+};
 </script>

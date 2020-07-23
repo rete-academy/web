@@ -10,8 +10,8 @@
   </section>
 </template>
 <script>
-import { mapState } from 'vuex'
-import CardItem from '~/components/path/CardItem.vue'
+import { mapState } from 'vuex';
+import CardItem from '@/components/path/CardItem.vue';
 
 export default {
   name: 'Home',
@@ -21,19 +21,19 @@ export default {
   components: { CardItem },
 
   computed: {
-    ...mapState('paths', ['paths'])
+    ...mapState('paths', ['paths']),
   },
 
   created() {
-    if (this.paths.length === 0) this.$store.dispatch('paths/GET_PATHS')
+    if (this.paths.length === 0) this.$store.dispatch('paths/GET_PATHS');
   },
 
   methods: {
     openSinglePath(p) {
-      this.$router.push(`/paths/${p.slug}`)
-    }
-  }
-}
+      this.$router.push(`/paths/${p.slug}`);
+    },
+  },
+};
 </script>
 <style lang="scss" scoped>
 </style>

@@ -19,8 +19,9 @@
       border
     >
       <el-table-column
+        align="center"
         type="selection"
-        width="36"
+        width="60"
       />
       <el-table-column
         label="Name"

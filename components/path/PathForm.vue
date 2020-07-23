@@ -12,35 +12,15 @@
     <el-form ref="form" :model="form" label-width="120px">
       <el-form-item label="Path Name">
         <el-input
-          v-model="form.name"
+          clearable
           placeholder="Name"
           :disabled="loading"
-          clearable
-          @blur="checkPathBySlug"
-        >
-          <i
-            slot="suffix"
-            class="el-input__icon "
-            :class="loading ? 'el-icon-loading' : ''"
-          >&nbsp;</i>
-        </el-input>
+          v-model="form.name"
+        />
       </el-form-item>
 
       <el-row :gutter="20">
         <el-col :span="18">
-          <el-form-item label="Slug">
-            <el-input
-              v-model="form.slug"
-              :class="taken ? 'taken' : ''"
-              placeholder="slug"
-            >
-              <i
-                slot="suffix"
-                class="el-input__icon "
-                :class="taken ? 'el-icon-warning taken' : ''"
-              >&nbsp;</i>
-            </el-input>
-          </el-form-item>
           <el-form-item label="Description">
             <el-input
               v-model="form.description"
@@ -84,8 +64,8 @@
           Create Path
         </el-button>
         <el-button
+          plain
           size="small"
-          type="danger"
           @click="handleClose"
         >
           Close
@@ -111,7 +91,6 @@ export default {
     return {
       form: {
         name: '',
-        slug: '',
         description: '',
         image: '',
       },
@@ -142,14 +121,6 @@ export default {
     },
   },
 
-  watch: {
-    'form.name': () => {
-      if (this.form.name) {
-        this.form.slug = this.slugify(this.form.name);
-      }
-    },
-  },
-
   methods: {
     onChange(file) {
       this.file = file;
@@ -158,7 +129,6 @@ export default {
     handleClose() {
       this.form = {
         name: '',
-        slug: '',
         description: '',
         image: 'http://www.markweb.in/primehouseware/images/noimage.png',
       };
@@ -200,20 +170,6 @@ export default {
         this.$nuxt.$loading.fail();
         this.$message.error(`Oops, ${error.message}`);
       }
-    },
-
-    checkPathBySlug() {
-      this.$nuxt.$loading.start();
-      this.$store.dispatch('paths/GET_PATH', this.form.slug)
-        .then(() => {
-          this.taken = true;
-          this.$nuxt.$loading.finish();
-        })
-        .catch((err) => {
-          this.taken = false;
-          this.$nuxt.$loading.fail();
-          consola.error(err);
-        });
     },
 
     // Consider to use slugify plugin, fucking stupid Sang

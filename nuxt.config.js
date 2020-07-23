@@ -48,10 +48,12 @@ module.exports = {
     '@/plugins/filters',
     '@/plugins/fontawesome',
     '@/plugins/chat-scroll.js',
+    /*
     {
       src: '@/plugins/socket.io.js',
       ssr: false, // <-- this line is required
     },
+    */
   ],
 
   modules: [

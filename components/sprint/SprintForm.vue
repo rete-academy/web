@@ -36,8 +36,8 @@
           Create Sprint
         </el-button>
         <el-button
+          plain
           size="small"
-          type="danger"
           @click="handleClose"
         >
           Close

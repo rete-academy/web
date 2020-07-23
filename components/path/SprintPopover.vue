@@ -64,6 +64,8 @@
         Save
       </el-button>
       <el-button
+        plain
+        type="danger"
         size="mini"
         @click="handleReset"
       >

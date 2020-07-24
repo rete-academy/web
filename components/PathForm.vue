@@ -30,30 +30,41 @@
             />
           </el-form-item>
         </el-col>
+
         <el-col :span="6">
           <el-upload
+            list-type="picture-card"
             class="image-uploader"
-            list-type="picture"
             :action="uploadEndpoint"
-            :auto-upload="true"
+            :before-upload="beforeUpload"
+            :auto-upload="false"
+            :file-list="fileList"
             :http-request="submitUpload"
             :headers="uploadHeaders"
-            :show-file-list="false"
             :on-change="onChange"
           >
-            <img
-              v-if="hasImage"
-              :src="form.image"
-              class="image"
-            >
-            <fa
-              v-else
-              icon="upload"
-              class="avatar-uploader-icon"
-            />
+          <i slot="default" class="el-icon-plus" />
+          <div v-if="file" slot="file">
+            <img :src="file.url" class="image">
+            <span class="el-upload-list__item-actions">
+              <span
+                class="el-upload-list__item-preview"
+                @click="handlePreview()"
+              >
+                <i class="el-icon-zoom-in" />
+              </span>
+              <span
+                class="el-upload-list__item-delete"
+                @click="handleRemove()"
+              >
+                <i class="el-icon-delete" />
+              </span>
+            </span>
+          </div>
           </el-upload>
         </el-col>
       </el-row>
+
       <el-form-item>
         <el-button
           size="small"
@@ -66,9 +77,9 @@
         <el-button
           plain
           size="small"
-          @click="handleClose"
+          @click="handleCancel"
         >
-          Close
+          Cancel
         </el-button>
       </el-form-item>
     </el-form>
@@ -96,8 +107,10 @@ export default {
         image: '',
       },
       file: null,
+      fileList: [],
       loading: false,
       taken: false,
+      count: 0,
     };
   },
 
@@ -110,8 +123,7 @@ export default {
     },
 
     uploadEndpoint() {
-      const baseUrl = this.$axios.defaults.baseURL || 'http://localhost:8000';
-      return `${baseUrl}/api/path/avatar`;
+      return `${this.$axios.defaults.baseURL}/api/files/upload`;
     },
 
     uploadHeaders() {
@@ -123,28 +135,50 @@ export default {
   },
 
   methods: {
-    onChange(file) {
+    onChange(file, fileList) {
       this.file = file;
+      this.fileList = fileList;
     },
 
-    handleClose() {
+    handleCancel() {
       this.form = {
         name: '',
         description: '',
-        image: 'http://www.markweb.in/primehouseware/images/noimage.png',
+        image: '',
       };
       this.$emit('update:visible', false);
     },
 
-    onSubmit() {
+    beforeUpload(file) {
+      this.file = file;
+
+      const isLt2M = file.size / 1024 / 1024 < 2;
+
+      if (!isLt2M) {
+        this.$message.error('Avatar picture size can not exceed 2MB!');
+      }
+
+      return isLt2M;
+    },
+
+    handleRemove() {
+      this.file = null;
+      this.fileList = [];
+    },
+
+    async onSubmit() {
       consola.info('Begin add new path');
+
       this.$nuxt.$loading.start();
       if (!this.taken) {
+        await this.submitUpload();
+
         this.$store.dispatch('paths/CREATE_PATH', {
           name: this.form.name,
           description: this.form.description,
+          image: this.form.image,
         }).then(() => {
-          this.handleClose();
+          this.handleCancel();
           this.$nuxt.$loading.finish();
         }).catch((err) => {
           consola.error(err);
@@ -155,13 +189,20 @@ export default {
     async submitUpload() {
       try {
         this.$nuxt.$loading.start();
+
         const formData = new FormData();
-        formData.append('image', this.file.raw);
-        await this.$axios.post(this.uploadEndpoint, formData, {
+        formData.append('files', this.file.raw);
+        const { data } = await this.$axios.post(this.uploadEndpoint, formData, {
           headers: this.uploadHeaders,
         });
+
+        if (data && data.success) {
+          this.form.image = data.message.data.location;
+        }
+
         // await this.$store.dispatch('users/FETCH_USER')
         this.$nuxt.$loading.finish();
+
         this.$message({
           message: 'Uploaded succesfully!',
           type: 'success',

@@ -50,6 +50,11 @@ p {
   font-size: 11px;
 }
 
+// Hide the plus icon when already have image selected
+.el-upload-list--picture-card:not(:empty) + .el-upload--picture-card {
+  display: none;
+}
+
 code {
   font-family: 'Fira Mono', monospace;
 }

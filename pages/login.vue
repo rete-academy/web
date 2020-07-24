@@ -55,7 +55,7 @@
           Login
         </el-button>
         <el-button
-          type="info"
+          type="text"
           class="sign-up-btn"
           plain
           @click="$router.push('/signup')"
@@ -193,10 +193,6 @@ export default {
     width: 100%;
     margin: 10px auto 0;
     font-size: 12px;
-
-    &:hover {
-      border: none;
-    }
   }
 }
 </style>

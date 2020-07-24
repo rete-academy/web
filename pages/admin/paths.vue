@@ -13,7 +13,7 @@
     </div>
     <el-table
       v-loading="loading"
-      :data="paginated[currentPage-1]"
+      :data="paginated[currentPage - 1]"
       class="paths-table"
       width="100%"
       border

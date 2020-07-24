@@ -52,8 +52,7 @@
 <script>
 // import consola from 'consola'
 import { mapGetters } from 'vuex';
-import MaterialRow from '@/components/material/MaterialRow';
-import ChatBox from '@/components/material/ChatBox';
+import { MaterialRow, ChatBox } from '@/components';
 
 export default {
   name: 'MyPaths',

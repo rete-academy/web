@@ -5,6 +5,7 @@
     </el-main>
   </el-container>
 </template>
+
 <script>
 export default {
   name: 'Blank',

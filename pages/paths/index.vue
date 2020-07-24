@@ -11,7 +11,7 @@
 </template>
 <script>
 import { mapState } from 'vuex';
-import CardItem from '@/components/path/CardItem.vue';
+import { CardItem } from '@/components';
 
 export default {
   name: 'Home',

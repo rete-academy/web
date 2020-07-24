@@ -34,6 +34,7 @@
     </el-form>
   </div>
 </template>
+
 <script>
 import consola from 'consola';
 

@@ -70,12 +70,9 @@
     </div>
   </div>
 </template>
+
 <script>
-// import consola from 'consola'
-// import { mapState } from 'vuex'
-
 export default {
-
   name: 'SinglePath',
 
   auth: false,

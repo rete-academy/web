@@ -14,12 +14,12 @@ export default {
   props: {
     data: {
       type: Object,
-      default: () => ({})
-    }
+      default: () => ({}),
+    },
   },
 
   data() {
-    return {}
+    return {};
   },
 
   computed: {
@@ -28,26 +28,25 @@ export default {
 
     position: {
       get() {
-        if (this.data.path.meta.position &&
-                    this.data.path.meta.position[this.data.sprint._id]) {
-          return this.data.path.meta.position[this.data.sprint._id]
+        if (this.data.path.meta.position
+                    && this.data.path.meta.position[this.data.sprint._id]) {
+          return this.data.path.meta.position[this.data.sprint._id];
         }
-        return 0
+        return 0;
       },
       set(newValue) {
         // consola.info(newValue)
         this.$emit('position-change', {
-          [this.data.sprint._id]: parseInt(newValue, 10)
-        })
-      }
-    }
+          [this.data.sprint._id]: parseInt(newValue, 10),
+        });
+      },
+    },
   },
 
   methods: {
-    updatePosition(pos) {
-    }
-  }
-}
+    updatePosition() {},
+  },
+};
 </script>
 <style lang="scss" scoped>
 </style>

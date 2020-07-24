@@ -83,8 +83,10 @@ import consola from 'consola';
 import { mapState } from 'vuex';
 import { chunk, flatten } from 'lodash';
 
-import PathForm from '@/components/path/PathForm';
-import SprintPopover from '@/components/path/SprintPopover';
+import {
+  PathForm,
+  SprintPopover,
+} from '@/components';
 
 export default {
   name: 'AdminPaths',

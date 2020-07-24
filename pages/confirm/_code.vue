@@ -35,6 +35,7 @@
     </div>
   </div>
 </template>
+
 <script>
 import consola from 'consola';
 

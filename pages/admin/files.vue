@@ -136,20 +136,15 @@
       :page-size="pageSize"
       :current-page.sync="currentPage"
     />
-    <!-- material-form :visible.sync="userFormVisible" / -->
   </div>
 </template>
 <script>
 import consola from 'consola';
 import { mapGetters } from 'vuex';
 import { chunk, flatten } from 'lodash';
-// import SettingPopover from '@/components/user/SettingPopover'
-// import MaterialForm from '@/components/form/Material'
 
 export default {
   name: 'AdminFiles',
-
-  // components: { SettingPopover },
 
   data() {
     return {

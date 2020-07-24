@@ -4,16 +4,15 @@
       <nav-bar />
     </el-header>
     <nuxt />
-    <foot-bar />
+    <footer />
   </el-container>
 </template>
 
 <script>
-import NavBar from '@/components/header/NavBar';
-import FootBar from '@/components/footer/Footer';
+import { NavBar, Footer } from '@/components';
 
 export default {
   name: 'Landing',
-  components: { NavBar, FootBar },
+  components: { NavBar, Footer },
 };
 </script>

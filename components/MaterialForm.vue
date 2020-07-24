@@ -78,6 +78,7 @@
     </el-form>
   </el-dialog>
 </template>
+
 <script>
 import consola from 'consola';
 import { mapGetters } from 'vuex';

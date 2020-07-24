@@ -86,7 +86,7 @@ import consola from 'consola';
 import { mapState } from 'vuex';
 import { chunk, flatten } from 'lodash';
 
-import MaterialForm from '@/components/material/MaterialForm';
+import { MaterialForm } from '@/components';
 
 export default {
   name: 'AdminMaterials',

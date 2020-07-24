@@ -43,10 +43,7 @@
   </div>
 </template>
 <script>
-import Avatar from '@/components/header/Avatar';
-// import { mapGetters } from 'vuex'
-// import { displayName } from '@/mixins'
-// import errorHandler from '@/common/error.handler'
+import Avatar from './Avatar.vue';
 
 export default {
   name: 'NavBar',

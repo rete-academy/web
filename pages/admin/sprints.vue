@@ -82,8 +82,7 @@
 import consola from 'consola';
 import { mapState } from 'vuex';
 import { chunk, flatten } from 'lodash';
-import MaterialPopover from '@/components/sprint/MaterialPopover';
-import SprintForm from '@/components/sprint/SprintForm';
+import { MaterialPopover, SprintForm } from '@/components';
 
 export default {
   name: 'AdminSprints',

@@ -81,8 +81,7 @@
 <script>
 import consola from 'consola';
 import { mapGetters } from 'vuex';
-import SettingPopover from '@/components/user/SettingPopover';
-// import MaterialForm from '@/components/form/Material'
+import { SettingPopover } from '@/components';
 
 export default {
   name: 'AdminUsers',

@@ -102,10 +102,11 @@
     </section>
   </div>
 </template>
+
 <script>
 import consola from 'consola';
 import { mapGetters } from 'vuex';
-import CardItem from '~/components/path/CardItem.vue';
+import { CardItem } from '@/components';
 
 export default {
   name: 'Home',

@@ -37,10 +37,8 @@
     <nuxt-child class="main-content" />
   </div>
 </template>
-<script>
-// import consola from 'consola'
-// import { mapGetters } from 'vuex'
 
+<script>
 export default {
   name: 'AdminView',
 
@@ -87,7 +85,6 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-// Test
 .main-content {
     width: 100%;
 }

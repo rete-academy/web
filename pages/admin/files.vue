@@ -48,12 +48,13 @@
       @selection-change="selectionChange"
     >
       <el-table-column
+        align="center"
         type="selection"
-        width="36"
+        width="50"
       />
       <el-table-column
         label="Name"
-        width="320"
+        width="380"
       >
         <template slot-scope="scope">
           <p class="file-name">
@@ -89,7 +90,7 @@
       </el-table-column>
       <el-table-column
         label="Preview"
-        width="77px"
+        width="80"
       >
         <template slot-scope="scope">
           <img
@@ -180,8 +181,7 @@ export default {
     },
 
     uploadEndpoint() {
-      const baseUrl = this.$axios.defaults.baseURL || 'http://localhost:8000';
-      return `${baseUrl}/api/files/upload`;
+      return `${this.$axios.defaults.baseURL}/api/files/upload`;
     },
 
     uploadHeaders() {
@@ -191,16 +191,6 @@ export default {
       };
     },
   },
-
-  /* async asyncData({ store, error }) {
-        try {
-            if (store.getters['files/files'].length === 0) {
-                return await store.dispatch('users/FETCH_USER')
-            }
-        } catch (e) {
-            error({ message: e, statusCode: 404 })
-        }
-    }, */
 
   watch: {
     currentPage() {
@@ -263,16 +253,6 @@ export default {
         message: 'File URL copied successfully',
         type: 'success',
       });
-      /*
-            // this.$refs[id].$refs.input.selectionStart
-            // this.$refs[id].$refs.input.selectionEnd
-            if (typeof el.createTextRange != "undefined") {
-            el.focus();
-            var range = el.createTextRange();
-            range.collapse(false);
-            range.select();
-            consola.info(this.$refs[id])
-            */
     },
 
     async submitUpload() {
@@ -412,17 +392,18 @@ h2 {
     min-width: 160px;
 }
 .file-name {
-    .name {
-        font-weight: bold;
-    }
+  .name {
+    font-weight: bold;
+    font-size: 0.9rem;
+  }
 }
 .success {
-    color: green;
+  color: green;
 }
 .preview {
     float: left;
-    width: 55px;
-    height: 55px;
+    max-width: 30px;
+    max-height: 30px;
     color: #CCC;
 }
 .file-icon {

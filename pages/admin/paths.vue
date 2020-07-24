@@ -21,7 +21,7 @@
       <el-table-column
         align="center"
         type="selection"
-        width="60"
+        width="50"
       />
       <el-table-column
         label="Name"

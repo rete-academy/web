@@ -20,13 +20,13 @@
         <fa icon="journal-whills" />
         <span slot="title">Materials</span>
       </el-menu-item>
-      <el-menu-item index="/admin/users">
-        <fa icon="user" />
-        <span slot="title">Users</span>
-      </el-menu-item>
       <el-menu-item index="/admin/files">
         <fa icon="folder" />
         <span slot="title">Files</span>
+      </el-menu-item>
+      <el-menu-item index="/admin/users">
+        <fa icon="user" />
+        <span slot="title">Users</span>
       </el-menu-item>
       <el-menu-item index="/admin/settings">
         <fa icon="cog" />

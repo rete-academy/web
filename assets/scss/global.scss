@@ -26,7 +26,7 @@ html, body {
   margin: 0;
 }
 h1 {
-  font-size: 60px;
+  font-size: 4rem;
 }
 h2 {
   color: #AAA;
@@ -54,20 +54,17 @@ code {
   font-family: 'Fira Mono', monospace;
 }
 
-.name {
-  font-size: 14px;
-}
-
 .material-name {
-    .icon {
-      margin-right: 5px;
-      color: #AAA;
-    }
+  .icon {
+    margin-right: 5px;
+    color: #AAA;
+  }
 }
 
 p.time, p.small {
-  font-size: 11px;
+  font-size: 0.8rem;
   color: #999;
+  line-height: 100%;
 }
 
 
@@ -144,7 +141,7 @@ a, .link, .el-dropdown-link {
     border-bottom: 0;
     background: none;
 
-    font-size: 14px;
+    font-size: 1rem;
     font-weight: bold;
 
     &.is-active {
@@ -194,7 +191,7 @@ a, .link, .el-dropdown-link {
   .el-button {
     margin: 10px 0 0;
     height: 50px;
-    font-size: 14px;
+    font-size: 1rem;
     font-weight: 200;
     width: 100%;
     // border-radius: 25px;
@@ -206,7 +203,7 @@ a, .link, .el-dropdown-link {
     margin-top: 100px;
 
     a {
-      font-size: 80%;
+      font-size: 0.8rem;
       margin: 0 20px;
     }
   }
@@ -216,7 +213,7 @@ a, .link, .el-dropdown-link {
   display: flex;
   justify-content: space-between;
   text-align: center;
-  font-size: 12px;
+  font-size: 0.8rem;
   color: #999;
   padding: 20px 0;
   width: 100%;

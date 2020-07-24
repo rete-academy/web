@@ -25,15 +25,18 @@ export default {
   },
 
   created() {
-    if (this.paths.length === 0) this.$store.dispatch('paths/GET_PATHS');
+    if (this.paths.length === 0) {
+      this.$store.dispatch('paths/GET_PATHS');
+    }
   },
 
   methods: {
-    openSinglePath(p) {
-      this.$router.push(`/paths/${p.slug}`);
+    openSinglePath(path) {
+      this.$router.push(`/paths/${path.slug}`);
     },
   },
 };
 </script>
+
 <style lang="scss" scoped>
 </style>

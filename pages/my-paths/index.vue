@@ -77,6 +77,7 @@ export default {
 
     myPaths() {
       if (this.$auth.user && this.$auth.user.progress && this.paths) {
+        console.log('### user:', this.$auth.user);
         const tempPaths = [];
         // eslint-disable-next-line
         for (const singleStep of this.$auth.user.progress) {

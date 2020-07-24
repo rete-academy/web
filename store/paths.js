@@ -52,9 +52,9 @@ export const actions = {
 
   async [GET_PATH]({ commit }, slug) {
     const response = await this.$axios.get(`/api/paths/${slug}`);
-    commit(SET_PATH, response.data.message);
-    consola.trace(response.data.message);
-    return response.data.message;
+    commit(SET_PATH, response.data.message[0]);
+    consola.trace(response.data.message[0]);
+    return response.data.message[0];
   },
 
   async [ADD_SPRINTS]({ dispatch }, { pathId, sprintIds }) {

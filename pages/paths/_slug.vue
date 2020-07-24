@@ -5,9 +5,9 @@
         <h1>{{ name }} <small>{{ description }}</small></h1>
         <el-button
           :type="isEnrolled ? 'danger':'success'"
-          @click="handleEnroll"
+          @click="handlePath"
         >
-          {{ isEnrolled ? 'Unenroll':'Enroll Now' }}
+          {{ isEnrolled ? 'Unenroll' : 'Enroll Now' }}
         </el-button>
         <el-button
           v-if="isEnrolled"
@@ -51,9 +51,6 @@
                   </span>
                   <span class="name">
                     {{ m.name }}
-                    <!-- a :href="m.url" target="_blank">
-                                            {{ m.name }}
-                                        </a -->
                   </span>
                 </p>
               </el-col>
@@ -88,7 +85,6 @@ export default {
       let sum = 0;
       if (this.sprints && this.sprints.length > 0) {
         this.sprints.forEach((s) => {
-          // consola.info(s.materials)
           sum += s.materials.length;
         });
         return sum;
@@ -97,34 +93,33 @@ export default {
     },
 
     isEnrolled() {
-      if (this.$auth.user && this.$auth.user.progress) {
-        return !!this.$auth.user.progress.find((o) => o.path === this.$data._id);
+      if (this.$auth.user && this.$auth.user.enrolled) {
+        return !!this.$auth.user.enrolled.find((id) => id === this.$data._id);
       }
       return false;
     },
   },
 
-  async asyncData({ params, store, error }) {
-    if (error) {
-      error({ message: 'slug.vue', statusCode: 404 });
-    }
-
+  async asyncData({ params, store }) {
     return store.dispatch('paths/GET_PATH', params.slug);
   },
 
   methods: {
     handleChange() {},
 
-    async handleEnroll() {
+    async handlePath() {
       try {
         this.$nuxt.$loading.start();
         if (this.$auth.user) {
           const ACTION = this.isEnrolled ? 'UNENROLL' : 'ENROLL';
-          await this.$store.dispatch(`paths/${ACTION}`, {
-            pathId: this.$data._id,
-            userIds: this.$auth.user._id,
+
+          await this.$store.dispatch(`users/${ACTION}`, {
+            userId: this.$auth.user._id,
+            data: this.$data._id.toString(),
           });
+
           await this.$auth.fetchUser();
+
           this.$message({
             type: 'success',
             message: `${ACTION} successfully!`,

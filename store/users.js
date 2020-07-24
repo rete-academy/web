@@ -1,17 +1,19 @@
 /* eslint-disable no-param-reassign */
 import {
-  FORGOT,
-  RESET,
-  SIGN_UP,
+  CONFIRM_EMAIL,
+  ENROLL,
+  UNENROLL,
   FETCH_USER,
+  FORGOT,
   GET_USERS,
+  RESEND_CONFIRM,
+  RESET,
   SET_USER,
   SET_USERS,
-  CONFIRM_EMAIL,
-  RESEND_CONFIRM,
+  SIGN_UP,
+  UPDATE_PROGRESS,
   UPDATE_STATUS,
   UPDATE_USER,
-  UPDATE_PROGRESS,
 } from '@/store/types';
 
 export const state = () => ({
@@ -67,8 +69,22 @@ export const actions = {
     return response.data.message;
   },
 
-  async [UPDATE_USER]({ dispatch }, { id, data }) {
-    const response = await this.$axios.put(`/api/users/${id}`, data);
+  async [UPDATE_USER]({ dispatch }, { userId, data }) {
+    const response = await this.$axios.put(`/api/users/${userId}`, data);
+    dispatch(GET_USERS);
+    dispatch(FETCH_USER);
+    return response.data.message;
+  },
+
+  async [ENROLL]({ dispatch }, { userId, data }) {
+    const response = await this.$axios.put(`/api/users/${userId}/enroll`, { data });
+    dispatch(GET_USERS);
+    dispatch(FETCH_USER);
+    return response.data.message;
+  },
+
+  async [UNENROLL]({ dispatch }, { userId, data }) {
+    const response = await this.$axios.put(`/api/users/${userId}/unenroll`, { data });
     dispatch(GET_USERS);
     dispatch(FETCH_USER);
     return response.data.message;

@@ -5,6 +5,7 @@
         <h1>{{ name }} <small>{{ description }}</small></h1>
         <el-button
           :type="isEnrolled ? 'danger':'success'"
+          icon="el-icon-s-management"
           @click="handlePath"
         >
           {{ isEnrolled ? 'Unenroll' : 'Enroll Now' }}
@@ -12,10 +13,10 @@
         <el-button
           v-if="isEnrolled"
           type="success"
-          icon="el-icon-arrow-right"
-          @click="$router.push('/paths#' + $route.params.slug)"
+          @click="$router.push('/my-paths#')"
         >
-          Go to path
+          Go to My Paths
+          <i class="el-icon-arrow-right"></i>
         </el-button>
       </div>
       <div class="sprints block">

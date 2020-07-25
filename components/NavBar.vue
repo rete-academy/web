@@ -35,13 +35,14 @@
         class="item"
         to="/admin"
       >
-        Admin Panel
+        Admin Dashboard
       </router-link>
     </div>
 
     <avatar />
   </div>
 </template>
+
 <script>
 import Avatar from './Avatar.vue';
 
@@ -119,35 +120,33 @@ export default {
 
 <style lang="scss" scoped>
 .menu-wrapper {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    // padding-bottom: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
-    .mobile-item {
-        width: 60%;
-        height: 60px;
-        font-size: 18px;
-        text-align: center;
+  .mobile-item {
+      width: 60%;
+      height: 60px;
+      font-size: 18px;
+      text-align: center;
 
-        &.language {
-            margin: 0 auto 50px;
-        }
-        & .flag-image {
-            width: 22px;
-        }
-    }
+      &.language {
+          margin: 0 auto 50px;
+      }
+      & .flag-image {
+          width: 22px;
+      }
+  }
 
-    .el-button {
-        margin: 5px 0;
-    }
+  .el-button {
+      margin: 5px 0;
+  }
 
-    .el-dialog__close {
-        color: #FFF;
-        border: 1px solid #FFF;
-        border-radius: 50%;
-    }
-
+  .el-dialog__close {
+      color: #FFF;
+      border: 1px solid #FFF;
+      border-radius: 50%;
+  }
 }
 .language {
     margin-right: 30px;

@@ -33,9 +33,7 @@ $breakpoint-xl: 1600px;
         }
     }
 
-    .profile {
-        // margin-right: 10px;
-    }
+    .profile { margin-right: 20px; }
 
     .router-link-exact-active {
         text-decoration: underline !important;
@@ -169,7 +167,8 @@ $breakpoint-xl: 1600px;
 
 @media (min-width: $breakpoint-sm) and (max-width: $breakpoint-md - 1) {
     .flex-nav {
-        width: 624px;
+        width: 100%;
+        // width: 624px;
         .nav-content {
             display: none;
         }
@@ -241,7 +240,8 @@ $breakpoint-xl: 1600px;
 
 @media (min-width: $breakpoint-md) and (max-width: $breakpoint-lg - 1) {
     .flex-nav {
-        width: 946px;
+        // width: 946px;
+        width: 100%;
         .nav-content {
             display: flex;
         }
@@ -303,7 +303,8 @@ $breakpoint-xl: 1600px;
 
 @media (min-width: $breakpoint-lg) {
     .flex-nav {
-        width: 1268px;
+        // width: 1268px;
+        width: 100%;
         .nav-content {
             display: flex;
         }

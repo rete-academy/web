@@ -82,7 +82,7 @@
           @click="handleFinishAndMove"
         >
           Finish and Go to next material
-          <i class="el-icon-arrow-right el-icon-right"></i>
+          <i class="el-icon-arrow-right"></i>
         </el-button>
       </span>
     </el-dialog>

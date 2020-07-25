@@ -14,11 +14,11 @@
 
       <fa
         icon="eye"
-        class="preview"
+        class="preview button"
         @click="handleClick(data)"
       />
 
-      <a :href="data.material.url" target="_blank">
+      <a :href="data.material.url" class="button" target="_blank">
         <fa icon="external-link-alt" />
       </a>
     </div>
@@ -62,12 +62,9 @@ export default {
     },
 
     isNew() {
-      const found = this.$auth.user.progress
-        .find((o) => o.material === this.data.material._id
-                    && o.sprint === this.data.sprint._id
-                    && o.path === this.data.path._id);
-      if (found) return false;
-      return true;
+      const { material } = this.data;
+      const updatedTime = (new Date(material.updatedTime)).getTime();
+      return Date.now() - updatedTime < 60480000;
     },
   },
 
@@ -130,19 +127,15 @@ export default {
   border-radius: 4px;
 
   .tools {
-    &:hover {
-      cursor: pointer;
+    .button {
+      color: #F9A825;
+
+      &:hover {
+        cursor: pointer;
+      }
     }
 
     .new {
-      color: #8BC34A;
-    }
-
-    .preview {
-      color: #666666;
-    }
-
-    .open {
       color: #8BC34A;
     }
   }

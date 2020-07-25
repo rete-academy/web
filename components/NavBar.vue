@@ -12,24 +12,21 @@
         class="item"
         to="/paths"
       >
-        Danh sách khoá học
+        Browse Paths
       </router-link>
       <router-link
         v-else
         class="item"
         to="/my-paths"
       >
-        Khoá học của tôi
+        My Paths
       </router-link>
       <!-- router-link class="item" to="/" disabled>
-                Events
-            </router-link>
-            <router-link class="item" to="/">
-                Jobs
-            </router-link>
-            <router-link class="item" to="/">
-                Dashboard
-            </router-link -->
+          Events
+      </router-link>
+      <router-link class="item" to="/">
+          Jobs
+      </router-link -->
       <router-link
         v-if="isAdmin(user)"
         class="item"

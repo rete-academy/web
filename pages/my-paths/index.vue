@@ -5,7 +5,7 @@
       :key="path._id"
       class="path-row"
     >
-      <h2 :id="path.slug" class="title">
+      <h2 :id="path.slug" class="path-name">
         {{ path.name }}
         <fa icon="cog" class="actions" />
       </h2>
@@ -18,7 +18,7 @@
             <el-step
               v-for="sprint in path.sprints"
               :key="sprint._id"
-              :title="sprint.name"
+              :title="sprint.name | truncate(40)"
               :description="sprint.description"
               class="sprint"
             />
@@ -80,7 +80,6 @@
         <el-button
           size="medium"
           type="success"
-          :disabled="!predictMaterials.next"
           @click="handleFinishAndMove"
         >
           Finish and Go to next material
@@ -93,7 +92,7 @@
 </template>
 
 <script>
-// import consola from 'consola'
+import consola from 'consola';
 import { mapGetters } from 'vuex';
 import { MaterialRow, ChatBox } from '@/components';
 
@@ -190,11 +189,27 @@ export default {
       }
     },
 
-    handleFinishAndMove() {
+    async handleFinishAndMove() {
       this.fullscreenLoading = true;
+      this.$nuxt.$loading.start();
+
+      await this.$store.dispatch('users/INCREASE_PROGRESS', {
+        userId: this.$auth.user._id,
+        data: this.currentMaterial._id,
+      }).then(() => {
+        this.$auth.fetchUser();
+        this.clickCheckbox = false;
+      }).catch((e) => {
+        this.$nuxt.$loading.fail();
+        consola.error(e.message);
+        this.$message.error(e.message);
+      });
+
       if (this.predictMaterials.next) {
         this.currentMaterial = this.predictMaterials.next;
       }
+
+      this.$nuxt.$loading.finish();
     },
 
     handleChat(material) {
@@ -212,46 +227,46 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-h2 {
-    font-size: 32px;
+.path-name {
+  font-size: 3rem;
 
-    .actions {
-        font-size: 18px;
-        color: #CCC;
-    }
+  .actions {
+    font-size: 1.5px;
+    color: #CCC;
+  }
 }
 
 .progress-wrapper {
-    width: auto;
-    height: auto;
-    margin: 40px auto 80px;
-    padding: 20px 10px 10px;
-    border-radius: 4px;
-    overflow-y: hidden;
-    overflow-x: scroll;
-    background: #F5F5F5;
+  width: auto;
+  height: auto;
+  margin: 40px auto 80px;
+  padding: 20px 10px 10px;
+  border-radius: 4px;
+  overflow-y: hidden;
+  overflow-x: scroll;
+  background: #F5F5F5;
 }
 .el-steps {
-    text-align: center;
-    margin-left: 10px;
+  text-align: center;
+  margin-left: 10px;
 }
 .sprint {
-    min-width: 500px;
+  min-width: 500px;
 }
 
 .sprint-content {
-    display: flex;
+  display: flex;
 }
 
 .materials-list {
-    width: 470px;
-    padding: 10px;
-    border-radius: 4px;
-    background: #EEEEEE;
+  width: 470px;
+  padding: 10px;
+  border-radius: 4px;
+  background: #EEEEEE;
 
-    h4 {
-        padding: 10px 0 0 25px;
-    }
+  h4 {
+    padding: 10px 0 0 25px;
+  }
 }
 
 .loading {

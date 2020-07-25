@@ -25,7 +25,7 @@
       />
       <el-table-column
         label="Name"
-        width="320"
+        width="380"
       >
         <template slot-scope="scope">
           <p class="name">

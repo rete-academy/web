@@ -23,8 +23,9 @@
       @select-all="handleSelections"
     >
       <el-table-column
+        align="center"
         type="selection"
-        width="40"
+        width="50"
       />
       <el-table-column
         width="280"

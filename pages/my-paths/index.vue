@@ -45,6 +45,7 @@
       </div>
     </div>
     <chat-box
+      v-if="chatVisible"
       :visible="chatVisible"
       :data="currentMaterial"
     />
@@ -52,8 +53,9 @@
     <el-dialog
       fullscreen
       class="preview-dialog"
-      :visible.sync="previewVisible"
+      v-if="previewVisible"
       v-loading.fullscreen.lock="fullscreenLoading"
+      :visible.sync="previewVisible"
     >
       <iframe
         class="preview-iframe"
@@ -61,14 +63,14 @@
       />
       <span slot="footer" class="dialog-footer">
         <el-button
-          size="mini"
+          size="medium"
           icon="el-icon-close"
           @click="handleClose"
         >
           Close
         </el-button>
         <el-button
-          size="mini"
+          size="medium"
           icon="el-icon-arrow-left"
           :disabled="!predictMaterials.previous"
           @click="handlePrevious"
@@ -76,7 +78,7 @@
           Previous material
         </el-button>
         <el-button
-          size="mini"
+          size="medium"
           type="success"
           :disabled="!predictMaterials.next"
           @click="handleFinishAndMove"

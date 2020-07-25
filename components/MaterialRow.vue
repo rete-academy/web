@@ -1,9 +1,9 @@
 <template>
-  <div class="material-row" @click="handleClick(data)">
+  <div class="material-row">
     <el-checkbox
       :key="stepId"
       :value="isChecked"
-      @change="updateStatus"
+      @change="updateProgress"
     >
       {{ data.material.name | truncate(40) }}
     </el-checkbox>
@@ -12,12 +12,11 @@
         New!
       </span>
 
-      <!-- fa
-        icon="comment-alt"
-        class="comment link"
-        :class="currentId === data.material._id ? 'open' : ''"
-        @click="openChat(data.material._id)"
-      / -->
+      <fa
+        icon="eye"
+        class="preview"
+        @click="handleClick(data)"
+      />
 
       <a :href="data.material.url" target="_blank">
         <fa icon="external-link-alt" />
@@ -40,19 +39,17 @@ export default {
   },
 
   data() {
-    return {};
+    return {
+      // clickCheckbox: false,
+    };
   },
 
   computed: {
     ...mapGetters('conversations', ['chatVisible', 'currentId']),
 
     isChecked() {
-      const found = this.$auth.user.progress
-        .find((o) => o.material === this.data.material._id
-                    && o.sprint === this.data.sprint._id
-                    && o.path === this.data.path._id);
-      if (found) return !!found.status;
-      return false;
+      const { material } = this.data;
+      return !!this.$auth.user.progress.find((id) => id === material._id);
     },
 
     stepId() {
@@ -80,37 +77,17 @@ export default {
       this.$emit('click', data);
     },
 
-    updateStatus(status) {
+    async updateProgress(status) {
       this.$nuxt.$loading.start();
-      this.$store.dispatch('users/UPDATE_STATUS', {
-        userId: this.$auth.user._id,
-        data: {
-          id: this.stepId,
-          status: status ? 1 : 0,
-        },
-      }).then(() => {
-        this.$auth.fetchUser();
-        this.$nuxt.$loading.finish();
-      }).catch((e) => {
-        this.$nuxt.$loading.fail();
-        consola.error(e.message);
-        this.$message.error(e.message);
-      });
-    },
+      const DIRECTION = status ? 'INCREASE' : 'DECREASE';
 
-    copy() {
-      this.$nuxt.$loading.start();
-      this.$store.dispatch('users/UPDATE_PROGRESS', {
+      await this.$store.dispatch(`users/${DIRECTION}_PROGRESS`, {
         userId: this.$auth.user._id,
-        data: {
-          path: this.data.path._id,
-          sprint: this.data.sprint._id,
-          material: this.data.material._id,
-          status: 0,
-        },
+        data: this.data.material._id,
       }).then(() => {
         this.$auth.fetchUser();
         this.$nuxt.$loading.finish();
+        this.clickCheckbox = false;
       }).catch((e) => {
         this.$nuxt.$loading.fail();
         consola.error(e.message);
@@ -134,16 +111,16 @@ export default {
   display: flex;
   justify-content: space-between;
 
-  &:hover {
-    cursor: pointer;
-  }
+  // &:hover { cursor: pointer; }
 
   &.selected {
     background: #EEEEEE;
   }
 
-  a, .link, .new {
+  a, .link, .new, .preview {
     font-size: 12px;
+    line-height: 100%;
+    margin-right: 10px;
   }
 
   padding: 10px;
@@ -153,11 +130,16 @@ export default {
   border-radius: 4px;
 
   .tools {
+    &:hover {
+      cursor: pointer;
+    }
+
     .new {
       color: #8BC34A;
     }
-    .new, .comment {
-      margin-right: 10px;
+
+    .preview {
+      color: #666666;
     }
 
     .open {

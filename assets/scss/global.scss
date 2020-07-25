@@ -20,10 +20,12 @@ $--font-path: '~element-ui/lib/theme-chalk/fonts';
 @import "~element-ui/packages/theme-chalk/src/index";
 @import url('https://fonts.googleapis.com/css?family=Fira+Mono|Fira+Sans');
 
-html, body {
+html, body, iframe {
   font-family: 'Fira Sans', sans-serif;
   font-size: 14px;
   margin: 0;
+  height: 100%;
+  width: 100%;
 }
 h1 {
   font-size: 4rem;
@@ -50,9 +52,37 @@ p {
   font-size: 11px;
 }
 
+.el-step__title {
+  font-weight: bold;
+}
+
+.el-checkbox__input {
+  height: 1rem;
+}
 // Hide the plus icon when already have image selected
 .el-upload-list--picture-card:not(:empty) + .el-upload--picture-card {
   display: none;
+}
+
+.preview-dialog {
+  .el-dialog {
+    display: flex;
+    flex-direction: column;
+
+    .el-dialog__header {
+      display: none;
+    }
+
+    .el-dialog__body {
+      padding: 0;
+      flex-grow: 1;
+    }
+
+    .el-dialog__footer {
+      text-align: center;
+      padding: 10px !important;
+    }
+  }
 }
 
 code {

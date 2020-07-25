@@ -10,58 +10,58 @@
     class="custom-dialog"
   >
     <el-form ref="form" :model="form" label-width="120px">
-      <el-form-item label="Path Name">
-        <el-input
-          clearable
-          placeholder="Name"
-          :disabled="loading"
-          v-model="form.name"
-        />
-      </el-form-item>
-
       <el-row :gutter="20">
-        <el-col :span="18">
+        <el-col :span="22">
+          <el-form-item label="Path Name">
+            <el-input
+              clearable
+              placeholder="Name"
+              :disabled="loading"
+              v-model="form.name"
+            />
+          </el-form-item>
+
           <el-form-item label="Description">
             <el-input
               v-model="form.description"
               placeholder="Description text here..."
               type="textarea"
-              :autosize="{ minRows: 4, maxRows: 6}"
+              :autosize="{ minRows: 8, maxRows: 12 }"
             />
           </el-form-item>
-        </el-col>
 
-        <el-col :span="6">
-          <el-upload
-            list-type="picture-card"
-            class="image-uploader"
-            :action="uploadEndpoint"
-            :before-upload="beforeUpload"
-            :auto-upload="false"
-            :file-list="fileList"
-            :http-request="submitUpload"
-            :headers="uploadHeaders"
-            :on-change="onChange"
-          >
-          <i slot="default" class="el-icon-plus" />
-          <div v-if="file" slot="file">
-            <img :src="file.url" class="image">
-            <span class="el-upload-list__item-actions">
-              <span
-                class="el-upload-list__item-preview"
-                @click="handlePreview()"
-              >
-                <i class="el-icon-zoom-in" />
-              </span>
-              <span
-                class="el-upload-list__item-delete"
-                @click="handleRemove()"
-              >
-                <i class="el-icon-delete" />
-              </span>
-            </span>
-          </div>
-          </el-upload>
+          <el-form-item label="Image">
+            <el-upload
+              list-type="picture-card"
+              class="image-uploader"
+              :action="uploadEndpoint"
+              :before-upload="beforeUpload"
+              :auto-upload="false"
+              :file-list="fileList"
+              :http-request="submitUpload"
+              :headers="uploadHeaders"
+              :on-change="onChange"
+            >
+              <i slot="default" class="el-icon-plus" />
+              <div v-if="file" slot="file">
+                <img :src="file.url" class="image">
+                <span class="el-upload-list__item-actions">
+                  <span
+                    class="el-upload-list__item-preview"
+                    @click="handlePreview()"
+                  >
+                    <i class="el-icon-zoom-in" />
+                  </span>
+                  <span
+                    class="el-upload-list__item-delete"
+                    @click="handleRemove()"
+                  >
+                    <i class="el-icon-delete" />
+                  </span>
+                </span>
+              </div>
+            </el-upload>
+          </el-form-item>
         </el-col>
       </el-row>
 

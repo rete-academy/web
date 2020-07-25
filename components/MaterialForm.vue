@@ -11,10 +11,10 @@
   >
     <el-form ref="form" :model="form" label-width="150px">
       <el-row :gutter="20">
-        <el-col :span="18">
+        <el-col :span="16">
           <el-form-item label="Material URL">
             <el-input
-              v-model="form.url"
+              v-model="url"
               placeholder="Paste material URL here..."
               :disabled="loading"
               clearable
@@ -28,14 +28,14 @@
           </el-form-item>
           <el-form-item v-if="fetched" label="Title">
             <el-input
-              v-model="form.name"
+              v-model="name"
               placeholder="Title"
               clearable
             />
           </el-form-item>
           <el-form-item v-if="fetched" label="Description">
             <el-input
-              v-model="form.description"
+              v-model="description"
               placeholder="Description..."
               type="textarea"
               :autosize="{ minRows: 3, maxRows: 6}"
@@ -56,7 +56,7 @@
               :value="sprint._id"
             />
           </el-select>
-          <img :src="form.image" class="material-image">
+          <img :src="image" class="material-image">
         </el-col>
       </el-row>
       <el-form-item>
@@ -99,12 +99,10 @@ export default {
 
   data() {
     return {
-      form: {
-        url: '',
-        name: '',
-        description: '',
-        image: '',
-      },
+      url: '',
+      name: '',
+      description: '',
+      image: '',
       loading: false,
       fetched: false,
     };
@@ -112,6 +110,15 @@ export default {
 
   computed: {
     ...mapGetters('sprints', ['sprints', 'selectedSprint']),
+
+    form() {
+      return {
+        url: this.url,
+        name: this.name,
+        description: this.description,
+        image: this.image,
+      };
+    },
 
     localSelected: {
       get() {
@@ -124,21 +131,21 @@ export default {
   },
 
   watch: {
-    'form.url': () => {
-      if (this.form.url && this.isValidUrl(this.form.url)) {
+    url() {
+      if (this.url && this.isValidUrl(this.url)) {
         this.loading = true;
         this.$nuxt.$loading.start();
         this.$axios
           .post('https://api.linkpreview.net', {
-            q: this.form.url,
+            q: this.url,
             key: '5c6e71509eafb0595e5860fe9c5eaba82fb617087dbc1',
           })
           .then((res) => {
             if (res) {
               this.fetched = true;
-              this.form.name = res.data.title;
-              this.form.description = res.data.description;
-              this.form.image = res.data.image;
+              this.name = res.data.title;
+              this.description = res.data.description;
+              this.image = res.data.image;
 
               this.loading = false;
               this.$nuxt.$loading.finish();
@@ -160,12 +167,10 @@ export default {
 
   methods: {
     handleClose() {
-      this.form = {
-        url: '',
-        name: '',
-        description: '',
-        image: '',
-      };
+      this.url = '';
+      this.name = '';
+      this.description = '';
+      this.image = '';
       this.fetched = false;
       this.$emit('update:visible', false);
     },

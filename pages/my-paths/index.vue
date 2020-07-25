@@ -1,5 +1,5 @@
 <template>
-  <section class="container paths items">
+  <section class="container my-paths items">
     <div
       v-for="path in myPaths"
       :key="path._id"
@@ -18,7 +18,7 @@
             <el-step
               v-for="sprint in path.sprints"
               :key="sprint._id"
-              :title="'Sprint: ' + sprint.name"
+              :title="sprint.name"
               :description="sprint.description"
               class="sprint"
             />
@@ -36,6 +36,7 @@
                   :key="material._id"
                   :data="{ path, sprint, material }"
                   @chat-open="handleChat"
+                  @click="handleClick"
                 />
               </div>
             </div>
@@ -47,8 +48,48 @@
       :visible="chatVisible"
       :data="currentMaterial"
     />
+
+    <el-dialog
+      fullscreen
+      class="preview-dialog"
+      :visible.sync="previewVisible"
+      v-loading.fullscreen.lock="fullscreenLoading"
+    >
+      <iframe
+        class="preview-iframe"
+        :src="currentMaterial.url"
+      />
+      <span slot="footer" class="dialog-footer">
+        <el-button
+          size="mini"
+          icon="el-icon-close"
+          @click="handleClose"
+        >
+          Close
+        </el-button>
+        <el-button
+          size="mini"
+          icon="el-icon-arrow-left"
+          :disabled="!predictMaterials.previous"
+          @click="handlePrevious"
+        >
+          Previous material
+        </el-button>
+        <el-button
+          size="mini"
+          type="success"
+          :disabled="!predictMaterials.next"
+          @click="handleFinishAndMove"
+        >
+          Finish and Go to next material
+          <i class="el-icon-arrow-right el-icon-right"></i>
+        </el-button>
+      </span>
+    </el-dialog>
+
   </section>
 </template>
+
 <script>
 // import consola from 'consola'
 import { mapGetters } from 'vuex';
@@ -68,6 +109,10 @@ export default {
     return {
       activeStep: 0,
       currentMaterial: {},
+      currentPath: {},
+      currentSprint: {},
+      previewVisible: false,
+      fullscreenLoading: false,
     };
   },
 
@@ -76,22 +121,37 @@ export default {
     ...mapGetters('conversations', ['chatVisible', 'currentId']),
 
     myPaths() {
-      if (this.$auth.user && this.$auth.user.progress && this.paths) {
-        console.log('### user:', this.$auth.user);
-        const tempPaths = [];
-        // eslint-disable-next-line
-        for (const singleStep of this.$auth.user.progress) {
-          const had = tempPaths.includes(singleStep.path);
-          const found = this.paths.find((p) => p._id === singleStep.path);
-          if (found && !had) { tempPaths.push(singleStep.path); }
-        }
-        return tempPaths.map((id) => this.paths.find((p) => p._id === id));
-        // TODO: Make an easier way to detect current active sprint.
-        // const currentSprints = foundPath.sprints.map(e => e._id)
-        // consola.info(currentSprints)
-        // if (foundPath) return foundPath
+      if (this.$auth.user && this.$auth.user.enrolled && this.paths) {
+        return this.$auth.user.enrolled.map((id) => this.paths.find((p) => p._id === id));
       }
       return [];
+    },
+
+    predictMaterials() {
+      const predict = {
+        previous: undefined,
+        next: undefined,
+      };
+
+      const { materials } = this.currentSprint;
+      const foundIndex = (materials || []).findIndex((m) => m._id === this.currentMaterial._id);
+      if (materials && materials[foundIndex - 1]) {
+        predict.previous = materials[foundIndex - 1];
+      }
+      if (materials && materials[foundIndex + 1]) {
+        predict.next = materials[foundIndex + 1];
+      }
+      return predict;
+    },
+  },
+
+  watch: {
+    fullscreenLoading() {
+      if (this.fullscreenLoading) {
+        setTimeout(() => {
+          this.fullscreenLoading = false;
+        }, 1000);
+      }
     },
   },
 
@@ -109,6 +169,32 @@ export default {
       this.$router.push(`/paths/${p.slug}`);
     },
 
+    handleClose() {
+      this.previewVisible = false;
+    },
+
+    handleClick({ path, sprint, material }) {
+      this.fullscreenLoading = true;
+      this.previewVisible = true;
+      this.currentMaterial = material;
+      this.currentPath = path;
+      this.currentSprint = sprint;
+    },
+
+    handlePrevious() {
+      this.fullscreenLoading = true;
+      if (this.predictMaterials.previous) {
+        this.currentMaterial = this.predictMaterials.previous;
+      }
+    },
+
+    handleFinishAndMove() {
+      this.fullscreenLoading = true;
+      if (this.predictMaterials.next) {
+        this.currentMaterial = this.predictMaterials.next;
+      }
+    },
+
     handleChat(material) {
       this.currentMaterial = material;
       if (material.conversation) {
@@ -122,6 +208,7 @@ export default {
   },
 };
 </script>
+
 <style lang="scss" scoped>
 h2 {
     font-size: 32px;
@@ -131,6 +218,7 @@ h2 {
         color: #CCC;
     }
 }
+
 .progress-wrapper {
     width: auto;
     height: auto;
@@ -162,5 +250,24 @@ h2 {
     h4 {
         padding: 10px 0 0 25px;
     }
+}
+
+.loading {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #FFF;
+}
+
+.preview-dialog {
+  display: flex;
+
+  .preview-iframe {
+    border: none;
+    width: 100%;
+    height: 100%;
+  }
 }
 </style>

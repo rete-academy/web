@@ -1,9 +1,8 @@
 <template>
-  <div class="material-row">
+  <div class="material-row" @click="handleClick(data)">
     <el-checkbox
       :key="stepId"
       :value="isChecked"
-      :disabled="isNew"
       @change="updateStatus"
     >
       {{ data.material.name | truncate(40) }}
@@ -12,18 +11,14 @@
       <span v-if="isNew" class="new">
         New!
       </span>
-      <fa
-        v-if="isNew"
-        icon="download"
-        class="copy link"
-        @click="copy"
-      />
-      <fa
+
+      <!-- fa
         icon="comment-alt"
         class="comment link"
         :class="currentId === data.material._id ? 'open' : ''"
         @click="openChat(data.material._id)"
-      />
+      / -->
+
       <a :href="data.material.url" target="_blank">
         <fa icon="external-link-alt" />
       </a>
@@ -80,6 +75,11 @@ export default {
   },
 
   methods: {
+
+    handleClick(data) {
+      this.$emit('click', data);
+    },
+
     updateStatus(status) {
       this.$nuxt.$loading.start();
       this.$store.dispatch('users/UPDATE_STATUS', {
@@ -131,30 +131,38 @@ export default {
 
 <style lang="scss" scoped>
 .material-row {
-    display: flex;
-    justify-content: space-between;
+  display: flex;
+  justify-content: space-between;
 
-    a, .link, .new {
-        font-size: 12px;
+  &:hover {
+    cursor: pointer;
+  }
+
+  &.selected {
+    background: #EEEEEE;
+  }
+
+  a, .link, .new {
+    font-size: 12px;
+  }
+
+  padding: 10px;
+  margin-bottom: 1px;
+  border: 1px solid #EEEEEE;
+  background: #FFF;
+  border-radius: 4px;
+
+  .tools {
+    .new {
+      color: #8BC34A;
+    }
+    .new, .comment {
+      margin-right: 10px;
     }
 
-    padding: 10px;
-    margin-bottom: 1px;
-    border: 1px solid #EEEEEE;
-    background: #FFF;
-    border-radius: 4px;
-
-    .tools {
-        .new, .copy {
-            color: #8BC34A;
-        }
-        .copy, .comment {
-            margin-right: 10px;
-        }
-
-        .open {
-            color: #8BC34A;
-        }
+    .open {
+      color: #8BC34A;
     }
+  }
 }
 </style>

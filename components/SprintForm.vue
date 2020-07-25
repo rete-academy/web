@@ -10,22 +10,26 @@
     class="custom-dialog"
   >
     <el-form ref="form" :model="form" label-width="120px">
-      <el-form-item label="Sprint Name">
-        <el-input
-          v-model="form.name"
-          placeholder="Name"
-          :disabled="loading"
-          clearable
-        />
-      </el-form-item>
-      <el-form-item label="Description">
-        <el-input
-          v-model="form.description"
-          placeholder="Description text here..."
-          type="textarea"
-          :autosize="{ minRows: 4, maxRows: 6}"
-        />
-      </el-form-item>
+      <el-row :gutter="20">
+        <el-col :span="22">
+          <el-form-item label="Sprint Name">
+            <el-input
+              v-model="form.name"
+              placeholder="Name"
+              :disabled="loading"
+              clearable
+            />
+          </el-form-item>
+          <el-form-item label="Description">
+            <el-input
+              v-model="form.description"
+              placeholder="Description text here..."
+              type="textarea"
+              :autosize="{ minRows: 4, maxRows: 6}"
+            />
+          </el-form-item>
+        </el-col>
+      </el-row>
       <el-form-item>
         <el-button
           size="small"

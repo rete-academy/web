@@ -3,6 +3,8 @@ import {
   CONFIRM_EMAIL,
   ENROLL,
   UNENROLL,
+  INCREASE_PROGRESS,
+  DECREASE_PROGRESS,
   FETCH_USER,
   FORGOT,
   GET_USERS,
@@ -85,6 +87,20 @@ export const actions = {
 
   async [UNENROLL]({ dispatch }, { userId, data }) {
     const response = await this.$axios.put(`/api/users/${userId}/unenroll`, { data });
+    dispatch(GET_USERS);
+    dispatch(FETCH_USER);
+    return response.data.message;
+  },
+
+  async [INCREASE_PROGRESS]({ dispatch }, { userId, data }) {
+    const response = await this.$axios.put(`/api/users/${userId}/increase`, { data });
+    dispatch(GET_USERS);
+    dispatch(FETCH_USER);
+    return response.data.message;
+  },
+
+  async [DECREASE_PROGRESS]({ dispatch }, { userId, data }) {
+    const response = await this.$axios.put(`/api/users/${userId}/decrease`, { data });
     dispatch(GET_USERS);
     dispatch(FETCH_USER);
     return response.data.message;

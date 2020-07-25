@@ -42,20 +42,28 @@
     </div>
 
     <el-dialog
+      title="Edit Profile"
       class="edit-profile-dialog"
       v-if="editProfileVisible"
       :visible.sync="editProfileVisible"
     >
       <el-form
         ref="profileForm"
-        :model="profile"
+        :model="form"
         label-width="180px"
         label-position="top"
       >
+        <el-form-item label="Name" class="name">
+          <el-row :gutter="10">
+            <el-col :span="22">
+              <el-input v-model="form.name" />
+            </el-col>
+          </el-row>
+        </el-form-item>
         <el-form-item label="Email" class="email">
-          <el-row :gutter="5">
+          <el-row :gutter="10">
             <el-col :span="18">
-              <el-input v-model="profile.email" />
+              <el-input v-model="form.email" />
             </el-col>
             <el-col :span="6">
               <el-button
@@ -67,14 +75,6 @@
               </el-button>
             </el-col>
           </el-row>
-        </el-form-item>
-        <el-form-item>
-          <el-button
-            type="success"
-            @click="updateProfile"
-          >
-            Update Profile
-          </el-button>
         </el-form-item>
       </el-form>
 
@@ -91,7 +91,7 @@
           @click="handleSave"
         >
           Save
-          <i class="el-icon-check"></i>
+          <fa icon="save" class="info-icon" />
         </el-button>
       </span>
     </el-dialog>
@@ -110,6 +110,10 @@ export default {
       file: null,
       defaultAvatar: '',
       editProfileVisible: false,
+      form: {
+        name: '',
+        email: '',
+      },
     };
   },
 
@@ -163,10 +167,15 @@ export default {
     },
 
     handleEdit() {
+      this.form = {
+        name: this.profile.name,
+        email: this.profile.email,
+      };
+
       this.editProfileVisible = true;
     },
 
-    async updateProfile() {
+    async handleSave() {
       if (this.file) {
         await this.submitUpload();
       }
@@ -217,9 +226,7 @@ export default {
     },
 
     handleCancel() {
-    },
-
-    handleSave() {
+      this.editProfileVisible = false;
     },
   },
 };

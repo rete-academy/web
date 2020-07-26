@@ -163,9 +163,9 @@ export default {
           showClose: true,
           duration: 500,
           type: 'success',
-          message: 'Reset successful!',
+          message: 'Reset mail sent successful!',
         });
-        this.$router.push('/');
+        this.$router.push('/login');
       }).catch((e) => {
         this.$nuxt.$loading.fail();
         consola.error(e.message);

@@ -12,7 +12,7 @@
         <el-dropdown-item command="profile">
           My Profile
         </el-dropdown-item>
-        <el-dropdown-item>Preferences</el-dropdown-item>
+        <!-- el-dropdown-item>Preferences</el-dropdown-item -->
         <el-dropdown-item divided command="logout">
           Logout
         </el-dropdown-item>

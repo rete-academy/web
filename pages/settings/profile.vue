@@ -30,13 +30,21 @@
 
       <el-row>
         <el-col :span="12">
-          <fa icon="envelope" class="info-icon" />
-          {{ profile.email }}
+          <fa icon="calendar" class="info-icon" />
+          Joined {{ joinedDate }}
         </el-col>
 
         <el-col :span="12">
-          <fa icon="calendar" class="info-icon" />
-          Joined {{ joinedDate }}
+          <fa icon="envelope" class="info-icon" />
+          {{ profile.email }}
+
+          <span
+            class="link"
+            v-if="!profile.meta.confirm"
+            @click="resendConfirm"
+          >
+            Resend confirmation
+          </span>
         </el-col>
       </el-row>
     </div>
@@ -44,6 +52,7 @@
     <el-dialog
       title="Edit Profile"
       class="edit-profile-dialog"
+      width="30%"
       v-if="editProfileVisible"
       :visible.sync="editProfileVisible"
     >
@@ -55,24 +64,15 @@
       >
         <el-form-item label="Name" class="name">
           <el-row :gutter="10">
-            <el-col :span="22">
-              <el-input v-model="form.name" />
+            <el-col :span="24">
+              <el-input v-model="form.name" :disabled="loading" />
             </el-col>
           </el-row>
         </el-form-item>
         <el-form-item label="Email" class="email">
           <el-row :gutter="10">
-            <el-col :span="18">
-              <el-input v-model="form.email" />
-            </el-col>
-            <el-col :span="6">
-              <el-button
-                v-if="!profile.meta.confirm"
-                type="text"
-                @click="resendConfirm"
-              >
-                Resend Confirmation
-              </el-button>
+            <el-col :span="24">
+              <el-input v-model="form.email" :disabled="loading" />
             </el-col>
           </el-row>
         </el-form-item>
@@ -81,6 +81,7 @@
       <span slot="footer" class="dialog-footer">
         <el-button
           size="medium"
+          :disabled="loading"
           @click="handleCancel"
         >
           Cancel
@@ -88,10 +89,11 @@
         <el-button
           size="medium"
           type="success"
+          :loading="loading"
+          icon="el-icon-check"
           @click="handleSave"
         >
           Save
-          <fa icon="save" class="info-icon" />
         </el-button>
       </span>
     </el-dialog>
@@ -110,6 +112,7 @@ export default {
       file: null,
       defaultAvatar: '',
       editProfileVisible: false,
+      loading: false,
       form: {
         name: '',
         email: '',
@@ -176,9 +179,21 @@ export default {
     },
 
     async handleSave() {
+      this.$nuxt.$loading.start();
+      this.loading = true;
+
       if (this.file) {
         await this.submitUpload();
       }
+
+      await this.$store.dispatch('users/UPDATE_USER', {
+        userId: this.$auth.user._id,
+        data: this.form,
+      });
+
+      this.editProfileVisible = false;
+      this.loading = false;
+      this.$nuxt.$loading.finish();
     },
 
     async submitUpload() {
@@ -233,71 +248,73 @@ export default {
 </script>
 <style lang="scss" scoped>
 .profile {
-    display: flex;
-    justify-content: space-between;
-    margin: 0 auto 50px;
+  display: flex;
+  justify-content: space-between;
+  margin: 0 auto 50px;
 
-    .big-button {
-      text-align: right;
-      margin: 1rem 0;
+  .big-button {
+    text-align: right;
+    margin: 1rem 0;
+  }
+
+  .big-name {
+    font-size: 3rem;
+    padding: 0;
+    margin: 1rem 0;
+    line-height: 100%;
+  }
+
+  .avatar {
+    width: 200px;
+    height: 200px;
+
+    img {
+      width: 100%;
+      border-radius: 4px;
     }
 
-    .big-name {
-      font-size: 3rem;
-      padding: 0;
-      margin: 1rem 0;
-      line-height: 100%;
-    }
+    .el-upload {
+      border: 1px dashed #d9d9d9;
+      border-radius: 4px;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
 
-    .avatar {
-        width: 200px;
-        height: 200px;
-
-        img {
-          width: 100%;
-          border-radius: 4px;
-        }
-
-        .el-upload {
-          border: 1px dashed #d9d9d9;
-          border-radius: 4px;
-          cursor: pointer;
-          position: relative;
-          overflow: hidden;
-
-          &:hover {
-            border-color: #409EFF;
-          }
-        }
-
-        .avatar-uploader-icon {
-          font-size: 28px;
-          color: #8c939d;
-          width: 36px;
-          height: 36px;
-          padding: 124px;
-          border: 1px dashed #d9d9d9;
-          border-radius: 4px;
-          line-height: 200px;
-          text-align: center;
-        }
-
-        .image {
-          width: 200px;
-          display: block;
-        }
-    }
-
-    .content {
-      width: auto;
-      margin-left: 20px;
-      flex: 1;
-      color: #333333;
-
-      .info-icon {
-        color: #666666;
-        margin-right: 10px;
+      &:hover {
+        border-color: #409EFF;
       }
     }
+
+    .avatar-uploader-icon {
+      font-size: 28px;
+      color: #8c939d;
+      width: 36px;
+      height: 36px;
+      padding: 124px;
+      border: 1px dashed #d9d9d9;
+      border-radius: 4px;
+      line-height: 200px;
+      text-align: center;
+    }
+
+    .image {
+      width: 200px;
+      display: block;
+    }
+  }
+
+  .content {
+    width: auto;
+    margin-left: 20px;
+    flex: 1;
+    color: #333333;
+
+    .info-icon {
+      color: #666666;
+      margin-right: 10px;
+    }
+  }
+
+  // .edit-profile-dialog {}
 }
 </style>

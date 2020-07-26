@@ -80,7 +80,13 @@
       </el-table-column>
       <el-table-column label="Author">
         <template slot-scope="scope">
-          {{ scope.row.author.name }}
+          <span
+            class="author-name"
+            v-for="author in scope.row.authors"
+            :key="author.id._id"
+          >
+            {{ author.id.name }}
+          </span>
         </template>
       </el-table-column>
       <el-table-column label="Created">
@@ -241,6 +247,7 @@ export default {
     },
 
     copyText(id) {
+      console.log('### files:', this.files);
       this.$copyText(this.$refs[id].value);
       this.$refs[id].select();
       this.$notify({

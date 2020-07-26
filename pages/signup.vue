@@ -76,7 +76,7 @@
         <el-button
           type="success"
           class="sign-up-btn"
-          :disabled="!acceptTos"
+          :disabled="!acceptTos || score < 3"
           @click="onSubmit"
         >
           Register
@@ -260,6 +260,7 @@ export default {
     handleSignUp() {
       if (this.acceptTos) {
         this.$nuxt.$loading.start();
+
         this.$store.dispatch('users/SIGN_UP', this.input)
           .then((res) => {
             this.$nuxt.$loading.finish();

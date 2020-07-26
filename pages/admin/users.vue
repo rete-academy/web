@@ -121,11 +121,6 @@ export default {
       consola.info(selected);
     },
 
-    /*
-         * Calculate and pre-select the sprints that already included
-         * into this path.
-         */
-
     async handleSubmit(id) {
       try {
         this.loading = true;

@@ -80,7 +80,7 @@ export default {
             this.count -= 1;
             if (this.count <= 0) {
               clearInterval(countDown);
-              this.$router.push('/');
+              this.$router.push('/login');
             }
           }, 1000);
           consola.error(err.message);

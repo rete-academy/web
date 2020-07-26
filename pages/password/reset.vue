@@ -38,7 +38,7 @@
         <el-button
           type="success"
           class="reset-btn"
-          :disabled="!input.password && !input.token"
+          :disabled="!input.password || !input.token || score < 3"
           @click="onSubmit"
         >
           Save New Password
@@ -132,22 +132,7 @@ export default {
       this.$nuxt.$loading.start();
       this.$refs.resetForm.validate((valid) => {
         if (valid) {
-          if (this.score >= 3) {
-            this.handleReset();
-          } else {
-            this.$confirm(
-              'Your password is quite weak. Continue?',
-              'Weak Password',
-              {
-                confirmButtonText: 'OK',
-                cancelButtonText: 'Choose Stronger Password',
-                type: 'warning',
-                center: true,
-              },
-            ).then(() => {
-              this.handleReset();
-            }).catch(() => {});
-          }
+          this.handleReset();
         }
       });
     },
@@ -161,11 +146,11 @@ export default {
         this.$nuxt.$loading.finish();
         this.$message({
           showClose: true,
-          duration: 500,
+          duration: 5000,
           type: 'success',
-          message: 'Reset mail sent successful!',
+          message: 'Reset successful!',
         });
-        this.$router.push('/login');
+        this.$router.push('/');
       }).catch((e) => {
         this.$nuxt.$loading.fail();
         consola.error(e.message);

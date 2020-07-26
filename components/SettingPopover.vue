@@ -133,7 +133,7 @@ export default {
       try {
         this.$nuxt.$loading.start();
         await this.$store.dispatch('users/UPDATE_USER', {
-          id: this.data._id,
+          userId: this.data._id,
           data: { role: [this.role] },
         });
         this.$nuxt.$loading.finish();
@@ -169,7 +169,6 @@ export default {
 
         h2 {
             float: left;
-            display: inline-block;
             width: auto;
             margin-left: 10px;
         }

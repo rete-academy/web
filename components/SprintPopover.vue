@@ -17,7 +17,7 @@
     </el-button>
     <el-table
       :ref="tableId"
-      :data="sprints"
+      :data="paginated[currentPage - 1]"
       row-key="_id"
       @select="handleSelections"
       @select-all="handleSelections"
@@ -59,26 +59,41 @@
         </template>
       </el-table-column>
     </el-table>
-    <div class="buttons">
-      <el-button
-        type="success"
-        size="mini"
-        :disabled="!changed"
-        @click="handleSubmit(data._id)"
-      >
-        Save
-      </el-button>
-      <el-button
-        size="mini"
-        @click="handleClose"
-      >
-        Close
-      </el-button>
+
+    <div class="controllers">
+      <el-pagination
+        background
+        v-if="paginated.length > 1"
+        class="pagination"
+        layout="prev, pager, next"
+        :total="total"
+        :page-size="pageSize"
+        :current-page.sync="currentPage"
+      />
+
+      <div v-else class="empty">&nbsp;</div>
+      <div class="buttons">
+        <el-button
+          size="mini"
+          @click="handleClose"
+        >
+          Close
+        </el-button>
+        <el-button
+          type="success"
+          size="mini"
+          :disabled="!changed"
+          @click="handleSubmit(data._id)"
+        >
+          Save
+        </el-button>
+      </div>
     </div>
   </el-dialog>
 </template>
 
 <script>
+import { chunk, flatten } from 'lodash';
 import { mapState } from 'vuex';
 
 export default {
@@ -105,12 +120,24 @@ export default {
       currentPage: 1,
       changed: false,
       position: {},
+      filter: '',
+      pageSize: 8,
     };
   },
 
   computed: {
     ...mapState('paths', ['paths']),
     ...mapState('sprints', ['sprints']),
+
+    paginated() {
+      return chunk(this.sprints.filter((o) => this.matched(o.name)), this.pageSize);
+    },
+
+    total() {
+      // we need to do total this way to reflect correct total entries
+      // after user filtering the results.
+      return flatten(this.paginated).length;
+    },
 
     tableId() {
       return this.data._id + this.currentPage;
@@ -136,6 +163,10 @@ export default {
   },
 
   methods: {
+    matched(str) {
+      return str.toLowerCase().indexOf(this.filter.toLowerCase()) !== -1;
+    },
+
     convertPositions(pos) {
       const toNum = {};
       // eslint-disable-next-line
@@ -174,10 +205,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.buttons {
-    display: flex;
-    justify-content: center;
-    margin-top: 10px;
+.controllers {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 10px;
 }
 .position-input {
   text-align: center;

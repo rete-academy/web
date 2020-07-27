@@ -7,6 +7,7 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 // we import it as faCoffee,
 // and use in Vue Component like <fa icon="coffee"/>
 import {
+  faAtlas,
   faCalendar,
   faChevronDown,
   faCircle,
@@ -65,6 +66,7 @@ import {
 } from '@fortawesome/vue-fontawesome';
 
 library.add(
+  faAtlas,
   faCalendar,
   faChevronDown,
   faCircle,

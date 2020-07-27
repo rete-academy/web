@@ -85,18 +85,18 @@
       <div v-else class="empty">&nbsp;</div>
       <div class="buttons">
         <el-button
+          size="mini"
+          @click="handleClose"
+        >
+          Close
+        </el-button>
+        <el-button
           type="success"
           size="mini"
           :disabled="!changed"
           @click="handleSubmit(data._id)"
         >
           Save
-        </el-button>
-        <el-button
-          size="mini"
-          @click="handleClose"
-        >
-          Close
         </el-button>
       </div>
     </div>
@@ -226,12 +226,13 @@ export default {
 
 <style lang="scss" scoped>
 .controllers {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 10px;
 }
 .name {
-    font-weight: bold;
+  font-weight: bold;
 }
 .description {
   line-height: 1rem;

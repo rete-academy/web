@@ -12,11 +12,11 @@
       </el-button>
     </div>
     <el-table
+      border
       v-loading="loading"
       :data="paginated[currentPage-1]"
       class="sprints-table"
       width="100%"
-      border
     >
       <el-table-column
         align="center"
@@ -112,7 +112,7 @@ export default {
       selection: 'name',
       currentPage: 1,
       currentSprint: undefined,
-      pageSize: 7,
+      pageSize: 8,
       filter: '',
       selectedSprints: null,
       selectedMaterials: null,

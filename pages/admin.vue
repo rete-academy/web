@@ -17,7 +17,7 @@
         <span slot="title">Sprints</span>
       </el-menu-item>
       <el-menu-item index="/admin/materials">
-        <fa icon="journal-whills" />
+        <fa icon="atlas" />
         <span slot="title">Materials</span>
       </el-menu-item>
       <el-menu-item index="/admin/files">

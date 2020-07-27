@@ -7,33 +7,38 @@
       <img src="@/assets/images/rete-logo-icon.png" class="logo-icon">
     </router-link>
     <div class="nav-content">
-      <router-link
-        v-if="!isLoggedIn"
-        class="item"
-        to="/paths"
-      >
-        Browse Paths
-      </router-link>
-      <router-link
-        v-else
-        class="item"
-        to="/my-paths"
-      >
-        My Paths
-      </router-link>
-      <!-- router-link class="item" to="/" disabled>
-          Events
-      </router-link>
-      <router-link class="item" to="/">
-          Jobs
-      </router-link -->
-      <router-link
-        v-if="isAdmin(user)"
-        class="item"
-        to="/admin"
-      >
-        Admin Dashboard
-      </router-link>
+      <div class="left">
+        <router-link
+          class="item"
+          to="/paths"
+        >
+          Browse Paths
+        </router-link>
+        <!-- router-link class="item" to="/" disabled>
+            Events
+        </router-link>
+        <router-link class="item" to="/">
+            Jobs
+        </router-link -->
+      </div>
+
+      <div class="right">
+        <router-link
+          v-if="isAdmin(user)"
+          class="item"
+          to="/admin"
+        >
+          Dashboard
+        </router-link>
+
+        <router-link
+          v-if="$auth.loggedIn"
+          class="item right"
+          to="/my-paths"
+        >
+          My Paths
+        </router-link>
+      </div>
     </div>
 
     <avatar />

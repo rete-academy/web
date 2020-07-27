@@ -29,7 +29,7 @@
       >
         <template slot-scope="scope">
           <p class="name">
-            {{ scope.row.name }}
+            {{ scope.row.name | truncate(45) }}
           </p>
           <p class="time">
             Updated: {{ scope.row.updatedTime | convertTime('HH:mm DD.MM.YYYY') }}
@@ -47,11 +47,12 @@
         width="250"
       >
         <template slot-scope="scope">
-          <sprint-popover
-            :data="scope.row"
-            @selected="handleSelected"
-            @positions-changed="handlePositions"
-            @submit="handleSubmit"
+          <el-button
+            plain
+            size="mini"
+            icon="el-icon-edit"
+            type="success"
+            @click="handleEditPath(scope.row)"
           />
           <el-button
             size="mini"
@@ -74,7 +75,20 @@
       :current-page.sync="currentPage"
     />
 
-    <path-form :visible.sync="formVisible" />
+    <sprint-popover
+      v-if="visible.sprintDialog"
+      :visible="visible.sprintDialog"
+      :data="currentPath"
+      title="Manage sprints"
+      @close="visible.sprintDialog = false"
+      @selected="handleSelected"
+      @positions-changed="handlePositions"
+      @submit="handleSubmit"
+    />
+
+    <path-form
+      :visible.sync="formVisible"
+    />
   </div>
 </template>
 
@@ -97,12 +111,17 @@ export default {
     return {
       selection: 'name',
       currentPage: 1,
+      currentPath: undefined,
       pageSize: 7,
       filter: '',
       loading: false,
       formVisible: false,
       selectedSprints: null,
       changedPositions: {},
+      visible: {
+        formDialog: false,
+        sprintDialog: false,
+      },
     };
   },
 
@@ -157,9 +176,15 @@ export default {
       this.changedPositions = positions;
     },
 
+    handleEditPath(path) {
+      this.currentPath = path;
+      this.visible.sprintDialog = true;
+    },
+
     async handleSubmit(id) {
       try {
         this.loading = true;
+        this.visible.sprintDialog = false;
         this.$nuxt.$loading.start();
         const currentSprints = this.paths.find((p) => p._id === id).sprints;
 

@@ -1,10 +1,10 @@
 <template>
-  <el-popover
-    width="500"
-    placement="left"
-    trigger="click"
+  <el-dialog
+    width="560px"
+    :title="title"
+    :visible="visible"
     @show="calculateSelections"
-    @hide="handleReset"
+    @close="handleClose"
   >
     <el-button
       slot="reference"
@@ -38,6 +38,7 @@
             </span>
             <el-input
               :key="scope.column.id"
+              class="search-input"
               v-model="filter"
               size="mini"
               placeholder="Type to search"
@@ -50,16 +51,17 @@
             {{ scope.row.name | truncate(50) }}
           </p>
           <p class="description">
-            {{ scope.row.description | truncate(140) }}
+            {{ scope.row.description | truncate(60) }}
           </p>
         </template>
       </el-table-column>
       <el-table-column
-        width="80"
+        width="100"
         label="Position"
       >
         <template slot-scope="scope">
           <el-input
+            class="position-input"
             v-model="position[scope.row._id]"
             size="mini"
             placeholder="0"
@@ -80,9 +82,7 @@
         class="small-pagination"
         @current-change="calculateSelections"
       />
-      <div v-else class="empty">
-                &nbsp;
-      </div>
+      <div v-else class="empty">&nbsp;</div>
       <div class="buttons">
         <el-button
           type="success"
@@ -94,13 +94,13 @@
         </el-button>
         <el-button
           size="mini"
-          @click="handleReset"
+          @click="handleClose"
         >
-          Reset
+          Close
         </el-button>
       </div>
     </div>
-  </el-popover>
+  </el-dialog>
 </template>
 <script>
 // import consola from 'consola'
@@ -114,6 +114,14 @@ export default {
     data: {
       type: Object,
       default: () => ({}),
+    },
+    title: {
+      type: String,
+      default: '',
+    },
+    visible: {
+      type: Boolean,
+      default: false,
     },
   },
 
@@ -190,12 +198,7 @@ export default {
       return toNum;
     },
 
-    /*
-         * Calculate and pre-select the sprints that already included
-         * into this path.
-         */
     calculateSelections() {
-      // this.$refs[tableId].clearSelection()
       this.data.materials.forEach((s) => {
         const index = this.materials.findIndex((e) => e._id === s._id);
         this.$refs[this.tableId].toggleRowSelection(this.materials[index], 'selected');
@@ -208,9 +211,10 @@ export default {
       this.$emit('selected', selections);
     },
 
-    handleReset() {
+    handleClose() {
       this.calculateSelections();
       this.changed = false;
+      this.$emit('close', {});
     },
 
     handleSubmit(id) {
@@ -230,13 +234,28 @@ export default {
     font-weight: bold;
 }
 .description {
-    line-height: 14px;
-    font-size: 11px;
-    color: #999;
+  line-height: 1rem;
+  font-size: 0.8rem;
+  color: #999;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
+
 .head-search {
-    display: flex;
-    justify-content: space-between;
-    padding: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0;
+
+  .search-input {
+    text-align: left;
+    width: 60%;
+  }
+}
+
+.position-input {
+  text-align: center;
+  width: 60px;
 }
 </style>

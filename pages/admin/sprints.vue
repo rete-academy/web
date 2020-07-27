@@ -6,7 +6,7 @@
         type="success"
         icon="el-icon-plus"
         class="create-new-btn"
-        @click="handleDialog"
+        @click="handleVisible('formDialog')"
       >
         Create New Sprint
       </el-button>
@@ -33,7 +33,7 @@
           </p>
           <p class="time">
             Updated: {{ scope.row.updatedTime | convertTime('HH:mm DD.MM.YYYY') }}
-            – v.{{ scope.row.meta.version }}
+            – Version: {{ scope.row.meta.version }}
           </p>
         </template>
       </el-table-column>
@@ -47,17 +47,18 @@
         width="250"
       >
         <template slot-scope="scope">
-          <material-popover
-            :data="scope.row"
-            @selected="handleSelected"
-            @positions-changed="handlePositions"
-            @submit="handleSubmit"
+          <el-button
+            plain
+            size="mini"
+            icon="el-icon-edit"
+            type="success"
+            @click="handleEditSprint(scope.row)"
           />
           <el-button
+            plain
             size="mini"
             icon="el-icon-delete"
             type="danger"
-            plain
             @click="handleDelete(scope.row._id)"
           />
         </template>
@@ -74,7 +75,21 @@
       :current-page.sync="currentPage"
     />
 
-    <sprint-form :visible.sync="formVisible" />
+    <sprint-form
+      v-if="visible.formDialog"
+      :visible.sync="visible.formDialog"
+    />
+
+    <material-popover
+      v-if="visible.materialDialog"
+      :visible="visible.materialDialog"
+      :data="currentSprint"
+      title="Manage materials"
+      @close="visible.materialDialog = false"
+      @selected="handleSelected"
+      @positions-changed="handlePositions"
+      @submit="handleSubmit"
+    />
   </div>
 </template>
 
@@ -96,13 +111,17 @@ export default {
     return {
       selection: 'name',
       currentPage: 1,
+      currentSprint: undefined,
       pageSize: 7,
       filter: '',
       selectedSprints: null,
       selectedMaterials: null,
       changed: false,
       loading: false,
-      formVisible: false,
+      visible: {
+        formDialog: false,
+        materialDialog: false,
+      },
       changedPositions: {},
     };
   },
@@ -147,8 +166,8 @@ export default {
       return str.toLowerCase().indexOf(this.filter.toLowerCase()) !== -1;
     },
 
-    handleDialog() {
-      this.formVisible = !this.formVisible;
+    handleVisible(key, state) {
+      this.visible[key] = typeof state !== 'undefined' ? state : !this.visible[key];
     },
 
     handleSelected(selections) {
@@ -159,10 +178,11 @@ export default {
       this.changedPositions = positions;
     },
 
-    /*
-         * Calculate and pre-select the sprints that already included
-         * into this path.
-         */
+    handleEditSprint(sprint) {
+      this.currentSprint = sprint;
+      this.visible.materialDialog = true;
+    },
+
     calculateSelections() {
       this.sprints.forEach((s) => {
         this.$refs[s._id].clearSelection();
@@ -181,6 +201,7 @@ export default {
     async handleSubmit(id) {
       try {
         this.loading = true;
+        this.visible.materialDialog = false;
         this.$nuxt.$loading.start();
 
         const currentMaterials = this.sprints.find((s) => s._id === id).materials;

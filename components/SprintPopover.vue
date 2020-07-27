@@ -1,10 +1,10 @@
 <template>
-  <el-popover
-    width="500"
-    placement="left"
-    trigger="click"
+  <el-dialog
+    width="560px"
+    :title="title"
+    :visible="visible"
     @show="calculateSelections"
-    @hide="handleReset"
+    @close="handleClose"
   >
     <el-button
       slot="reference"
@@ -16,7 +16,7 @@
       Manage Sprints ({{ data.sprints.length }})
     </el-button>
     <el-table
-      :ref="data._id"
+      :ref="tableId"
       :data="sprints"
       row-key="_id"
       @select="handleSelections"
@@ -28,10 +28,13 @@
         width="50"
       />
       <el-table-column
-        width="280"
+        width="380"
         label="Sprint Name"
-        property="name"
-      />
+      >
+        <template slot-scope="scope">
+          {{ scope.row.name | truncate(45) }}
+        </template>
+      </el-table-column>
       <el-table-column
         align="center"
         width="100"
@@ -42,11 +45,12 @@
         </template>
       </el-table-column>
       <el-table-column
-        width="80"
+        width="100"
         label="Position"
       >
         <template slot-scope="scope">
           <el-input
+            class="position-input"
             v-model="position[scope.row._id]"
             size="mini"
             placeholder="0"
@@ -65,15 +69,13 @@
         Save
       </el-button>
       <el-button
-        plain
-        type="danger"
         size="mini"
-        @click="handleReset"
+        @click="handleClose"
       >
-        Reset
+        Close
       </el-button>
     </div>
-  </el-popover>
+  </el-dialog>
 </template>
 
 <script>
@@ -87,11 +89,20 @@ export default {
       type: Object,
       default: () => ({}),
     },
+    title: {
+      type: String,
+      default: '',
+    },
+    visible: {
+      type: Boolean,
+      default: false,
+    },
   },
 
   data() {
     return {
       selectedSprints: null,
+      currentPage: 1,
       changed: false,
       position: {},
     };
@@ -100,6 +111,18 @@ export default {
   computed: {
     ...mapState('paths', ['paths']),
     ...mapState('sprints', ['sprints']),
+
+    tableId() {
+      return this.data._id + this.currentPage;
+    },
+  },
+
+  created() {
+    this.position = this.convertPositions(this.data.meta.position || {});
+  },
+
+  updated() {
+    this.calculateSelections();
   },
 
   watch: {
@@ -122,16 +145,12 @@ export default {
       // consola.info(toNum)
       return toNum;
     },
-    /*
-         * Calculate and pre-select the sprints that already included
-         * into this path.
-         */
+
     calculateSelections() {
-      this.$refs[this.data._id].clearSelection();
-      this.position = this.convertPositions(this.data.meta.position || {});
+      // this.position = this.convertPositions(this.data.meta.position || {});
       this.data.sprints.forEach((s) => {
         const index = this.sprints.findIndex((e) => e._id === s._id);
-        this.$refs[this.data._id].toggleRowSelection(this.sprints[index], 'selected');
+        this.$refs[this.tableId].toggleRowSelection(this.sprints[index], 'selected');
       });
     },
 
@@ -141,9 +160,10 @@ export default {
       this.$emit('selected', selections);
     },
 
-    handleReset() {
+    handleClose() {
       this.calculateSelections();
       this.changed = false;
+      this.$emit('close', {});
     },
 
     handleSubmit(id) {
@@ -152,10 +172,15 @@ export default {
   },
 };
 </script>
+
 <style lang="scss" scoped>
 .buttons {
     display: flex;
     justify-content: center;
     margin-top: 10px;
+}
+.position-input {
+  text-align: center;
+  width: 60px;
 }
 </style>

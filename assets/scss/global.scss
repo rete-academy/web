@@ -61,6 +61,11 @@ p {
   display: none;
 }
 
+.el-table-column--selection .cell {
+  padding-left: 10px !important;
+  padding-right: 10px !important;
+}
+
 .preview-dialog {
   .el-dialog {
     display: flex;

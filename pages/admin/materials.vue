@@ -33,7 +33,7 @@
               <fa :icon="scope.row.icon" />
             </span>
             <span class="name">
-              {{ scope.row.name }}
+              {{ scope.row.name | truncate(45) }}
             </span>
           </p>
           <p class="time">

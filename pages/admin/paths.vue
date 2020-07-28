@@ -27,13 +27,13 @@
         label="Name"
         width="380"
       >
-        <template slot-scope="scope">
+        <template slot-scope="{ row }">
           <p class="name">
-            {{ scope.row.name | truncate(45) }}
+            {{ row.name | truncate(45) }}
           </p>
           <p class="time">
-            Updated: {{ scope.row.updatedTime | convertTime('HH:mm DD.MM.YYYY') }}
-            – v.{{ scope.row.meta.version }}
+            Updated: {{ row.updatedTime | convertTime('HH:mm DD.MM.YYYY') }}
+            – Version: {{ row.meta.version }}
           </p>
         </template>
       </el-table-column>
@@ -46,20 +46,20 @@
         label="Actions"
         width="250"
       >
-        <template slot-scope="scope">
+        <template slot-scope="{ row }">
           <el-button
             plain
             size="mini"
             icon="el-icon-edit"
             type="success"
-            @click="handleEditPath(scope.row)"
+            @click="handleEditPath(row)"
           />
           <el-button
             size="mini"
             icon="el-icon-delete"
             type="danger"
             plain
-            @click="handleDelete(scope.row._id)"
+            @click="handleDelete(row._id)"
           />
         </template>
       </el-table-column>
@@ -75,14 +75,14 @@
       :current-page.sync="currentPage"
     />
 
-    <sprint-popover
+    <path-editor
       v-if="visible.sprintDialog"
-      :visible="visible.sprintDialog"
       :data="currentPath"
-      title="Manage sprints"
+      title="Path Editor"
       @close="visible.sprintDialog = false"
       @selected="handleSelected"
       @positions-changed="handlePositions"
+      @data-changed="handleDataChange"
       @submit="handleSubmit"
     />
 
@@ -99,13 +99,13 @@ import { chunk, flatten } from 'lodash';
 
 import {
   PathForm,
-  SprintPopover,
+  PathEditor,
 } from '@/components';
 
 export default {
   name: 'AdminPaths',
 
-  components: { PathForm, SprintPopover },
+  components: { PathForm, PathEditor },
 
   data() {
     return {
@@ -151,8 +151,7 @@ export default {
   },
 
   created() {
-    if (this.$route.query.page
-            && this.$route.query.page < this.paginated.length) {
+    if (this.$route.query.page && this.$route.query.page < this.paginated.length) {
       this.currentPage = parseInt(this.$route.query.page, 10);
     } else {
       this.$router.push({ query: {} });
@@ -181,6 +180,13 @@ export default {
       this.visible.sprintDialog = true;
     },
 
+    handleDataChange(obj) {
+      this.currentPath = {
+        ...this.currentPath,
+        ...obj,
+      };
+    },
+
     async handleSubmit(id) {
       try {
         this.loading = true;
@@ -195,12 +201,14 @@ export default {
           added = this.selectedSprints.filter((s) => !currentSprints.find((o) => o._id === s._id));
         }
 
-        if (this.changedPositions) {
-          await this.$store.dispatch('paths/UPDATE_PATH', {
-            pathId: id,
-            data: { meta: { position: this.changedPositions } },
-          });
-        }
+        await this.$store.dispatch('paths/UPDATE_PATH', {
+          pathId: id,
+          data: {
+            meta: { position: this.changedPositions },
+            name: this.currentPath.name,
+            description: this.currentPath.description,
+          },
+        });
 
         if (removed && removed.length > 0) {
           await this.$store.dispatch('paths/REMOVE_SPRINTS', {

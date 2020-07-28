@@ -153,8 +153,7 @@ export default {
   },
 
   created() {
-    if (this.$route.query.page
-            && this.$route.query.page < this.paginated.length) {
+    if (this.$route.query.page < this.paginated.length) {
       this.currentPage = parseInt(this.$route.query.page, 10);
     } else {
       this.$router.push({ query: {} });

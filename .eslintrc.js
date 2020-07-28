@@ -20,6 +20,10 @@ module.exports = {
   rules: {
     'max-len': 'off',
 
+    // Many times we have to use function () {}
+    // because the arrow func eats the 'this'
+    'func-names': 'off',
+
     // temporary allow dangle, bad decision in the past, at api level
     'no-underscore-dangle': 'off',
 

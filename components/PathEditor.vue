@@ -2,14 +2,27 @@
   <el-dialog
     width="560px"
     :title="title"
-    :visible="visible"
-    @show="calculateSelections"
+    :visible="!!data"
     @close="handleClose"
   >
     <el-tabs
       v-model="activeTab"
       @tab-click="handleChangeTab"
     >
+      <el-tab-pane label="Configurations" name="config">
+        <el-form ref="form" :model="form" label-width="120">
+          <el-form-item label="Path name">
+            <el-input v-model="form.name" :debounce="200"/>
+          </el-form-item>
+          <el-form-item label="Description">
+            <el-input
+              type="textarea"
+              v-model="form.description"
+              :rows="3"
+            />
+          </el-form-item>
+        </el-form>
+      </el-tab-pane>
       <el-tab-pane label="Manage sprints" name="sprints">
         <el-table
           :ref="tableId"
@@ -27,8 +40,8 @@
             width="380"
             label="Sprint Name"
           >
-            <template slot-scope="scope">
-              {{ scope.row.name | truncate(45) }}
+            <template slot-scope="{ row }">
+              {{ row.name | truncate(45) }}
             </template>
           </el-table-column>
           <el-table-column
@@ -36,18 +49,18 @@
             width="100"
             label="Materials"
           >
-            <template slot-scope="scope">
-              {{ scope.row.materials.length }}
+            <template slot-scope="{ row }">
+              {{ row.materials.length }}
             </template>
           </el-table-column>
           <el-table-column
             width="100"
             label="Position"
           >
-            <template slot-scope="scope">
+            <template slot-scope="{ row }">
               <el-input
                 class="position-input"
-                v-model="position[scope.row._id]"
+                v-model="position[row._id]"
                 size="mini"
                 placeholder="0"
                 @change="changed = true"
@@ -55,20 +68,6 @@
             </template>
           </el-table-column>
         </el-table>
-      </el-tab-pane>
-      <el-tab-pane label="Config Path" name="config">
-        <el-form ref="form" :model="form" label-width="120">
-          <el-form-item label="Path name">
-            <el-input v-model="form.name" />
-          </el-form-item>
-          <el-form-item label="Description">
-            <el-input
-              type="textarea"
-              v-model="form.description"
-              :rows="3"
-            />
-          </el-form-item>
-        </el-form>
       </el-tab-pane>
     </el-tabs>
 
@@ -82,8 +81,8 @@
         :page-size="pageSize"
         :current-page.sync="currentPage"
       />
-      <div v-else class="empty">&nbsp;</div>
 
+      <div v-else class="empty">&nbsp;</div>
       <div class="buttons">
         <el-button
           size="mini"
@@ -105,11 +104,11 @@
 </template>
 
 <script>
-import { chunk, flatten } from 'lodash';
+import { chunk, debounce, flatten } from 'lodash';
 import { mapState } from 'vuex';
 
 export default {
-  name: 'SprintPopover',
+  name: 'PathEditor',
 
   props: {
     data: {
@@ -128,8 +127,8 @@ export default {
 
   data() {
     return {
-      activeTab: 'sprints',
-      selectedSprints: null,
+      activeTab: 'config',
+      selectedSprints: this.data.sprints,
       currentPage: 1,
       changed: false,
       position: {},
@@ -162,11 +161,17 @@ export default {
   },
 
   created() {
-    this.position = this.convertPositions(this.data.meta.position || {});
+    this.selectedSprints = this.data.sprints;
   },
 
-  updated() {
-    this.calculateSelections();
+  mounted() {
+    // this.position = this.convertPositions(this.data.meta.position || {});
+    this.$router.push({ query: { id: this.data._id, tab: 'config' } });
+    setTimeout(() => this.calculateSelections(), 10);
+  },
+
+  destroyed() {
+    this.$router.push({ query: {} });
   },
 
   watch: {
@@ -176,6 +181,18 @@ export default {
         this.$emit('positions-changed', this.convertPositions(pos));
       },
       deep: true,
+    },
+
+    form: {
+      handler: debounce(function (obj) {
+        this.changed = true;
+        this.$emit('data-changed', obj);
+      }, 300),
+      deep: true,
+    },
+
+    currentPage() {
+      setTimeout(() => this.calculateSelections(), 10);
     },
   },
 
@@ -196,14 +213,15 @@ export default {
 
     calculateSelections() {
       // this.position = this.convertPositions(this.data.meta.position || {});
-      this.data.sprints.forEach((s) => {
-        const index = this.sprints.findIndex((e) => e._id === s._id);
-        this.$refs[this.tableId].toggleRowSelection(this.sprints[index], 'selected');
+      this.selectedSprints.forEach((s) => {
+        const i = this.sprints.findIndex((e) => e._id === s._id);
+        this.$refs[this.tableId].toggleRowSelection(this.sprints[i], 'selected');
       });
     },
 
-    handleChangeTab(tab) {
-      this.activeTab = tab.name;
+    handleChangeTab({ name }) {
+      this.activeTab = name;
+      this.$router.push({ query: { id: this.data._id, tab: name } });
     },
 
     handleSelections(selections) {
@@ -213,7 +231,6 @@ export default {
     },
 
     handleClose() {
-      this.calculateSelections();
       this.changed = false;
       this.$emit('close', {});
     },

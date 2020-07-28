@@ -1,9 +1,9 @@
 <template>
   <div class="admin wrapper">
     <el-menu
+      router
       class="admin-sub-menu"
       mode="horizontal"
-      router
       :default-active="activeIndex"
       @open="handleOpen"
       @close="handleClose"
@@ -66,20 +66,35 @@ export default {
 
   data() {
     return {
-      activeIndex: this.$route.fullPath,
       materialFormVisible: false,
     };
   },
 
+  computed: {
+    activeIndex() {
+      return this.$route.fullPath;
+    },
+  },
+
+  watch: {
+    activeIndex() {
+      if (this.activeIndex === '/admin') {
+        this.redirectToDefault();
+      }
+    },
+  },
+
   mounted() {
-    if (this.activeIndex === '/admin') {
-      this.$router.push('/admin/paths');
-      this.activeIndex = '/admin/paths';
-    }
+    this.redirectToDefault();
   },
 
   methods: {
+    redirectToDefault() {
+      this.$router.push('/admin/paths');
+    },
+
     handleClose() {},
+
     handleOpen() {},
   },
 };

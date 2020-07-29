@@ -52,6 +52,7 @@
             size="mini"
             icon="el-icon-edit"
             type="success"
+            :disabled="!canEdit(row)"
             @click="handleEditPath(row)"
           />
           <el-button
@@ -102,6 +103,8 @@ import {
   PathEditor,
 } from '@/components';
 
+import { checkRole } from '@/library';
+
 export default {
   name: 'AdminPaths',
 
@@ -130,7 +133,7 @@ export default {
     ...mapState('sprints', ['sprints']),
 
     paginated() {
-      return chunk(this.paths.filter((o) => this.matched(o.name)), this.pageSize);
+      return chunk(this.paths.filter((p) => this.matched(p) && this.canSee(p)), this.pageSize);
     },
 
     total() {
@@ -159,8 +162,19 @@ export default {
   },
 
   methods: {
-    matched(str) {
-      return str.toLowerCase().indexOf(this.filter.toLowerCase()) !== -1;
+    matched(p) {
+      return p.name.toLowerCase().indexOf(this.filter.toLowerCase()) !== -1;
+    },
+
+    canEdit(p) {
+      const isAdmin = checkRole(this.$auth.user, 'admin');
+      const isAuthor = p.authors.some((a) => a._id === this.$auth.user._id);
+      return isAdmin || isAuthor;
+    },
+
+    canSee(p) {
+      console.log('### p:', p);
+      return p.status === 'public' || this.canEdit(p);
     },
 
     handleDialog() {
@@ -194,8 +208,18 @@ export default {
         this.$nuxt.$loading.start();
         const currentSprints = this.paths.find((p) => p._id === id).sprints;
 
-        let removed; let
-          added; // need to find better way
+        let removed;
+        let added; // need to find better way
+
+        const updatedPath = { ...this.currentPath };
+        // Delete the properties not allowed to change
+        delete updatedPath._id;
+        delete updatedPath.authors;
+        delete updatedPath.createdTime;
+        delete updatedPath.meta;
+        delete updatedPath.slug;
+        delete updatedPath.sprints;
+
         if (this.selectedSprints) {
           removed = currentSprints.filter((c) => !this.selectedSprints.find((o) => o._id === c._id));
           added = this.selectedSprints.filter((s) => !currentSprints.find((o) => o._id === s._id));
@@ -205,8 +229,7 @@ export default {
           pathId: id,
           data: {
             meta: { position: this.changedPositions },
-            name: this.currentPath.name,
-            description: this.currentPath.description,
+            ...updatedPath,
           },
         });
 

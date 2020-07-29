@@ -21,6 +21,20 @@
               :rows="3"
             />
           </el-form-item>
+          <el-form-item label="Visibility">
+            <el-select
+              filterable
+              placeholder="Select visibility"
+              v-model="form.status"
+            >
+              <el-option
+                v-for="v in visibilities"
+                :key="v.value"
+                :label="v.label"
+                :value="v.value"
+              />
+            </el-select>
+          </el-form-item>
         </el-form>
       </el-tab-pane>
       <el-tab-pane label="Manage sprints" name="sprints">
@@ -137,6 +151,7 @@ export default {
       form: {
         name: this.data.name,
         description: this.data.description,
+        status: this.data.status,
       },
     };
   },
@@ -144,6 +159,14 @@ export default {
   computed: {
     ...mapState('paths', ['paths']),
     ...mapState('sprints', ['sprints']),
+
+    visibilities() {
+      return [
+        { value: 'public', label: 'Public' },
+        { value: 'draft', label: 'Draft' },
+        { value: 'unlisted', label: 'Unlisted' },
+      ];
+    },
 
     paginated() {
       return chunk(this.sprints.filter((o) => this.matched(o.name)), this.pageSize);

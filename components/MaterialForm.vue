@@ -13,18 +13,22 @@
       <el-row :gutter="20">
         <el-col :span="16">
           <el-form-item label="Material URL">
-            <el-input
-              v-model="url"
-              placeholder="Paste material URL here..."
-              :disabled="loading"
+            <el-autocomplete
               clearable
+              class="url-input"
+              placeholder="Paste material URL here..."
+              v-model="url"
+              :fetch-suggestions="querySearch"
+              :trigger-on-focus="false"
+              :disabled="loading"
+              @select="handleSelect"
             >
               <i
                 slot="suffix"
                 class="el-input__icon "
                 :class="loading ? 'el-icon-loading' : ''"
               >&nbsp;</i>
-            </el-input>
+            </el-autocomplete>
           </el-form-item>
           <el-form-item v-if="fetched" label="Title">
             <el-input
@@ -109,7 +113,15 @@ export default {
   },
 
   computed: {
+    ...mapGetters('files', ['files']),
     ...mapGetters('sprints', ['sprints', 'selectedSprint']),
+
+    allFiles() {
+      return this.files.map((f) => ({
+        value: f.data.originalname.toLowerCase(),
+        link: f.data.location,
+      }));
+    },
 
     form() {
       return {
@@ -166,6 +178,10 @@ export default {
   },
 
   methods: {
+    querySearch(s, c) {
+      c(this.allFiles.filter((f) => f.value.indexOf(s.toLowerCase()) !== -1));
+    },
+
     handleClose() {
       this.url = '';
       this.name = '';
@@ -173,6 +189,11 @@ export default {
       this.image = '';
       this.fetched = false;
       this.$emit('update:visible', false);
+    },
+
+    handleSelect(item) {
+      this.name = item.originalname;
+      this.url = item.link;
     },
 
     onSubmit() {
@@ -203,6 +224,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.url-input {
+  width: 100%;
+}
 .material-image {
     margin-top: 20px;
     width: 100%;

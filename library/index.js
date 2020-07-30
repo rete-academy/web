@@ -24,3 +24,5 @@ export const checkRole = (user, role) => {
 };
 
 export const isEmail = (str) => /^[a-zA-Z0-9.!#$%&’*+=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(str);
+
+export const diff = (s, t) => s.filter((c) => !t.find((o) => o._id === c._id));

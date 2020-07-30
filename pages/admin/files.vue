@@ -79,13 +79,13 @@
         </template>
       </el-table-column>
       <el-table-column label="Author">
-        <template slot-scope="scope">
+        <template slot-scope="{ row }">
           <span
             class="author-name"
-            v-for="author in scope.row.authors"
-            :key="author.id._id"
+            v-for="author in row.authors"
+            :key="author._id"
           >
-            {{ author.id.name }}
+            {{ author.name }}
           </span>
         </template>
       </el-table-column>
@@ -98,15 +98,15 @@
         label="Preview"
         width="80"
       >
-        <template slot-scope="scope">
+        <template slot-scope="{ row }">
           <img
-            v-if="isImage(scope.row.data.originalname)"
-            :src="scope.row.data.location"
+            v-if="isImage(row.data.originalname)"
+            :src="row.data.location"
             class="preview"
           >
           <fa
             v-else
-            :icon="detectIcon(scope.row.data.originalname)"
+            :icon="detectIcon(row.data.originalname)"
             class="preview"
           />
         </template>
@@ -115,18 +115,18 @@
         label="URL"
         width="250"
       >
-        <template slot-scope="scope">
+        <template slot-scope="{ row }">
           <el-input
-            :ref="scope.row._id"
-            :value="scope.row.data.location"
+            :ref="row._id"
+            :value="row.data.location"
             size="mini"
             placeholder="Please use valid data"
-            @focus="selectText(scope.row._id)"
+            @focus="selectText(row._id)"
           >
             <el-button
               slot="append"
               icon="el-icon-document"
-              @click="copyText(scope.row._id)"
+              @click="copyText(row._id)"
             />
           </el-input>
         </template>
@@ -247,7 +247,6 @@ export default {
     },
 
     copyText(id) {
-      console.log('### files:', this.files);
       this.$copyText(this.$refs[id].value);
       this.$refs[id].select();
       this.$notify({

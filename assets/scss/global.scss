@@ -14,7 +14,6 @@ $--color-primary: #F9A825;
 // $--border-radius-base: 25px;
 // $--button-mini-border-radius: #{$--border-radius-base - 10};
 
-
 /* icon font path, required */
 $--font-path: '~element-ui/lib/theme-chalk/fonts';
 @import "~element-ui/packages/theme-chalk/src/index";
@@ -56,14 +55,39 @@ p {
 .el-checkbox__input {
   height: 1rem;
 }
+
+
+.el-form-item__content {
+  line-height: 0;
+}
+
+.el-upload--picture-card {
+  overflow: hidden;
+
+  img {
+    width: 100%;
+    height: 100%;
+  }
+}
+
 // Hide the plus icon when already have image selected
-.el-upload-list--picture-card:not(:empty) + .el-upload--picture-card {
-  display: none;
+.el-upload-list--picture-card {
+  &:not(:empty) + .el-upload--picture-card {
+    display: none;
+  }
+
+  .el-upload-list__item {
+    margin: 0;
+  }
 }
 
 .el-table-column--selection .cell {
   padding-left: 10px !important;
   padding-right: 10px !important;
+}
+
+.el-dialog__body {
+  padding: 10px 20px 30px;
 }
 
 .preview-dialog {

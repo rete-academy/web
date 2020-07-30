@@ -12,7 +12,6 @@
       </el-button>
     </div>
     <el-table
-      v-loading="loading"
       :data="paginated[currentPage - 1]"
       class="paths-table"
       width="100%"
@@ -78,13 +77,11 @@
 
     <path-editor
       v-if="visible.sprintDialog"
+      :visible="visible.sprintDialog"
       :data="currentPath"
       title="Path Editor"
-      @close="visible.sprintDialog = false"
-      @selected="handleSelected"
-      @positions-changed="handlePositions"
-      @data-changed="handleDataChange"
-      @submit="handleSubmit"
+      @on-close="visible.sprintDialog = false"
+      @on-save="handleSubmit"
     />
 
     <path-form
@@ -96,14 +93,17 @@
 <script>
 import consola from 'consola';
 import { mapState } from 'vuex';
-import { chunk, flatten } from 'lodash';
+import { chunk, flatten, isEqual } from 'lodash';
 
 import {
   PathForm,
   PathEditor,
 } from '@/components';
 
-import { checkRole } from '@/library';
+import {
+  checkRole,
+  diff,
+} from '@/library';
 
 export default {
   name: 'AdminPaths',
@@ -117,14 +117,14 @@ export default {
       currentPath: undefined,
       pageSize: 7,
       filter: '',
-      loading: false,
       formVisible: false,
-      selectedSprints: null,
+      selectedSprints: [],
       changedPositions: {},
       visible: {
         formDialog: false,
         sprintDialog: false,
       },
+      working: false,
     };
   },
 
@@ -141,6 +141,13 @@ export default {
       // after user filtering the results.
       return flatten(this.paginated).length;
     },
+
+    uploadHeaders() {
+      return {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        Authorization: this.$auth.getToken('local'),
+      };
+    },
   },
 
   watch: {
@@ -151,6 +158,13 @@ export default {
         this.$router.push({ query: {} });
       }
     },
+
+    currentPath: {
+      handler(path) {
+        this.selectedSprints = path.sprints;
+      },
+      deep: true,
+    },
   },
 
   created() {
@@ -159,6 +173,9 @@ export default {
     } else {
       this.$router.push({ query: {} });
     }
+  },
+
+  mounted() {
   },
 
   methods: {
@@ -173,7 +190,6 @@ export default {
     },
 
     canSee(p) {
-      console.log('### p:', p);
       return p.status === 'public' || this.canEdit(p);
     },
 
@@ -181,11 +197,8 @@ export default {
       this.formVisible = !this.formVisible;
     },
 
-    handleSelected(selections) {
-      this.selectedSprints = selections;
-    },
-
     handlePositions(positions) {
+      console.log('### positions:', positions);
       this.changedPositions = positions;
     },
 
@@ -201,44 +214,77 @@ export default {
       };
     },
 
-    async handleSubmit(id) {
+    async handleUpload(file) {
       try {
-        this.loading = true;
-        this.visible.sprintDialog = false;
         this.$nuxt.$loading.start();
-        const currentSprints = this.paths.find((p) => p._id === id).sprints;
 
-        let removed;
-        let added; // need to find better way
+        const formData = new FormData();
+        formData.append('files', file.raw);
+        const { data } = await this.$axios.post(
+          `${this.$axios.defaults.baseURL}/api/files/upload`,
+          formData,
+          { headers: this.uploadHeaders },
+        );
 
-        const updatedPath = { ...this.currentPath };
-        // Delete the properties not allowed to change
-        delete updatedPath._id;
-        delete updatedPath.authors;
-        delete updatedPath.createdTime;
-        delete updatedPath.meta;
-        delete updatedPath.slug;
-        delete updatedPath.sprints;
-
-        if (this.selectedSprints) {
-          removed = currentSprints.filter((c) => !this.selectedSprints.find((o) => o._id === c._id));
-          added = this.selectedSprints.filter((s) => !currentSprints.find((o) => o._id === s._id));
-        }
-
-        await this.$store.dispatch('paths/UPDATE_PATH', {
-          pathId: id,
-          data: {
-            meta: { position: this.changedPositions },
-            ...updatedPath,
-          },
-        });
-
-        if (removed && removed.length > 0) {
-          await this.$store.dispatch('paths/REMOVE_SPRINTS', {
-            pathId: id,
-            sprintIds: removed.map((o) => o._id),
+        if (data && data.success && data.message.data.location) {
+          this.$nuxt.$loading.finish();
+          this.$message({
+            message: 'Uploaded succesfully!',
+            type: 'success',
           });
+
+          return data.message.data.location;
         }
+
+        return 'Can not find url from S3';
+      } catch (error) {
+        consola.error(error.message);
+        this.$nuxt.$loading.fail();
+        this.$message.error(`Oops, ${error.message}`);
+
+        return 'Error';
+      }
+    },
+
+    sanitizeData(obj) {
+      if (!obj) {
+        return {};
+      }
+
+      const pathData = { ...obj };
+      delete pathData._id;
+      delete pathData.authors;
+      delete pathData.createdTime;
+      delete pathData.file;
+      delete pathData.meta.version;
+      delete pathData.slug;
+      delete pathData.sprints;
+
+      return pathData;
+    },
+
+    async handleSubmit(currentPath) {
+      try {
+        this.working = true;
+        this.$nuxt.$loading.start();
+
+        const {
+          file,
+          id,
+          sprints,
+        } = currentPath;
+
+        const newData = this.sanitizeData({ ...currentPath });
+        const oldData = this.sanitizeData(this.currentPath);
+
+        // Delete the properties not allowed to change
+
+        if (file) {
+          const uploadedUrl = await this.handleUpload(file);
+          newData.image = uploadedUrl;
+        }
+
+        const added = diff(sprints, this.selectedSprints);
 
         if (added && added.length > 0) {
           await this.$store.dispatch('paths/ADD_SPRINTS', {
@@ -247,7 +293,24 @@ export default {
           });
         }
 
-        this.loading = false;
+        const removed = diff(this.selectedSprints, sprints);
+
+        if (removed && removed.length > 0) {
+          await this.$store.dispatch('paths/REMOVE_SPRINTS', {
+            pathId: id,
+            sprintIds: removed.map((o) => o._id),
+          });
+        }
+
+        if (!isEqual(newData, oldData)) {
+          await this.$store.dispatch(`paths/${id ? 'UPDATE' : 'CREATE'}_PATH`, {
+            pathId: id,
+            data: newData,
+          });
+        }
+
+        this.visible.sprintDialog = false;
+        this.working = false;
         this.$nuxt.$loading.finish();
       } catch (e) {
         this.$nuxt.$loading.fail();
@@ -269,7 +332,7 @@ export default {
             center: true,
           },
         ).then(async () => {
-          this.loading = true;
+          this.working = true;
           this.$nuxt.$loading.start();
           await this.$store.dispatch('paths/DELETE_PATH', id);
           this.$message({
@@ -278,7 +341,7 @@ export default {
             showClose: true,
             duration: 1000,
           });
-          this.loading = false;
+          this.working = false;
           this.$nuxt.$loading.finish();
         }).catch(() => {
           this.$message({

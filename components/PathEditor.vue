@@ -1,8 +1,11 @@
 <template>
   <el-dialog
-    width="560px"
+    class="editor-dialog"
+    width="600px"
     :title="title"
-    :visible="!!data"
+    :visible="visible"
+    :close-on-click-modal="false"
+    :close-on-press-escape="false"
     @close="handleClose"
   >
     <el-tabs
@@ -10,15 +13,22 @@
       @tab-click="handleChangeTab"
     >
       <el-tab-pane label="Configurations" name="config">
-        <el-form ref="form" :model="form" label-width="120">
+        <el-form
+          ref="form"
+          :disabled="working"
+          :model="form"
+          label-width="90px"
+          class="form-wrapper"
+        >
           <el-form-item label="Path name">
-            <el-input v-model="form.name" :debounce="200"/>
+            <el-input class="input" v-model="form.name" />
           </el-form-item>
           <el-form-item label="Description">
             <el-input
               type="textarea"
+              class="input"
+              :autosize="{ minRows: 3, maxRows: 6 }"
               v-model="form.description"
-              :rows="3"
             />
           </el-form-item>
           <el-form-item label="Visibility">
@@ -35,8 +45,35 @@
               />
             </el-select>
           </el-form-item>
+          <el-form-item label="Image">
+            <el-upload
+              list-type="picture-card"
+              class="image-uploader"
+              action="#"
+              :before-upload="beforeUpload"
+              :auto-upload="false"
+              :file-list="fileList"
+              :on-change="onChange"
+              :on-remove="onRemove"
+            >
+              <img v-if="form.image" :src="form.image" slot="default">
+              <i v-else slot="default" class="el-icon-plus"></i>
+              <div slot="file" slot-scope="{ file }">
+                <img :src="file.url" class="image">
+                <span class="el-upload-list__item-actions">
+                  <span
+                    class="el-upload-list__item-delete"
+                    @click="onRemove"
+                  >
+                  <i class="el-icon-delete"></i>
+                  </span>
+                </span>
+              </div>
+            </el-upload>
+          </el-form-item>
         </el-form>
       </el-tab-pane>
+
       <el-tab-pane label="Manage sprints" name="sprints">
         <el-table
           :ref="tableId"
@@ -51,7 +88,6 @@
             width="50"
           />
           <el-table-column
-            width="380"
             label="Sprint Name"
           >
             <template slot-scope="{ row }">
@@ -73,10 +109,13 @@
           >
             <template slot-scope="{ row }">
               <el-input
+                :disabled="working"
+                :min="0"
+                :placeholder="0"
                 class="position-input"
-                v-model="position[row._id]"
                 size="mini"
-                placeholder="0"
+                type="number"
+                v-model.number="position[row._id]"
                 @change="changed = true"
               />
             </template>
@@ -99,6 +138,7 @@
       <div v-else class="empty">&nbsp;</div>
       <div class="buttons">
         <el-button
+          :disabled="working"
           size="mini"
           @click="handleClose"
         >
@@ -107,7 +147,7 @@
         <el-button
           type="success"
           size="mini"
-          :disabled="!changed"
+          :disabled="!changed || working"
           @click="handleSubmit(data._id)"
         >
           Save
@@ -118,7 +158,12 @@
 </template>
 
 <script>
-import { chunk, debounce, flatten } from 'lodash';
+import {
+  chunk,
+  debounce,
+  flatten,
+  isEqual,
+} from 'lodash';
 import { mapState } from 'vuex';
 
 export default {
@@ -142,17 +187,21 @@ export default {
   data() {
     return {
       activeTab: 'config',
-      selectedSprints: this.data.sprints,
-      currentPage: 1,
       changed: false,
-      position: {},
+      currentPage: 1,
+      file: null,
+      fileList: [],
       filter: '',
-      pageSize: 8,
       form: {
-        name: this.data.name,
         description: this.data.description,
+        image: this.data.image,
+        name: this.data.name,
         status: this.data.status,
       },
+      pageSize: 6,
+      position: {},
+      selectedSprints: this.data.sprints,
+      working: false,
     };
   },
 
@@ -172,25 +221,30 @@ export default {
       return chunk(this.sprints.filter((o) => this.matched(o.name)), this.pageSize);
     },
 
+    // we need to do total this way to reflect correct total entries
+    // after user filtering the results.
     total() {
-      // we need to do total this way to reflect correct total entries
-      // after user filtering the results.
       return flatten(this.paginated).length;
     },
 
     tableId() {
-      return this.data._id + this.currentPage;
+      return `path-editor-table-${this.currentPage}`;
     },
+
   },
 
   created() {
     this.selectedSprints = this.data.sprints;
+    this.position = this.convertPositions(this.data.meta.position || {});
   },
 
   mounted() {
-    // this.position = this.convertPositions(this.data.meta.position || {});
     this.$router.push({ query: { id: this.data._id, tab: 'config' } });
     setTimeout(() => this.calculateSelections(), 10);
+
+    if (this.$route.query.id !== 'new') {
+      // this.file = { url: this.data.image };
+    }
   },
 
   destroyed() {
@@ -198,19 +252,20 @@ export default {
   },
 
   watch: {
-    position: {
-      handler(pos) {
-        this.changed = true;
-        this.$emit('positions-changed', this.convertPositions(pos));
-      },
-      deep: true,
-    },
-
     form: {
       handler: debounce(function (obj) {
-        this.changed = true;
-        this.$emit('data-changed', obj);
-      }, 300),
+        const newForm = {
+          description: this.data.description,
+          image: this.data.image,
+          name: this.data.name,
+          status: this.data.status,
+        };
+        if (!isEqual(obj, newForm)) {
+          this.changed = true;
+        } else {
+          this.changed = false;
+        }
+      }, 100),
       deep: true,
     },
 
@@ -225,21 +280,39 @@ export default {
     },
 
     convertPositions(pos) {
-      const toNum = {};
-      // eslint-disable-next-line
-      for (const id in pos) {
-        toNum[id] = pos[id] ? parseInt(pos[id], 10) : 0;
-      }
-      // consola.info(toNum)
-      return toNum;
+      return Object.keys(pos).reduce((a, c) => ({
+        ...a,
+        [c]: pos[c] ? parseInt(pos[c], 10) : 0,
+      }), {});
     },
 
     calculateSelections() {
-      // this.position = this.convertPositions(this.data.meta.position || {});
       this.selectedSprints.forEach((s) => {
         const i = this.sprints.findIndex((e) => e._id === s._id);
         this.$refs[this.tableId].toggleRowSelection(this.sprints[i], 'selected');
       });
+    },
+
+    beforeUpload(file) {
+      this.file = file;
+
+      const isLt2M = file.size / 1024 / 1024 < 20;
+
+      if (!isLt2M) {
+        this.$message.error('File size can not exceed 20MB!');
+      }
+
+      return isLt2M;
+    },
+
+    onChange(file, fileList) {
+      this.file = file;
+      this.fileList = fileList;
+    },
+
+    onRemove() {
+      this.file = null;
+      this.fileList = [];
     },
 
     handleChangeTab({ name }) {
@@ -248,24 +321,47 @@ export default {
     },
 
     handleSelections(selections) {
-      this.changed = true;
+      if (!isEqual(this.data.sprints, selections)) {
+        this.changed = true;
+      } else {
+        this.changed = false;
+      }
       this.selectedSprints = selections;
-      this.$emit('selected', selections);
     },
 
     handleClose() {
       this.changed = false;
-      this.$emit('close', {});
+      this.$emit('on-close');
     },
 
-    handleSubmit(id) {
-      this.$emit('submit', id);
+    handleSubmit() {
+      const data = {
+        ...this.form,
+        id: this.data._id,
+        file: this.file,
+        meta: { position: this.position },
+        sprints: this.selectedSprints,
+      };
+      this.$emit('on-save', data);
     },
   },
 };
 </script>
 
 <style lang="scss" scoped>
+.form-wrapper {
+  padding-top: 10px;
+
+  .input {
+    width: 96%;
+  }
+
+  .image {
+    width: 150px;
+    height: 150px;
+  }
+}
+
 .controllers {
   display: flex;
   align-items: center;

@@ -193,10 +193,10 @@ export default {
       fileList: [],
       filter: '',
       form: {
-        description: this.data.description,
+        description: this.data.description || '',
         image: this.data.image || '',
-        name: this.data.name,
-        status: this.data.status,
+        name: this.data.name || '',
+        status: this.data.status || 'public',
       },
       pageSize: 6,
       position: {},

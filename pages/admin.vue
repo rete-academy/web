@@ -1,36 +1,17 @@
 <template>
   <div class="admin wrapper">
     <el-menu
-      router
-      class="admin-sub-menu"
       mode="horizontal"
       :default-active="activeIndex"
-      @open="handleOpen"
-      @close="handleClose"
+      class="admin-sub-menu"
     >
-      <el-menu-item index="/admin/paths">
-        <fa icon="university" />
-        <span slot="title">Paths</span>
-      </el-menu-item>
-      <el-menu-item index="/admin/sprints">
-        <fa icon="tasks" />
-        <span slot="title">Sprints</span>
-      </el-menu-item>
-      <el-menu-item index="/admin/materials">
-        <fa icon="atlas" />
-        <span slot="title">Materials</span>
-      </el-menu-item>
-      <el-menu-item index="/admin/files">
-        <fa icon="folder" />
-        <span slot="title">Files</span>
-      </el-menu-item>
-      <el-menu-item index="/admin/users">
-        <fa icon="user" />
-        <span slot="title">Users</span>
-      </el-menu-item>
-      <el-menu-item index="/admin/settings">
-        <fa icon="cog" />
-        <span slot="title">Settings</span>
+      <el-menu-item v-for="item in items"
+        :key="item.index"
+        :index="item.index"
+        @click="clickMenuItem"
+      >
+        <fa :icon="item.icon" />
+        <span slot="title">{{ item.label }}</span>
       </el-menu-item>
     </el-menu>
 
@@ -66,36 +47,77 @@ export default {
 
   data() {
     return {
+      items: [
+        {
+          index: '/admin/paths',
+          icon: 'university',
+          label: 'Paths',
+        },
+        {
+          index: '/admin/sprints',
+          icon: 'tasks',
+          label: 'Sprints',
+        },
+        {
+          index: '/admin/materials',
+          icon: 'atlas',
+          label: 'Materials',
+        },
+        {
+          index: '/admin/files',
+          icon: 'folder',
+          label: 'Files',
+        },
+        {
+          index: '/admin/users',
+          icon: 'user',
+          label: 'Users',
+        },
+        {
+          index: '/admin/settings',
+          icon: 'cog',
+          label: 'Settings',
+        },
+      ],
+      activeIndex: '/admin/paths',
       materialFormVisible: false,
     };
-  },
-
-  computed: {
-    activeIndex() {
-      return this.$route.fullPath;
-    },
   },
 
   watch: {
     activeIndex() {
       if (this.activeIndex === '/admin') {
-        this.redirectToDefault();
+        this.redirectToCorrectPlace();
       }
     },
   },
 
   mounted() {
-    this.redirectToDefault();
+    const { fullPath } = this.$route;
+
+    if (fullPath.indexOf('/admin') === 0 && fullPath.length > 6) {
+      this.redirectToCorrectPlace(fullPath);
+    } else {
+      this.redirectToCorrectPlace();
+    }
   },
 
   methods: {
-    redirectToDefault() {
-      this.$router.push('/admin/paths');
+    redirectToCorrectPlace(path) {
+      if (path) {
+        this.activeIndex = path;
+        this.$router.push(path);
+      } else {
+        this.$router.push('/admin/paths');
+      }
     },
 
-    handleClose() {},
-
-    handleOpen() {},
+    clickMenuItem(item) {
+      if (item.index !== this.activeIndex) {
+        this.activeIndex = item.index;
+        this.$router.push(item.index);
+      }
+    },
   },
 };
 </script>

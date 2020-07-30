@@ -83,10 +83,6 @@
       @on-close="visible.sprintDialog = false"
       @on-save="handleSubmit"
     />
-
-    <path-form
-      :visible.sync="formVisible"
-    />
   </div>
 </template>
 
@@ -95,10 +91,7 @@ import consola from 'consola';
 import { mapState } from 'vuex';
 import { chunk, flatten, isEqual } from 'lodash';
 
-import {
-  PathForm,
-  PathEditor,
-} from '@/components';
+import { PathEditor } from '@/components';
 
 import {
   checkRole,
@@ -108,7 +101,7 @@ import {
 export default {
   name: 'AdminPaths',
 
-  components: { PathForm, PathEditor },
+  components: { PathEditor },
 
   data() {
     return {
@@ -170,12 +163,9 @@ export default {
   created() {
     if (this.$route.query.page && this.$route.query.page < this.paginated.length) {
       this.currentPage = parseInt(this.$route.query.page, 10);
-    } else {
-      this.$router.push({ query: {} });
+    // } else {
+      // this.$router.push({ query: {} });
     }
-  },
-
-  mounted() {
   },
 
   methods: {
@@ -193,20 +183,9 @@ export default {
       return p.status === 'public' || this.canEdit(p);
     },
 
-    handleDialog() {
-      this.formVisible = !this.formVisible;
-    },
-
     handleEditPath(path) {
       this.currentPath = path;
       this.visible.sprintDialog = true;
-    },
-
-    handleDataChange(obj) {
-      this.currentPath = {
-        ...this.currentPath,
-        ...obj,
-      };
     },
 
     async handleUpload(file) {
@@ -241,6 +220,7 @@ export default {
       }
     },
 
+    // Delete the properties not allowed to change before submit
     sanitizeData(obj) {
       if (!obj) {
         return obj;
@@ -248,7 +228,6 @@ export default {
 
       const pathData = { ...obj };
 
-      // Delete the properties not allowed to change
       delete pathData._id;
       delete pathData.authors;
       delete pathData.createdTime;

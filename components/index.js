@@ -9,7 +9,6 @@ export { default as MaterialPopover } from './MaterialPopover.vue';
 export { default as MaterialRow } from './MaterialRow.vue';
 export { default as NavBar } from './NavBar.vue';
 export { default as PathEditor } from './PathEditor.vue';
-export { default as PathForm } from './PathForm.vue';
 export { default as PositionInput } from './PositionInput.vue';
 export { default as SettingPopover } from './SettingPopover.vue';
 export { default as SprintForm } from './SprintForm.vue';

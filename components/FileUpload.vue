@@ -26,7 +26,7 @@
 import consola from 'consola';
 
 export default {
-  name: 'PathForm',
+  name: 'FileUpload',
 
   props: {
     visible: {

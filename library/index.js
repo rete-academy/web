@@ -25,6 +25,8 @@ export const checkRole = (user, role) => {
 
 export const isEmail = (str) => /^[a-zA-Z0-9.!#$%&’*+=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(str);
 
+export const isValidUrl = (url) => /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)/.test(url);
+
 export const diff = (s, t) => s.filter((c) => !t.find((o) => o._id === c._id));
 
 // Delete the properties not allowed to change before submit
@@ -36,6 +38,7 @@ export const sanitizeData = (obj) => {
   const cleanData = { ...obj };
 
   delete cleanData._id;
+  delete cleanData.id;
   delete cleanData.authors;
 
   // The time should be handled by backend automatically

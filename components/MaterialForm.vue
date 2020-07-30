@@ -9,76 +9,80 @@
     width="50%"
     class="custom-dialog"
   >
-    <el-form ref="form" :model="form" label-width="150px">
-      <el-row :gutter="20">
-        <el-col :span="16">
-          <el-form-item label="Material URL">
-            <el-autocomplete
-              clearable
-              class="url-input"
-              placeholder="Paste material URL here..."
-              v-model="url"
-              :fetch-suggestions="querySearch"
-              :trigger-on-focus="false"
-              :disabled="loading"
-              @select="handleSelect"
-            >
-              <i
-                slot="suffix"
-                class="el-input__icon "
-                :class="loading ? 'el-icon-loading' : ''"
-              >&nbsp;</i>
-            </el-autocomplete>
-          </el-form-item>
-          <el-form-item v-if="fetched" label="Title">
-            <el-input
-              v-model="name"
-              placeholder="Title"
-              clearable
-            />
-          </el-form-item>
-          <el-form-item v-if="fetched" label="Description">
-            <el-input
-              v-model="description"
-              placeholder="Description..."
-              type="textarea"
-              :autosize="{ minRows: 3, maxRows: 6}"
-            />
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-select
-            v-model="localSelected"
-            placeholder="Select sprint"
-            clearable
-            filterable
-          >
-            <el-option
-              v-for="sprint in sprints"
-              :key="sprint._id"
-              :label="sprint.name"
-              :value="sprint._id"
-            />
-          </el-select>
-          <img :src="image" class="material-image">
-        </el-col>
-      </el-row>
-      <el-form-item>
-        <el-button
-          size="small"
-          type="success"
-          @click="onSubmit"
+    <el-form ref="form" :model="form" label-width="90px">
+      <el-form-item label="Link">
+        <el-autocomplete
+          clearable
+          class="url-input"
+          placeholder="Paste material URL here..."
+          v-model="form.url"
+          :fetch-suggestions="querySearch"
+          :trigger-on-focus="false"
+          :disabled="working"
+          @select="handleSelect"
         >
-          Add Material
-        </el-button>
+          <i
+            slot="suffix"
+            class="el-input__icon"
+            :class="working ? 'el-icon-loading' : ''"
+          >&nbsp;</i>
+        </el-autocomplete>
+      </el-form-item>
+      <el-form-item v-if="fetched || hasData" label="Title">
+        <el-input
+          v-model="form.name"
+          placeholder="Title"
+          clearable
+        />
+      </el-form-item>
+      <el-form-item v-if="fetched || hasData" label="Description">
+        <el-input
+          v-model="form.description"
+          placeholder="Description..."
+          type="textarea"
+          :autosize="{ minRows: 3, maxRows: 6 }"
+        />
+      </el-form-item>
+    <el-form-item label="Preview">
+      <img :src="form.image" class="material-image">
+    </el-form-item>
+    <el-form-item label="Sprint">
+      <el-select
+        v-model="currentSprint"
+        placeholder="Select sprint"
+        clearable
+        filterable
+      >
+        <el-option
+          v-for="sprint in sprints"
+          :key="sprint._id"
+          :label="sprint.name"
+          :value="sprint._id"
+        />
+      </el-select>
+    </el-form-item>
+
+    <div class="controllers">
+      <div class="empty">&nbsp;</div>
+      <div class="buttons">
         <el-button
           plain
-          size="small"
+          size="mini"
+          :disabled="working"
           @click="handleClose"
         >
           Close
         </el-button>
-      </el-form-item>
+        <el-button
+          size="mini"
+          type="success"
+          :disabled="!changed || working"
+          @click="onSubmit"
+        >
+          {{ hasData ? 'Save' : 'Add Material' }}
+        </el-button>
+      </div>
+      </div>
     </el-form>
   </el-dialog>
 </template>
@@ -86,12 +90,15 @@
 <script>
 import consola from 'consola';
 import { mapGetters } from 'vuex';
+import { isEqual, throttle } from 'lodash';
+
+import { isValidUrl } from '@/library';
 
 export default {
   name: 'MaterialForm',
 
   props: {
-    user: {
+    data: {
       type: Object,
       default: () => ({}),
     },
@@ -103,12 +110,15 @@ export default {
 
   data() {
     return {
-      url: '',
-      name: '',
-      description: '',
-      image: '',
-      loading: false,
       fetched: false,
+      changed: false,
+      working: false,
+      form: {
+        description: this.data.description || '',
+        image: this.data.image || '',
+        name: this.data.name || '',
+        url: this.data.url || '',
+      },
     };
   },
 
@@ -123,16 +133,11 @@ export default {
       }));
     },
 
-    form() {
-      return {
-        url: this.url,
-        name: this.name,
-        description: this.description,
-        image: this.image,
-      };
+    hasData() {
+      return Object.keys(this.data).length > 0 && this.data.constructor === Object;
     },
 
-    localSelected: {
+    currentSprint: {
       get() {
         return this.selectedSprint;
       },
@@ -143,31 +148,51 @@ export default {
   },
 
   watch: {
-    url() {
-      if (this.url && this.isValidUrl(this.url)) {
-        this.loading = true;
-        this.$nuxt.$loading.start();
-        this.$axios
-          .post('https://api.linkpreview.net', {
-            q: this.url,
-            key: '5c6e71509eafb0595e5860fe9c5eaba82fb617087dbc1',
-          })
-          .then((res) => {
-            if (res) {
-              this.fetched = true;
-              this.name = res.data.title;
-              this.description = res.data.description;
-              this.image = res.data.image;
+    form: {
+      handler: throttle(function (obj) {
+        const { url } = this.form;
 
-              this.loading = false;
+        const newForm = {
+          description: this.data.description,
+          image: this.data.image,
+          name: this.data.name,
+          url: this.data.url,
+        };
+
+        if (!isEqual(obj, newForm)) {
+          this.changed = true;
+        } else {
+          this.changed = false;
+        }
+
+        if (url && isValidUrl(url) && !this.fetched) {
+          this.working = true;
+          this.$nuxt.$loading.start();
+
+          this.$axios.post('https://api.linkpreview.net', {
+            q: this.form.url,
+            key: '5c6e71509eafb0595e5860fe9c5eaba82fb617087dbc1',
+          }).then(({ data }) => {
+            if (data) {
+              this.fetched = true;
+              this.form = {
+                url: this.form.url,
+                name: data.title,
+                description: data.description,
+                image: data.image,
+              };
+
               this.$nuxt.$loading.finish();
             }
           }).catch((error) => {
-            this.loading = false;
             this.$nuxt.$loading.fail();
             consola.error(error);
           });
-      }
+
+          this.working = false;
+        }
+      }, 1000),
+      deep: true,
     },
   },
 
@@ -177,47 +202,45 @@ export default {
     }
   },
 
+  mounted() {
+    if (this.hasData) {
+      this.fetched = true;
+      this.currentSprint = '';
+    }
+  },
+
   methods: {
     querySearch(s, c) {
       c(this.allFiles.filter((f) => f.value.indexOf(s.toLowerCase()) !== -1));
     },
 
     handleClose() {
-      this.url = '';
-      this.name = '';
-      this.description = '';
-      this.image = '';
+      this.form = {
+        url: '',
+        name: '',
+        description: '',
+        image: '',
+      };
       this.fetched = false;
       this.$emit('update:visible', false);
     },
 
     handleSelect(item) {
-      this.name = item.originalname;
-      this.url = item.link;
+      this.form = {
+        name: item.originalname,
+        url: item.link,
+      };
     },
 
     onSubmit() {
-      this.$nuxt.$loading.start();
-      this.$store.dispatch('materials/CREATE_MATERIAL', this.form)
-        .then((result) => {
-          if (this.localSelected) {
-            this.$store.dispatch('sprints/ADD_MATERIALS', {
-              sprintId: this.localSelected,
-              materialIds: result._id,
-            });
-          }
-          this.handleClose();
-          this.$nuxt.$loading.finish();
-        }).catch((e) => {
-          this.$nuxt.$loading.fail();
-          consola.error(e.message);
-          this.$message.error(e.message);
-        });
-    },
-
-    isValidUrl(url) {
-      const regex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)/;
-      return regex.test(url);
+      this.$emit('on-submit', {
+        ...this.form,
+        id: this.data._id,
+        meta: {
+          position: this.data.meta ? this.data.meta.position : {},
+          version: this.data.meta ? this.data.meta.version : 1,
+        },
+      });
     },
   },
 };
@@ -227,8 +250,15 @@ export default {
 .url-input {
   width: 100%;
 }
+.controllers {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 10px;
+}
 .material-image {
-    margin-top: 20px;
-    width: 100%;
+  height: 150px;
+  border: 1px solid #EEEEEE;
+  border-radius: 4px;
 }
 </style>

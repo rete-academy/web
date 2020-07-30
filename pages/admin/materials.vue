@@ -6,7 +6,7 @@
         type="success"
         icon="el-icon-plus"
         class="create-new-btn right"
-        @click="handleDialog"
+        @click="handleEdit({})"
       >
         Add New Material
       </el-button>
@@ -27,17 +27,17 @@
         label="Name"
         width="380"
       >
-        <template slot-scope="scope">
+        <template slot-scope="{ row }">
           <p class="material-name">
             <span class="icon">
-              <fa :icon="scope.row.icon" />
+              <fa :icon="row.icon" />
             </span>
             <span class="name">
-              {{ scope.row.name | truncate(45) }}
+              {{ row.name | truncate(45) }}
             </span>
           </p>
           <p class="time">
-            Updated: {{ scope.row.updatedTime | convertTime('HH:mm DD.MM.YYYY') }}
+            Updated: {{ row.updatedTime | convertTime('HH:mm DD.MM.YYYY') }}
           </p>
         </template>
       </el-table-column>
@@ -50,19 +50,20 @@
         label="Actions"
         width="250"
       >
-        <template slot-scope="scope">
+        <template slot-scope="{ row }">
           <el-button
             size="mini"
             icon="el-icon-edit"
             type="warning"
             plain
+            @click="handleEdit(row)"
           />
           <el-button
             size="mini"
             icon="el-icon-delete"
             type="danger"
             plain
-            @click="handleDelete(scope.row._id)"
+            @click="handleDelete(row._id)"
           />
         </template>
       </el-table-column>
@@ -78,7 +79,12 @@
       class="pagination"
     />
 
-    <material-form :visible.sync="formVisible" />
+    <material-form
+      v-if="formVisible"
+      :visible.sync="formVisible"
+      :data="currentMaterial"
+      @on-submit="handleSubmit"
+    />
   </div>
 </template>
 <script>
@@ -87,6 +93,7 @@ import { mapState } from 'vuex';
 import { chunk, flatten } from 'lodash';
 
 import { MaterialForm } from '@/components';
+import { sanitizeData } from '@/library';
 
 export default {
   name: 'AdminMaterials',
@@ -97,6 +104,7 @@ export default {
     return {
       selection: 'name',
       currentPage: 1,
+      currentMaterial: undefined,
       pageSize: 7,
       filter: '',
       selectedSprints: null,
@@ -109,7 +117,7 @@ export default {
 
   computed: {
     ...mapState('paths', ['paths']),
-    ...mapState('sprints', ['sprints']),
+    ...mapState('sprints', ['sprints', 'selectedSprint']),
     ...mapState('materials', ['materials']),
 
     paginated() {
@@ -147,8 +155,9 @@ export default {
       return str.toLowerCase().indexOf(this.filter.toLowerCase()) !== -1;
     },
 
-    handleDialog() {
-      this.formVisible = !this.formVisible;
+    handleEdit(material) {
+      this.formVisible = true;
+      this.currentMaterial = material;
     },
 
     handleSelections(selection) {
@@ -156,18 +165,36 @@ export default {
       this.selectedMaterials = selection;
     },
 
-    /*
-         * Calculate and pre-select the sprints that already included
-         * into this path.
-         */
-
-    async handleSubmit(id) {
+    async handleSubmit(data) {
       try {
+        const { id } = data;
+
+        const cleanData = sanitizeData(data);
+
         this.loading = true;
         this.$nuxt.$loading.start();
-        await this.$store.dispatch('materials/UPDATE_MATERIAL', id);
+
+        const ACTION = `${id ? 'UPDATE' : 'CREATE'}_MATERIAL`;
+        this.$store.dispatch(`materials/${ACTION}`, {
+          materialId: id,
+          data: cleanData,
+        }).then((result) => {
+          if (this.selectedSprint) {
+            this.$store.dispatch('sprints/ADD_MATERIALS', {
+              sprintId: this.selectedSprint,
+              materialIds: result._id,
+            });
+          }
+
+          this.$nuxt.$loading.finish();
+          this.formVisible = false;
+        }).catch((e) => {
+          this.$nuxt.$loading.fail();
+          consola.error(e.message);
+          this.$message.error(e.message);
+        });
+
         this.loading = false;
-        this.$nuxt.$loading.finish();
       } catch (e) {
         this.$nuxt.$loading.fail();
         consola.error(e.message);

@@ -2,6 +2,7 @@
 // import consola from 'consola'
 import {
   CREATE_MATERIAL,
+  UPDATE_MATERIAL,
   DELETE_MATERIAL,
   GET_MATERIALS,
   SET_MATERIALS,
@@ -20,8 +21,14 @@ export const getters = {
 };
 
 export const actions = {
-  async [CREATE_MATERIAL]({ dispatch }, data) {
+  async [CREATE_MATERIAL]({ dispatch }, { data }) {
     const response = await this.$axios.post('/api/materials', data);
+    dispatch(GET_MATERIALS);
+    return response.data.message;
+  },
+
+  async [UPDATE_MATERIAL]({ dispatch }, { materialId, data }) {
+    const response = await this.$axios.put(`/api/sprints/${materialId}`, data);
     dispatch(GET_MATERIALS);
     return response.data.message;
   },

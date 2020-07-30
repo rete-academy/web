@@ -6,7 +6,7 @@
         type="success"
         icon="el-icon-plus"
         class="create-new-btn"
-        @click="handleVisible('formDialog')"
+        @click="handleEditSprint({})"
       >
         Create New Sprint
       </el-button>
@@ -27,13 +27,13 @@
         label="Name"
         width="380"
       >
-        <template slot-scope="scope">
+        <template slot-scope="{ row }">
           <p class="name">
-            {{ scope.row.name }}
+            {{ row.name }}
           </p>
           <p class="time">
-            Updated: {{ scope.row.updatedTime | convertTime('HH:mm DD.MM.YYYY') }}
-            – Version: {{ scope.row.meta.version }}
+            Updated: {{ row.updatedTime | convertTime('HH:mm DD.MM.YYYY') }}
+            – Version: {{ row.meta.version }}
           </p>
         </template>
       </el-table-column>
@@ -46,20 +46,21 @@
         label="Actions"
         width="250"
       >
-        <template slot-scope="scope">
+        <template slot-scope="{ row }">
           <el-button
             plain
             size="mini"
             icon="el-icon-edit"
             type="success"
-            @click="handleEditSprint(scope.row)"
+            :disabled="!canEdit(row)"
+            @click="handleEditSprint(row)"
           />
           <el-button
             plain
             size="mini"
             icon="el-icon-delete"
             type="danger"
-            @click="handleDelete(scope.row._id)"
+            @click="handleDelete(row._id)"
           />
         </template>
       </el-table-column>
@@ -75,20 +76,13 @@
       :current-page.sync="currentPage"
     />
 
-    <sprint-form
-      v-if="visible.formDialog"
-      :visible.sync="visible.formDialog"
-    />
-
-    <material-popover
-      v-if="visible.materialDialog"
-      :visible="visible.materialDialog"
+    <sprint-editor
+      v-if="visible.editorDialog"
+      :visible="visible.editorDialog"
       :data="currentSprint"
-      title="Manage materials"
-      @close="visible.materialDialog = false"
-      @selected="handleSelected"
-      @positions-changed="handlePositions"
-      @submit="handleSubmit"
+      title="Sprint Editor"
+      @on-close="visible.editorDialog = false"
+      @on-save="handleSubmit"
     />
   </div>
 </template>
@@ -96,14 +90,16 @@
 <script>
 import consola from 'consola';
 import { mapState } from 'vuex';
-import { chunk, flatten } from 'lodash';
-import { MaterialPopover, SprintForm } from '@/components';
+import { chunk, flatten, isEqual } from 'lodash';
+import { MaterialPopover, SprintForm, SprintEditor } from '@/components';
+import { checkRole, diff, sanitizeData } from '@/library';
 
 export default {
   name: 'AdminSprints',
 
   components: {
     SprintForm,
+    SprintEditor,
     MaterialPopover,
   },
 
@@ -114,13 +110,13 @@ export default {
       currentSprint: undefined,
       pageSize: 8,
       filter: '',
-      selectedSprints: null,
-      selectedMaterials: null,
+      selectedMaterials: [],
       changed: false,
       loading: false,
       visible: {
         formDialog: false,
         materialDialog: false,
+        editorDialog: false,
       },
       changedPositions: {},
     };
@@ -132,13 +128,23 @@ export default {
     ...mapState('materials', ['materials']),
 
     paginated() {
-      return chunk(this.sprints.filter((o) => this.matched(o.name)), this.pageSize);
+      return chunk(
+        this.sprints.filter((o) => this.matched(o) && this.canSee(o)),
+        this.pageSize,
+      );
     },
 
     total() {
       // we need to do total this way to reflect correct total entries
       // after user filtering the results.
       return flatten(this.paginated).length;
+    },
+
+    uploadHeaders() {
+      return {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        Authorization: this.$auth.getToken('local'),
+      };
     },
   },
 
@@ -150,6 +156,14 @@ export default {
         this.$router.push({ query: {} });
       }
     },
+
+    currentSprint: {
+      handler(sprint) {
+        this.selectedMaterials = sprint.materials || [];
+      },
+      deep: true,
+    },
+
   },
 
   created() {
@@ -161,8 +175,18 @@ export default {
   },
 
   methods: {
-    matched(str) {
-      return str.toLowerCase().indexOf(this.filter.toLowerCase()) !== -1;
+    matched(o) {
+      return o.name.toLowerCase().indexOf(this.filter.toLowerCase()) !== -1;
+    },
+
+    canEdit(p) {
+      const isAdmin = checkRole(this.$auth.user, 'admin');
+      const isAuthor = (p.authors || []).some((a) => a._id === this.$auth.user._id);
+      return isAdmin || isAuthor;
+    },
+
+    canSee(p) {
+      return p.status === 'public' || this.canEdit(p);
     },
 
     handleVisible(key, state) {
@@ -179,54 +203,99 @@ export default {
 
     handleEditSprint(sprint) {
       this.currentSprint = sprint;
-      this.visible.materialDialog = true;
+      this.visible.editorDialog = true;
     },
 
-    calculateSelections() {
-      this.sprints.forEach((s) => {
-        this.$refs[s._id].clearSelection();
-        s.materials.forEach((m) => {
-          const index = this.materials.findIndex((e) => e._id === m._id);
-          this.$refs[s._id].toggleRowSelection(this.materials[index], 'selected');
-        });
-      });
-    },
-
-    handleReset() {
-      this.calculateSelections();
-      this.changed = false;
-    },
-
-    async handleSubmit(id) {
+    async handleUpload(file) {
       try {
-        this.loading = true;
-        this.visible.materialDialog = false;
         this.$nuxt.$loading.start();
 
-        const currentMaterials = this.sprints.find((s) => s._id === id).materials;
-        const removed = currentMaterials.filter((c) => !this.selectedMaterials.find((o) => o._id === c._id));
-        const added = this.selectedMaterials.filter((s) => !currentMaterials.find((o) => o._id === s._id));
+        const formData = new FormData();
+        formData.append('files', file.raw);
+        const { data } = await this.$axios.post(
+          `${this.$axios.defaults.baseURL}/api/files/upload`,
+          formData,
+          { headers: this.uploadHeaders },
+        );
 
-        if (removed && removed.length > 0) {
+        if (data && data.success && data.message.data.location) {
+          this.$nuxt.$loading.finish();
+          this.$message({
+            message: 'Uploaded succesfully!',
+            type: 'success',
+          });
+
+          return data.message.data.location;
+        }
+
+        return 'Can not find url from S3';
+      } catch (error) {
+        consola.error(error.message);
+        this.$nuxt.$loading.fail();
+        this.$message.error(`Oops, ${error.message}`);
+
+        return 'Error';
+      }
+    },
+
+    async handleSubmit(currentSprint) {
+      try {
+        this.working = true;
+        this.$nuxt.$loading.start();
+
+        const {
+          file,
+          id,
+          materials,
+        } = currentSprint;
+
+        const newData = sanitizeData({ ...currentSprint });
+        const oldData = sanitizeData(this.currentSprint);
+
+        if (file) {
+          const uploadedUrl = await this.handleUpload(file);
+          newData.image = uploadedUrl;
+        }
+
+        const removed = diff(this.selectedMaterials, materials);
+
+        // Can't remove if create new path
+        if (oldData && removed && removed.length > 0) {
           await this.$store.dispatch('sprints/REMOVE_MATERIALS', {
             sprintId: id,
             materialIds: removed.map((o) => o._id),
           });
         }
 
+        let newId = '';
+        if (!isEqual(newData, oldData)) {
+          const ACTION = `${id ? 'UPDATE' : 'CREATE'}_SPRINT`;
+          const response = await this.$store.dispatch(`sprints/${ACTION}`, {
+            sprintId: id,
+            data: newData,
+          });
+
+          newId = response._id;
+        }
+
+        // Can not add without ID
+        const added = diff(materials, this.selectedMaterials);
+
         if (added && added.length > 0) {
           await this.$store.dispatch('sprints/ADD_MATERIALS', {
-            sprintId: id,
+            sprintId: id || newId,
             materialIds: added.map((o) => o._id),
           });
         }
-        this.loading = false;
+
+        this.visible.editorDialog = false;
         this.$nuxt.$loading.finish();
       } catch (e) {
         this.$nuxt.$loading.fail();
         consola.error(e.message);
         this.$message.error(e.message);
       }
+      this.working = false;
     },
 
     handleDelete(id) {

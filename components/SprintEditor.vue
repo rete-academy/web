@@ -20,7 +20,7 @@
           label-width="90px"
           class="form-wrapper"
         >
-          <el-form-item label="Path name">
+          <el-form-item label="Sprint name">
             <el-input class="input" v-model="form.name" />
           </el-form-item>
           <el-form-item label="Description">
@@ -74,7 +74,7 @@
         </el-form>
       </el-tab-pane>
 
-      <el-tab-pane label="Manage sprints" name="sprints">
+      <el-tab-pane label="Manage materials" name="materials">
         <el-table
           :ref="tableId"
           :data="paginated[currentPage - 1]"
@@ -92,15 +92,6 @@
           >
             <template slot-scope="{ row }">
               {{ row.name | truncate(45) }}
-            </template>
-          </el-table-column>
-          <el-table-column
-            align="center"
-            width="100"
-            label="Materials"
-          >
-            <template slot-scope="{ row }">
-              {{ row.materials.length }}
             </template>
           </el-table-column>
           <el-table-column
@@ -166,7 +157,7 @@ import { mapState } from 'vuex';
 import { checkRole } from '@/library';
 
 export default {
-  name: 'PathEditor',
+  name: 'SprintEditor',
 
   props: {
     data: {
@@ -199,14 +190,14 @@ export default {
       },
       pageSize: 6,
       position: {},
-      selectedSprints: [],
+      selected: [],
       working: false,
     };
   },
 
   computed: {
-    ...mapState('paths', ['paths']),
     ...mapState('sprints', ['sprints']),
+    ...mapState('materials', ['materials']),
 
     visibilities() {
       return [
@@ -218,7 +209,7 @@ export default {
 
     paginated() {
       return chunk(
-        this.sprints.filter((o) => this.matched(o) && this.canSee(o)),
+        this.materials.filter((o) => this.matched(o) && this.canSee(o)),
         this.pageSize,
       );
     },
@@ -230,14 +221,14 @@ export default {
     },
 
     tableId() {
-      return `path-editor-table-${this.currentPage}`;
+      return `sprint-editor-table-${this.currentPage}`;
     },
 
   },
 
   created() {
-    if (this.data.sprints) {
-      this.selectedSprints = this.data.sprints;
+    if (this.data.materials) {
+      this.selected = this.data.materials;
     }
 
     if (this.data.meta) {
@@ -304,9 +295,9 @@ export default {
     },
 
     calculateSelections() {
-      this.selectedSprints.forEach((s) => {
-        const i = this.sprints.findIndex((e) => e._id === s._id);
-        this.$refs[this.tableId].toggleRowSelection(this.sprints[i], 'selected');
+      this.selected.forEach((s) => {
+        const i = this.materials.findIndex((e) => e._id === s._id);
+        this.$refs[this.tableId].toggleRowSelection(this.materials[i], 'selected');
       });
     },
 
@@ -338,12 +329,12 @@ export default {
     },
 
     handleSelections(selections) {
-      if (!isEqual(this.data.sprints, selections)) {
+      if (!isEqual(this.data.materials, selections)) {
         this.changed = true;
       } else {
         this.changed = false;
       }
-      this.selectedSprints = selections;
+      this.selected = selections;
     },
 
     handleClose() {
@@ -360,7 +351,7 @@ export default {
           position: this.position,
           version: this.data.meta ? this.data.meta.version : 1,
         },
-        sprints: this.selectedSprints,
+        materials: this.selected,
       };
       this.$emit('on-save', data);
     },

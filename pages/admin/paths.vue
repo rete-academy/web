@@ -92,11 +92,7 @@ import { mapState } from 'vuex';
 import { chunk, flatten, isEqual } from 'lodash';
 
 import { PathEditor } from '@/components';
-
-import {
-  checkRole,
-  diff,
-} from '@/library';
+import { checkRole, diff, sanitizeData } from '@/library';
 
 export default {
   name: 'AdminPaths',
@@ -126,7 +122,10 @@ export default {
     ...mapState('sprints', ['sprints']),
 
     paginated() {
-      return chunk(this.paths.filter((p) => this.matched(p) && this.canSee(p)), this.pageSize);
+      return chunk(
+        this.paths.filter((p) => this.matched(p) && this.canSee(p)),
+        this.pageSize,
+      );
     },
 
     total() {
@@ -175,7 +174,7 @@ export default {
 
     canEdit(p) {
       const isAdmin = checkRole(this.$auth.user, 'admin');
-      const isAuthor = p.authors.some((a) => a._id === this.$auth.user._id);
+      const isAuthor = (p.authors || []).some((a) => a._id === this.$auth.user._id);
       return isAdmin || isAuthor;
     },
 
@@ -220,32 +219,6 @@ export default {
       }
     },
 
-    // Delete the properties not allowed to change before submit
-    sanitizeData(obj) {
-      if (!obj) {
-        return obj;
-      }
-
-      const pathData = { ...obj };
-
-      delete pathData._id;
-      delete pathData.authors;
-      delete pathData.createdTime;
-
-      if (pathData.file) {
-        delete pathData.file;
-      }
-
-      if (pathData.meta) {
-        delete pathData.meta.version;
-      }
-
-      delete pathData.slug;
-      delete pathData.sprints;
-
-      return pathData;
-    },
-
     async handleSubmit(currentPath) {
       try {
         this.working = true;
@@ -257,21 +230,12 @@ export default {
           sprints,
         } = currentPath;
 
-        const newData = this.sanitizeData({ ...currentPath });
-        const oldData = this.sanitizeData(this.currentPath);
+        const newData = sanitizeData({ ...currentPath });
+        const oldData = sanitizeData(this.currentPath);
 
         if (file) {
           const uploadedUrl = await this.handleUpload(file);
           newData.image = uploadedUrl;
-        }
-
-        const added = diff(sprints, this.selectedSprints);
-
-        if (added && added.length > 0) {
-          await this.$store.dispatch('paths/ADD_SPRINTS', {
-            pathId: id,
-            sprintIds: added.map((o) => o._id),
-          });
         }
 
         const removed = diff(this.selectedSprints, sprints);
@@ -284,21 +248,35 @@ export default {
           });
         }
 
+        let newId = '';
         if (!isEqual(newData, oldData)) {
-          await this.$store.dispatch(`paths/${id ? 'UPDATE' : 'CREATE'}_PATH`, {
+          const ACTION = `${id ? 'UPDATE' : 'CREATE'}_PATH`;
+          const response = await this.$store.dispatch(`paths/${ACTION}`, {
             pathId: id,
             data: newData,
+          });
+
+          newId = response._id;
+        }
+
+        // Can not add without ID
+        const added = diff(sprints, this.selectedSprints);
+
+        if (added && added.length > 0) {
+          await this.$store.dispatch('paths/ADD_SPRINTS', {
+            pathId: id || newId,
+            sprintIds: added.map((o) => o._id),
           });
         }
 
         this.visible.sprintDialog = false;
-        this.working = false;
         this.$nuxt.$loading.finish();
       } catch (e) {
         this.$nuxt.$loading.fail();
         consola.error(e.message);
         this.$message.error(e.message);
       }
+      this.working = false;
     },
 
     handleDelete(id) {

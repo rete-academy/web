@@ -2,6 +2,7 @@
 import consola from 'consola';
 import {
   CREATE_SPRINT,
+  UPDATE_SPRINT,
   DELETE_SPRINT,
   GET_SPRINTS,
   SET_SPRINTS,
@@ -21,8 +22,14 @@ export const getters = {
 };
 
 export const actions = {
-  async [CREATE_SPRINT]({ dispatch }, data) {
+  async [CREATE_SPRINT]({ dispatch }, { data }) {
     const response = await this.$axios.post('/api/sprints', data);
+    dispatch(GET_SPRINTS);
+    return response.data.message;
+  },
+
+  async [UPDATE_SPRINT]({ dispatch }, { sprintId, data }) {
+    const response = await this.$axios.put(`/api/sprints/${sprintId}`, data);
     dispatch(GET_SPRINTS);
     return response.data.message;
   },

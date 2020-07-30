@@ -26,3 +26,37 @@ export const checkRole = (user, role) => {
 export const isEmail = (str) => /^[a-zA-Z0-9.!#$%&’*+=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(str);
 
 export const diff = (s, t) => s.filter((c) => !t.find((o) => o._id === c._id));
+
+// Delete the properties not allowed to change before submit
+export const sanitizeData = (obj) => {
+  if (!obj) {
+    return obj;
+  }
+
+  const cleanData = { ...obj };
+
+  delete cleanData._id;
+  delete cleanData.authors;
+
+  // The time should be handled by backend automatically
+  delete cleanData.createdTime;
+  delete cleanData.updatedTime;
+
+  if (cleanData.file) {
+    delete cleanData.file;
+  }
+
+  if (cleanData.slug) {
+    delete cleanData.slug;
+  }
+
+  if (cleanData.sprints) {
+    delete cleanData.sprints;
+  }
+
+  if (cleanData.materials) {
+    delete cleanData.materials;
+  }
+
+  return cleanData;
+};

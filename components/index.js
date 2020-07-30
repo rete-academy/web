@@ -11,4 +11,5 @@ export { default as NavBar } from './NavBar.vue';
 export { default as PathEditor } from './PathEditor.vue';
 export { default as PositionInput } from './PositionInput.vue';
 export { default as SettingPopover } from './SettingPopover.vue';
+export { default as SprintEditor } from './SprintEditor.vue';
 export { default as SprintForm } from './SprintForm.vue';

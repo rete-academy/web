@@ -25,7 +25,7 @@ export const getters = {
 };
 
 export const actions = {
-  async [CREATE_PATH]({ dispatch }, data) {
+  async [CREATE_PATH]({ dispatch }, { data }) {
     const response = await this.$axios.post('/api/paths', data);
     dispatch(GET_PATHS);
     return response.data.message;

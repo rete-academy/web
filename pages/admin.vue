@@ -121,6 +121,7 @@ export default {
   },
 };
 </script>
+
 <style lang="scss" scoped>
 .main-content {
     width: 100%;

@@ -189,18 +189,18 @@ export default {
       activeTab: 'config',
       changed: false,
       currentPage: 1,
-      file: null,
+      file: undefined,
       fileList: [],
       filter: '',
       form: {
         description: this.data.description,
-        image: this.data.image,
+        image: this.data.image || '',
         name: this.data.name,
         status: this.data.status,
       },
       pageSize: 6,
       position: {},
-      selectedSprints: this.data.sprints,
+      selectedSprints: [],
       working: false,
     };
   },
@@ -234,8 +234,13 @@ export default {
   },
 
   created() {
-    this.selectedSprints = this.data.sprints;
-    this.position = this.convertPositions(this.data.meta.position || {});
+    if (this.data.sprints) {
+      this.selectedSprints = this.data.sprints;
+    }
+
+    if (this.data.meta) {
+      this.position = this.convertPositions(this.data.meta.position);
+    }
   },
 
   mounted() {

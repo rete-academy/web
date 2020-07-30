@@ -6,7 +6,7 @@
         type="success"
         icon="el-icon-plus"
         class="create-new-btn right"
-        @click="handleDialog"
+        @click="handleEditPath({})"
       >
         Create New Path
       </el-button>
@@ -161,7 +161,7 @@ export default {
 
     currentPath: {
       handler(path) {
-        this.selectedSprints = path.sprints;
+        this.selectedSprints = path.sprints || [];
       },
       deep: true,
     },
@@ -195,11 +195,6 @@ export default {
 
     handleDialog() {
       this.formVisible = !this.formVisible;
-    },
-
-    handlePositions(positions) {
-      console.log('### positions:', positions);
-      this.changedPositions = positions;
     },
 
     handleEditPath(path) {
@@ -248,15 +243,24 @@ export default {
 
     sanitizeData(obj) {
       if (!obj) {
-        return {};
+        return obj;
       }
 
       const pathData = { ...obj };
+
+      // Delete the properties not allowed to change
       delete pathData._id;
       delete pathData.authors;
       delete pathData.createdTime;
-      delete pathData.file;
-      delete pathData.meta.version;
+
+      if (pathData.file) {
+        delete pathData.file;
+      }
+
+      if (pathData.meta) {
+        delete pathData.meta.version;
+      }
+
       delete pathData.slug;
       delete pathData.sprints;
 
@@ -277,8 +281,6 @@ export default {
         const newData = this.sanitizeData({ ...currentPath });
         const oldData = this.sanitizeData(this.currentPath);
 
-        // Delete the properties not allowed to change
-
         if (file) {
           const uploadedUrl = await this.handleUpload(file);
           newData.image = uploadedUrl;
@@ -295,7 +297,8 @@ export default {
 
         const removed = diff(this.selectedSprints, sprints);
 
-        if (removed && removed.length > 0) {
+        // Can't remove if create new path
+        if (oldData && removed && removed.length > 0) {
           await this.$store.dispatch('paths/REMOVE_SPRINTS', {
             pathId: id,
             sprintIds: removed.map((o) => o._id),

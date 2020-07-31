@@ -23,6 +23,16 @@ export const checkRole = (user, role) => {
   return false;
 };
 
+export const checkAuthor = (user, data) => {
+  if (!user) {
+    return false;
+  }
+  if (!data.authors || data.authors.length === 0) {
+    return true;
+  }
+  return data.authors.some((a) => a._id.toString() === user._id.toString());
+};
+
 export const isEmail = (str) => /^[a-zA-Z0-9.!#$%&’*+=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(str);
 
 export const isValidUrl = (url) => /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)/.test(url);

@@ -1,5 +1,8 @@
 <template>
-  <section class="container my-paths items">
+  <section
+    v-if="myPaths && myPaths.length > 0"
+    class="container my-paths items"
+  >
     <div
       v-for="path in myPaths"
       :key="path._id"
@@ -44,11 +47,6 @@
         </div>
       </div>
     </div>
-    <chat-box
-      v-if="chatVisible"
-      :visible="chatVisible"
-      :data="currentMaterial"
-    />
 
     <el-dialog
       fullscreen
@@ -87,23 +85,49 @@
         </el-button>
       </span>
     </el-dialog>
-
+  </section>
+  <section
+    v-else
+    class="container my-paths items"
+  >
+    No data
   </section>
 </template>
 
 <script>
 import consola from 'consola';
 import { mapGetters } from 'vuex';
-import { MaterialRow, ChatBox } from '@/components';
+import { Message } from 'element-ui';
+
+import { MaterialRow } from '@/components';
 
 export default {
   name: 'MyPaths',
 
   auth: true,
 
-  components: {
-    ChatBox,
-    MaterialRow,
+  components: { MaterialRow },
+
+  async asyncData({ store, error, redirect }) {
+    try {
+      const { user } = store.$auth;
+      await store.dispatch('paths/GET_PATHS');
+      const paths = store.getters['paths/paths'];
+      // make sure the paths are up to date
+      const found = user.enrolled.some((id) => !!paths.find((p) => p._id === id));
+
+      if (!found) {
+        Message({
+          duration: 10000,
+          message: 'You must enroll first. Redirect to browse all paths...',
+          showClose: true,
+          type: 'warning',
+        });
+        redirect('/paths');
+      }
+    } catch (e) {
+      error({ message: e, statusCode: 404 });
+    }
   },
 
   data() {
@@ -119,11 +143,12 @@ export default {
 
   computed: {
     ...mapGetters('paths', ['paths']),
-    ...mapGetters('conversations', ['chatVisible', 'currentId']),
 
     myPaths() {
       if (this.$auth.user && this.$auth.user.enrolled && this.paths) {
-        return this.$auth.user.enrolled.map((id) => this.paths.find((p) => p._id === id));
+        return this.$auth.user.enrolled
+          .filter((id) => !!this.paths.find((p) => p._id === id))
+          .map((id) => this.paths.find((p) => p._id === id));
       }
       return [];
     },
@@ -156,13 +181,8 @@ export default {
     },
   },
 
-  async asyncData({ store, error }) {
-    try {
-      // make sure the paths are up to date
-      await store.dispatch('paths/GET_PATHS');
-    } catch (e) {
-      error({ message: e, statusCode: 404 });
-    }
+  mounted() {
+    console.log('### myPaths:', this.myPaths);
   },
 
   methods: {

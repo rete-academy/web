@@ -9,6 +9,7 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import {
   faAtlas,
   faCalendar,
+  faChalkboardTeacher,
   faChevronDown,
   faCircle,
   faCog,
@@ -69,6 +70,7 @@ import {
 library.add(
   faAtlas,
   faCalendar,
+  faChalkboardTeacher,
   faChevronDown,
   faCircle,
   faCog,

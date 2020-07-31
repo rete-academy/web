@@ -62,7 +62,7 @@
 
 <script>
 export default {
-  name: 'SprintPopover',
+  name: 'SettingPopover',
 
   props: {
     data: {

@@ -10,21 +10,13 @@
         class="jumbo-btn"
         @click="goTo('')"
       >
-        Chọn Khoá Học
+        Bắt đầu ngay
       </el-button>
     </section>
 
     <section class="container who">
       <div class="featured-paths">
-        <card-item
-          v-for="path in paths"
-          :key="path._id"
-          :data="path"
-          :width="150"
-          class="path item"
-          plain
-          @click.native="goTo(path.slug)"
-        />
+        <fa icon="chalkboard-teacher" class="demo-icon" />
       </div>
       <div class="who-we-are">
         <h3 class="title">
@@ -55,7 +47,7 @@
       </div>
       <div class="third">
         <h3 class="title">
-          Cơ hội nghề nghiệp với dự án thật
+          Cơ hội nghề nghiệp với người thật, việc thật
         </h3>
         <p class="text">
           Tốn nhiều tháng liền để làm đồ án tốt nghiệp rồi vứt xó? Ở đây bạn có thể quên điều đó đi. Chúng ta sẽ làm dự án thật, với người thật, việc thật. Cơ hội nghề nghiệp sẽ được khai mở ngay khi bạn chưa tốt nghiệp.
@@ -72,7 +64,7 @@
           class="jumbo-btn"
           @click="goTo('')"
         >
-          Chọn Khoá Học
+          Bắt đầu ngay
         </el-button>
       </div>
       <!-- div class="half">
@@ -104,18 +96,12 @@
 </template>
 
 <script>
-import consola from 'consola';
-import { mapGetters } from 'vuex';
-import { CardItem } from '@/components';
-
 export default {
   name: 'Home',
 
   layout: 'landing',
 
   auth: false,
-
-  components: { CardItem },
 
   data() {
     return {
@@ -126,34 +112,9 @@ export default {
     };
   },
 
-  computed: {
-    ...mapGetters('paths', ['paths']),
-
-    featuredPaths() {
-      return this.paths.filter((o) => o.featured);
-    },
-  },
-
-  created() {
-    this.doStuff = (arg) => {
-      consola.info('Run at ', arg);
-    };
-
-    this.doStuff('created');
-
-    if (this.paths.length === 0) this.$store.dispatch('paths/GET_PATHS');
-  },
-
-  mounted() {
-    this.doStuff('mounted');
-  },
-
   methods: {
-    goTo(slug) {
-      this.$router.push(`/paths/${slug}`);
-    },
-
-    onSubmit() {
+    goTo() {
+      this.$router.push('/signup');
     },
   },
 };
@@ -190,7 +151,14 @@ export default {
 }
 .who {
     .featured-paths {
-        width: 320px;
+        width: 300px;
+        margin-right: 20px;
+
+        .demo-icon {
+          font-size: 10rem;
+          width: 300px;
+          color: #999999;
+        }
 
         .path {
             float: left;

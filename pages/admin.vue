@@ -1,5 +1,5 @@
 <template>
-  <div class="admin wrapper">
+  <div v-if="$auth.loggedIn" class="admin wrapper">
     <el-menu
       mode="horizontal"
       :default-active="activeIndex"
@@ -75,11 +75,11 @@ export default {
           icon: 'user',
           label: 'Users',
         },
-        /* {
+        {
           index: '/admin/settings',
           icon: 'cog',
           label: 'Settings',
-        }, */
+        },
       ],
       activeIndex: '/admin/paths',
       materialFormVisible: false,

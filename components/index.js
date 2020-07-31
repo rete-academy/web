@@ -2,7 +2,7 @@ export { default as Avatar } from './Avatar.vue';
 export { default as CardItem } from './CardItem.vue';
 export { default as ChatBox } from './ChatBox.vue';
 export { default as FileUpload } from './FileUpload.vue';
-export { default as Footer } from './Footer.vue';
+export { default as FootBar } from './FootBar.vue';
 export { default as Logo } from './Logo.vue';
 export { default as MaterialForm } from './MaterialForm.vue';
 export { default as MaterialPopover } from './MaterialPopover.vue';

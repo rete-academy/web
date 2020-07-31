@@ -90,7 +90,7 @@
 import consola from 'consola';
 import { mapState } from 'vuex';
 import { chunk, flatten, isEqual } from 'lodash';
-import { MaterialPopover, SprintForm, SprintEditor } from '@/components';
+import { SprintForm, SprintEditor } from '@/components';
 import {
   checkAuthor,
   checkRole,
@@ -104,7 +104,6 @@ export default {
   components: {
     SprintForm,
     SprintEditor,
-    MaterialPopover,
   },
 
   data() {

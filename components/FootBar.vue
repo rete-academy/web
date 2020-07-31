@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper">
-    <p class="sys-info">
+    <div class="sys-info">
       <span class="copy">
         © 2019 Rete Academy Team.
         Made with <fa icon="heart" /> in Finland.
@@ -24,13 +24,13 @@
       <span class="version">
         v{{ version }}
       </span>
-    </p>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'Footer',
+  name: 'FootBar',
 
   computed: {
     version: () => process.env.version || '1.0.0',

@@ -95,12 +95,12 @@
     <div v-else class="finished">
       <h2>Registration finished!</h2>
       <p>Please check your inbox to confirm email address.</p>
-      <p>
+      <div>
         Go back to
         <nuxt-link to="/">
           Home page
         </nuxt-link>
-      </p>
+      </div>
     </div>
 
     <el-dialog

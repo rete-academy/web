@@ -7,16 +7,16 @@
       <nuxt />
     </el-main>
     <el-footer>
-      <footer />
+      <foot-bar />
     </el-footer>
   </el-container>
 </template>
 
 <script>
-import { NavBar, Footer } from '@/components';
+import { NavBar, FootBar } from '@/components';
 
 export default {
   name: 'Default',
-  components: { NavBar, Footer },
+  components: { NavBar, FootBar },
 };
 </script>

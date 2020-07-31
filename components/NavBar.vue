@@ -9,6 +9,7 @@
     <div class="nav-content">
       <div class="left">
         <router-link
+          v-if="$auth.loggedIn"
           class="item"
           to="/paths"
         >
@@ -24,7 +25,7 @@
 
       <div class="right">
         <router-link
-          v-if="checkUser(user)"
+          v-if="isAdmin"
           class="item"
           to="/admin"
         >
@@ -55,27 +56,11 @@ export default {
 
   components: { Avatar },
 
-  mixins: [
-    // checkAuth,
-    // displayName
-  ],
-
   data() {
     return {
       language: 'fi',
       visible: false,
     };
-  },
-
-  computed: {
-    user() {
-      if (this.$auth.user) return this.$auth.user;
-      return {};
-    },
-
-    isLoggedIn() {
-      return this.$auth.loggedIn;
-    },
   },
 
   watch: {
@@ -84,14 +69,13 @@ export default {
     },
   },
 
-  created() {
+  computed: {
+    isAdmin() {
+      return checkRole(this.$auth.user, 'teacher');
+    },
   },
 
   methods: {
-    checkUser(user) {
-      return checkRole(user, 'teacher');
-    },
-
     goTo(string) {
       this.$router.push(string);
       this.visible = false;

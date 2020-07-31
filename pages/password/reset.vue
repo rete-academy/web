@@ -1,6 +1,11 @@
 <template>
   <div class="reset-form form-wrapper">
-    <img class="logo" src="@/assets/images/rete-logo-big.jpg">
+    <router-link
+      class="logo"
+      to="/"
+    >
+      <img class="logo" src="@/assets/images/rete-logo-big.jpg">
+    </router-link>
     <h2>
       Set New Password
     </h2>

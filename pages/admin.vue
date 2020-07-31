@@ -98,7 +98,7 @@ export default {
     },
   },
 
-  created() {
+  mounted() {
     if (!checkRole(this.$auth.user, 'teacher')) {
       this.redirectToCorrectPlace('/');
     }

@@ -1,5 +1,5 @@
 <template>
-  <section class="container paths items">
+  <section v-if="$auth.loggedIn" class="container paths items">
     <card-item
       v-for="path in paths"
       :key="path._id"
@@ -10,7 +10,7 @@
   </section>
 </template>
 <script>
-import { mapState } from 'vuex';
+import { mapGetters } from 'vuex';
 import { CardItem } from '@/components';
 
 export default {
@@ -21,12 +21,16 @@ export default {
   components: { CardItem },
 
   computed: {
-    ...mapState('paths', ['paths']),
+    ...mapGetters('paths', ['paths']),
   },
 
-  created() {
-    if (this.paths.length === 0) {
-      this.$store.dispatch('paths/GET_PATHS');
+  mounted() {
+    if (this.$auth.loggedIn) {
+      if (this.paths.length === 0) {
+        this.$store.dispatch('paths/GET_PATHS');
+      }
+    } else {
+      this.$router.push('/login');
     }
   },
 

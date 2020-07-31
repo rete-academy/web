@@ -173,11 +173,6 @@ export default {
     },
   },
 
-  created() {
-    // consola.info(this.$axios.defaults.baseURL)
-    // this.$axios.defaults.baseURL = process.env.apiUrl
-  },
-
   methods: {
     onAccept() {
       this.acceptTos = true;

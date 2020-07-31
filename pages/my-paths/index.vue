@@ -86,12 +86,6 @@
       </span>
     </el-dialog>
   </section>
-  <section
-    v-else
-    class="container my-paths items"
-  >
-    No data
-  </section>
 </template>
 
 <script>
@@ -116,13 +110,16 @@ export default {
       // make sure the paths are up to date
       const found = user.enrolled.some((id) => !!paths.find((p) => p._id === id));
 
-      if (!found) {
+      if (!store.$auth.loggedIn) {
+        redirect('/login');
+      } else if (!found) {
         Message({
           duration: 10000,
           message: 'You must enroll first. Redirect to browse all paths...',
           showClose: true,
           type: 'warning',
         });
+
         redirect('/paths');
       }
     } catch (e) {

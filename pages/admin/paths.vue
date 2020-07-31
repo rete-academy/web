@@ -163,7 +163,7 @@ export default {
     },
   },
 
-  created() {
+  mounted() {
     if (this.$route.query.page && this.$route.query.page < this.paginated.length) {
       this.currentPage = parseInt(this.$route.query.page, 10);
     // } else {

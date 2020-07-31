@@ -171,7 +171,7 @@ export default {
 .login-form {
   h2 {
     text-align: center;
-    margin: 0 auto 20px;
+    margin: 0 auto;
   }
 
   .eye-icon {
@@ -193,7 +193,6 @@ export default {
   .forgot-btn {
     width: 100%;
     margin: 10px auto 0;
-    font-size: 12px;
   }
 }
 </style>

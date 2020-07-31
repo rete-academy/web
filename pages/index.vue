@@ -8,7 +8,7 @@
       <el-button
         type="success"
         class="jumbo-btn"
-        @click="goTo('')"
+        @click="goTo"
       >
         Bắt đầu ngay
       </el-button>
@@ -57,40 +57,40 @@
     <section class="container start">
       <div class="half">
         <h2 class="title">
-          Bắt đầu ngay hôm nay
+          Bắt đầu ngay
         </h2>
         <el-button
           type="success"
           class="jumbo-btn"
-          @click="goTo('')"
+          @click="goTo"
         >
-          Bắt đầu ngay
+          Đăng ký
         </el-button>
       </div>
       <!-- div class="half">
-                <h3>Đăng ký nhận tin mới</h3>
-                <el-form
-                    :inline="true"
-                    :model="form"
-                    size="mini"
-                    class="subscribe-form"
-                >
-                    <el-form-item>
-                        <el-input
-                            v-model="form.email"
-                            placeholder="Địa chỉ email"
-                        />
-                    </el-form-item>
-                    <el-form-item>
-                        <el-button
-                            type="primary"
-                            @click="onSubmit"
-                        >
-                            Subscribe
-                        </el-button>
-                    </el-form-item>
-                </el-form>
-            </div -->
+        <h3>Đăng ký nhận tin mới</h3>
+        <el-form
+          :inline="true"
+          :model="form"
+          size="mini"
+          class="subscribe-form"
+        >
+          <el-form-item>
+            <el-input
+                v-model="form.email"
+                placeholder="Địa chỉ email"
+            />
+          </el-form-item>
+          <el-form-item>
+            <el-button
+                type="primary"
+                @click="onSubmit"
+            >
+                Subscribe
+            </el-button>
+          </el-form-item>
+        </el-form>
+    </div -->
     </section>
   </div>
 </template>
@@ -105,7 +105,6 @@ export default {
 
   data() {
     return {
-      doStuff: null,
       form: {
         email: '',
       },

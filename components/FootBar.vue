@@ -1,11 +1,11 @@
 <template>
   <div class="wrapper">
     <div class="sys-info">
-      <span class="copy">
+      <div class="copy">
         © 2019 Rete Academy Team.
-        Made with <fa icon="heart" /> in Finland.
-      </span>
-      <span class="social">
+        Made with  <fa icon="heart" />  in Finland.
+      </div>
+      <div class="social">
         <a
           href="https://twitter.com/reteacademy"
           target="_blank"
@@ -20,10 +20,10 @@
           <fa :icon="['fab', 'facebook']" />
           ReteAcademy
         </a>
-      </span>
-      <span class="version">
+      </div>
+      <div class="version">
         v{{ version }}
-      </span>
+      </div>
     </div>
   </div>
 </template>

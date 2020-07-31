@@ -3,7 +3,7 @@ require('dotenv').config();
 const pkg = require('./package');
 
 module.exports = {
-  mode: 'universal',
+  mode: 'spa',
 
   telemetry: false,
 
@@ -44,10 +44,13 @@ module.exports = {
   // These plugins load before mounting the App
   plugins: [
     // '@/plugins/axios',
-    '@/plugins/element-ui',
+    {
+      src: '@/plugins/element-ui',
+      ssr: true,
+    },
     '@/plugins/filters',
     '@/plugins/fontawesome',
-    '@/plugins/chat-scroll.js',
+    // '@/plugins/chat-scroll.js',
     /*
     {
       src: '@/plugins/socket.io.js',

@@ -1,6 +1,11 @@
 <template>
   <div class="forgot-form form-wrapper">
-    <img class="logo" src="@/assets/images/rete-logo-big.jpg">
+    <router-link
+      class="logo"
+      to="/"
+    >
+      <img class="logo" src="@/assets/images/rete-logo-big.jpg">
+    </router-link>
     <h2>
       Reset Password
     </h2>
@@ -29,6 +34,15 @@
           @click="onSubmit"
         >
           Reset Password
+        </el-button>
+        <el-button
+          plain
+          type="text"
+          class="login-btn"
+          icon="el-icon-back"
+          @click="$router.push('/login')"
+        >
+          Back to login
         </el-button>
       </el-form-item>
     </el-form>

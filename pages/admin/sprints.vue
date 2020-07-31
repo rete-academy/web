@@ -90,7 +90,7 @@
 import consola from 'consola';
 import { mapState } from 'vuex';
 import { chunk, flatten, isEqual } from 'lodash';
-import { SprintForm, SprintEditor } from '@/components';
+import { SprintEditor } from '@/components';
 import {
   checkAuthor,
   checkRole,
@@ -102,7 +102,6 @@ export default {
   name: 'AdminSprints',
 
   components: {
-    SprintForm,
     SprintEditor,
   },
 
@@ -169,7 +168,7 @@ export default {
 
   },
 
-  created() {
+  mounted() {
     if (this.$route.query.page < this.paginated.length) {
       this.currentPage = parseInt(this.$route.query.page, 10);
     } else {

@@ -172,8 +172,8 @@ a, .link, .el-dropdown-link {
     justify-content: space-between;
     align-items: center;
 
-    .el-dropdown {
-      margin-left: 20px;
+    & > * {
+      margin-right: 20px;
     }
   }
 }

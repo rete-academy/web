@@ -55,8 +55,8 @@
           <el-button
             size="mini"
             icon="el-icon-edit"
-            type="warning"
             plain
+            :disabled="!canEdit(row)"
             @click="handleEdit(row)"
           />
           <el-button
@@ -94,7 +94,11 @@ import { mapState } from 'vuex';
 import { chunk, flatten } from 'lodash';
 
 import { MaterialForm } from '@/components';
-import { sanitizeData } from '@/library';
+import {
+  checkAuthor,
+  checkRole,
+  sanitizeData,
+} from '@/library';
 
 export default {
   name: 'AdminMaterials',
@@ -122,8 +126,10 @@ export default {
     ...mapState('materials', ['materials']),
 
     paginated() {
-      return chunk(this.materials
-        .filter((o) => this.matched(o.name)), this.pageSize);
+      return chunk(
+        this.materials.filter((o) => this.matched(o) && this.canSee(o)),
+        this.pageSize,
+      );
     },
 
     total() {
@@ -152,8 +158,16 @@ export default {
   },
 
   methods: {
-    matched(str) {
-      return str.toLowerCase().indexOf(this.filter.toLowerCase()) !== -1;
+    matched({ name }) {
+      return name.toLowerCase().indexOf(this.filter.toLowerCase()) !== -1;
+    },
+
+    canEdit(p) {
+      return checkRole(this.$auth.user, 1) || checkAuthor(p, this.$auth.user);
+    },
+
+    canSee(p) {
+      return p.status === 'public' || this.canEdit(p);
     },
 
     handleEdit(material) {

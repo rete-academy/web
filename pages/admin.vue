@@ -20,6 +20,8 @@
 </template>
 
 <script>
+import { checkRole } from '@/library';
+
 export default {
   name: 'AdminView',
 
@@ -73,11 +75,11 @@ export default {
           icon: 'user',
           label: 'Users',
         },
-        {
+        /* {
           index: '/admin/settings',
           icon: 'cog',
           label: 'Settings',
-        },
+        }, */
       ],
       activeIndex: '/admin/paths',
       materialFormVisible: false,
@@ -96,7 +98,11 @@ export default {
     },
   },
 
-  mounted() {
+  created() {
+    if (!checkRole(this.$auth.user, 'teacher')) {
+      this.redirectToCorrectPlace('/');
+    }
+
     const { fullPath } = this.$route;
 
     if (fullPath.indexOf('/admin') === 0 && fullPath.length > 6) {

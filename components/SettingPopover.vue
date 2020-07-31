@@ -1,19 +1,13 @@
 <template>
-  <el-popover
-    width="500"
-    placement="left"
-    trigger="click"
+  <el-dialog
+    class="editor-dialog"
+    width="30%"
+    :visible="visible"
+    title="Edit User"
     @show="calculateRoles"
+    @close="handleClose"
   >
-    <el-button
-      slot="reference"
-      size="mini"
-      icon="el-icon-setting"
-      type="info"
-      plain
-    />
     <div class="actions">
-      <h3>Change Member Role</h3>
       <div class="user-info">
         <img
           :src="profileImage"
@@ -30,21 +24,18 @@
         <el-radio
           :label="0"
           :disabled="!isAdmin"
-          border
         >
           Admin
         </el-radio>
         <el-radio
           :label="1"
           :disabled="isLower(1)"
-          border
         >
-          Moderator
+          Instructor
         </el-radio>
         <el-radio
-          :label="3"
+          :label="2"
           :disabled="isLower(3)"
-          border
         >
           Student
         </el-radio>
@@ -61,17 +52,15 @@
       </el-button>
       <el-button
         size="mini"
-        @click="handleReset"
+        @click="handleClose"
       >
-        Reset
+        Close
       </el-button>
     </div>
-  </el-popover>
+  </el-dialog>
 </template>
 
 <script>
-import consola from 'consola';
-
 export default {
   name: 'SprintPopover',
 
@@ -80,11 +69,15 @@ export default {
       type: Object,
       default: () => ({}),
     },
+    visible: {
+      type: Boolean,
+      default: false,
+    },
   },
 
   data() {
     return {
-      role: '',
+      role: 2,
       defaultAvatar: 'http://placeimg.com/300/300/people',
       selectedSprints: null,
       changed: false,
@@ -94,9 +87,9 @@ export default {
 
   computed: {
     profileImage() {
-      if (this.data.avatar && this.data.avatar.location
-                && this.data.avatar.location.length > 0) {
-        return this.data.avatar.location;
+      const { avatar } = this.data;
+      if (avatar && avatar.location && avatar.location.length > 0) {
+        return avatar.location;
       }
       return this.defaultAvatar;
     },
@@ -105,6 +98,10 @@ export default {
       if (this.$auth.user.role.includes(0)) return true;
       return false;
     },
+  },
+
+  mounted() {
+    this.calculateRoles();
   },
 
   methods: {
@@ -116,7 +113,7 @@ export default {
     },
 
     calculateRoles() {
-      this.role = this.data.role[0];
+      this.role = Math.min(this.data.role);
     },
 
     handleSelection(selected) {
@@ -124,23 +121,13 @@ export default {
       this.$emit('selected', selected);
     },
 
-    handleReset() {
-      this.calculateRoles();
+    handleClose() {
       this.changed = false;
+      this.$emit('on-close');
     },
 
     async handleSubmit() {
-      try {
-        this.$nuxt.$loading.start();
-        await this.$store.dispatch('users/UPDATE_USER', {
-          userId: this.data._id,
-          data: { role: [this.role] },
-        });
-        this.$nuxt.$loading.finish();
-      } catch (error) {
-        this.$nuxt.$loading.fail();
-        consola.info(error.message);
-      }
+      this.$emit('on-submit', { id: this.data._id, role: this.role });
     },
   },
 };

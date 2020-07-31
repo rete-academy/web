@@ -124,7 +124,6 @@ export default {
     ...mapGetters('users', ['profile']),
 
     hasAvatar() {
-      console.log('### profile:', this.profile);
       if ((this.profile.avatar && this.profile.avatar.location
         && this.profile.avatar.location.length > 0) || this.file) {
         return true;

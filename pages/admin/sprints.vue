@@ -51,7 +51,6 @@
             plain
             size="mini"
             icon="el-icon-edit"
-            type="success"
             :disabled="!canEdit(row)"
             @click="handleEditSprint(row)"
           />
@@ -92,7 +91,12 @@ import consola from 'consola';
 import { mapState } from 'vuex';
 import { chunk, flatten, isEqual } from 'lodash';
 import { MaterialPopover, SprintForm, SprintEditor } from '@/components';
-import { checkRole, diff, sanitizeData } from '@/library';
+import {
+  checkAuthor,
+  checkRole,
+  diff,
+  sanitizeData,
+} from '@/library';
 
 export default {
   name: 'AdminSprints',
@@ -180,9 +184,7 @@ export default {
     },
 
     canEdit(p) {
-      const isAdmin = checkRole(this.$auth.user, 'admin');
-      const isAuthor = (p.authors || []).some((a) => a._id === this.$auth.user._id);
-      return isAdmin || isAuthor;
+      return checkRole(this.$auth.user, 1) || checkAuthor(p, this.$auth.user);
     },
 
     canSee(p) {

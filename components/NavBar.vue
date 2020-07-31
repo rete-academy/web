@@ -24,7 +24,7 @@
 
       <div class="right">
         <router-link
-          v-if="isAdmin(user)"
+          v-if="checkUser(user)"
           class="item"
           to="/admin"
         >
@@ -46,6 +46,8 @@
 </template>
 
 <script>
+import { checkRole } from '@/library';
+
 import Avatar from './Avatar.vue';
 
 export default {
@@ -86,9 +88,8 @@ export default {
   },
 
   methods: {
-    isAdmin(user) {
-      if (user.role) return user.role.includes(0);
-      return false;
+    checkUser(user) {
+      return checkRole(user, 'teacher');
     },
 
     goTo(string) {

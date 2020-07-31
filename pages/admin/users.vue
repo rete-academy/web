@@ -2,13 +2,6 @@
   <div class="main-content">
     <div class="title-buttons">
       <h2>Manage Users</h2>
-      <!-- el-button
-                type="success"
-                icon="el-icon-plus"
-                class="create-new-btn right"
-            >
-                Add New User
-            </el-button -->
     </div>
     <el-table
       v-loading="loading"
@@ -21,31 +14,31 @@
         label="Name"
         width="320"
       >
-        <template slot-scope="scope">
+        <template slot-scope="{ row }">
           <p class="material-name">
             <span class="icon">
               <fa
-                :icon="isAdmin(scope.row) ? 'user-shield' : 'user'"
+                :icon="userIcon(row)"
                 class="user-role"
               />
             </span>
             <span class="name">
-              {{ scope.row.name }}
+              {{ row.name }}
             </span>
           </p>
           <p class="small">
-            Sign up time: {{ scope.row.createdTime | convertTime('HH:mm DD.MM.YYYY') }}
+            Joined: {{ row.createdTime | convertTime('HH:mm DD.MM.YYYY') }}
           </p>
         </template>
       </el-table-column>
       <el-table-column label="Progress">
-        <template slot-scope="scope">
-          {{ scope.row.progress.length }}
+        <template slot-scope="{ row }">
+          {{ row.progress.length }}
         </template>
       </el-table-column>
       <el-table-column label="Confirmation">
-        <template slot-scope="scope">
-          {{ scope.row.meta.confirm }}
+        <template slot-scope="{ row }">
+          {{ row.meta.confirm }}
         </template>
       </el-table-column>
       <el-table-column
@@ -53,28 +46,31 @@
         label="Actions"
         width="250"
       >
-        <template slot-scope="scope">
-          <setting-popover
-            :data="scope.row"
-          />
+        <template slot-scope="{ row }">
           <el-button
             size="mini"
-            icon="el-icon-edit"
-            type="warning"
+            icon="el-icon-setting"
             plain
+            @click="handleEditUser(row)"
           />
           <el-button
             size="mini"
             icon="el-icon-delete"
             type="danger"
             plain
-            @click="handleDelete(scope.row._id)"
+            @click="handleDelete(row._id)"
           />
         </template>
       </el-table-column>
     </el-table>
 
-    <!-- material-form :visible.sync="userFormVisible" / -->
+    <setting-popover
+      v-if="currentUser"
+      :data="currentUser"
+      :visible="editorVisible"
+      @on-close="handleClose"
+      @on-submit="handleSubmit"
+    />
   </div>
 </template>
 
@@ -82,6 +78,8 @@
 import consola from 'consola';
 import { mapGetters } from 'vuex';
 import { SettingPopover } from '@/components';
+
+import { checkRole } from '@/library';
 
 export default {
   name: 'AdminUsers',
@@ -91,9 +89,10 @@ export default {
   data() {
     return {
       selectedUsers: null,
+      currentUser: undefined,
       changed: false,
       loading: false,
-      userFormVisible: false,
+      editorVisible: false,
     };
   },
 
@@ -104,12 +103,14 @@ export default {
   created() {},
 
   methods: {
-    isAdmin(user) {
-      if (user && user.role) {
-        if (user.role.reduce((i, j) => i * j) === 0) return true;
-        return false;
+    userIcon(o) {
+      if (checkRole(o, 'admin')) {
+        return 'user-shield';
       }
-      return false;
+      if (o.meta.confirm) {
+        return 'user-check';
+      }
+      return 'user';
     },
 
     handleMaterialDialog() {
@@ -121,18 +122,29 @@ export default {
       consola.info(selected);
     },
 
-    async handleSubmit(id) {
+    async handleSubmit({ id, role }) {
       try {
-        this.loading = true;
         this.$nuxt.$loading.start();
-        await this.$store.dispatch('materials/UPDATE_USER', id);
-        this.loading = false;
+        await this.$store.dispatch('users/UPDATE_USER', {
+          userId: id,
+          data: { role: [role] },
+        });
         this.$nuxt.$loading.finish();
-      } catch (e) {
+      } catch (error) {
         this.$nuxt.$loading.fail();
-        consola.error(e.message);
-        this.$message.error(e.message);
+        consola.info(error.message);
       }
+      this.editorVisible = false;
+    },
+
+    handleEditUser(user) {
+      this.currentUser = user;
+      this.editorVisible = true;
+    },
+
+    handleClose() {
+      this.currentUser = undefined;
+      this.editorVisible = false;
     },
 
     handleDelete(id) {

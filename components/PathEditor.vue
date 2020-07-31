@@ -260,18 +260,9 @@ export default {
 
   watch: {
     form: {
-      handler: debounce(function (obj) {
-        const newForm = {
-          description: this.data.description,
-          image: this.data.image,
-          name: this.data.name,
-          status: this.data.status,
-        };
-        if (!isEqual(obj, newForm)) {
-          this.changed = true;
-        } else {
-          this.changed = false;
-        }
+      handler: debounce(function () {
+        // Don't check anything, any change will trigger it
+        this.changed = true;
       }, 100),
       deep: true,
     },

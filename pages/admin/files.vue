@@ -3,21 +3,14 @@
     <div class="title-buttons">
       <div class="left">
         <h2>Manage Files</h2>
-        <el-dropdown @command="handleCommand">
-          <el-button
-            type="info"
-            size="mini"
-            plain
-          >
-            Actions
-            <fa icon="chevron-down" class="icon" />
-          </el-button>
-          <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item command="delete">
-              Delete Files
-            </el-dropdown-item>
-          </el-dropdown-menu>
-        </el-dropdown>
+        <el-button
+          v-if="selectedFileIds.length > 0"
+          plain
+          size="mini"
+          icon="el-icon-delete"
+          type="danger"
+          @click="deleteFiles(selectedFileIds)"
+        />
       </div>
       <el-upload
         class="avatar-uploader"
@@ -112,23 +105,24 @@
         </template>
       </el-table-column>
       <el-table-column
-        label="URL"
+        align="center"
+        label="Actions"
         width="250"
       >
         <template slot-scope="{ row }">
-          <el-input
-            :ref="row._id"
-            :value="row.data.location"
+          <el-button
+            plain
             size="mini"
-            placeholder="Please use valid data"
-            @focus="selectText(row._id)"
-          >
-            <el-button
-              slot="append"
-              icon="el-icon-document"
-              @click="copyText(row._id)"
-            />
-          </el-input>
+            icon="el-icon-document"
+            @click="copyText(row._id)"
+          />
+          <el-button
+            plain
+            size="mini"
+            icon="el-icon-delete"
+            type="danger"
+            @click="deleteFiles([row._id])"
+          />
         </template>
       </el-table-column>
     </el-table>
@@ -148,6 +142,8 @@
 import consola from 'consola';
 import { mapGetters } from 'vuex';
 import { chunk, flatten } from 'lodash';
+
+import { checkAuthor, checkRole } from '@/library';
 
 export default {
   name: 'AdminFiles',
@@ -172,7 +168,10 @@ export default {
     ...mapGetters('files', ['files']),
 
     paginatedFiles() {
-      return chunk(this.files.filter((o) => this.matched(o.data.originalname)), this.pageSize);
+      return chunk(
+        this.files.filter((o) => this.matched(o) && this.canSee(o)),
+        this.pageSize,
+      );
     },
 
     total() {
@@ -204,16 +203,25 @@ export default {
   },
 
   created() {
-    if (this.$route.query.page && this.$route.query.page < this.paginatedFiles.length) {
-      this.currentPage = parseInt(this.$route.query.page, 10);
+    const { page } = this.$route.query;
+    if (page && page < this.paginatedFiles.length) {
+      this.currentPage = parseInt(page, 10);
     } else {
       this.$router.push({ query: {} });
     }
   },
 
   methods: {
-    matched(str) {
-      return str.toLowerCase().indexOf(this.filter.toLowerCase()) !== -1;
+    matched({ data: { originalname: name } }) {
+      return name.toLowerCase().indexOf(this.filter.toLowerCase()) !== -1;
+    },
+
+    canEdit(p) {
+      return checkRole(this.$auth.user, 1) || checkAuthor(p, this.$auth.user);
+    },
+
+    canSee(p) {
+      return p.status === 'public' || this.canEdit(p);
     },
 
     selectionChange(selection) {

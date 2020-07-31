@@ -8,6 +8,7 @@
     :visible.sync="visible"
     width="50%"
     class="custom-dialog"
+    @close="handleClose"
   >
     <el-form ref="form" :model="form" label-width="90px">
       <el-form-item label="Link">

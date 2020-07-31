@@ -181,10 +181,6 @@ export default {
     },
   },
 
-  mounted() {
-    console.log('### myPaths:', this.myPaths);
-  },
-
   methods: {
     openSinglePath(p) {
       this.$router.push(`/paths/${p.slug}`);

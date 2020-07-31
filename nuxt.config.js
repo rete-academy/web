@@ -47,7 +47,7 @@ module.exports = {
     '@/plugins/element-ui',
     '@/plugins/filters',
     '@/plugins/fontawesome',
-    '@/plugins/chat-scroll.js',
+    // '@/plugins/chat-scroll.js',
     /*
     {
       src: '@/plugins/socket.io.js',
@@ -66,6 +66,7 @@ module.exports = {
   ],
 
   auth: {
+    cookie: false,
     redirect: {
       login: '/login',
       logout: '/',
@@ -78,6 +79,7 @@ module.exports = {
     refresh_token: {
       prefix: 'refresh_token.',
     },
+    scopeKey: 'role',
     strategies: {
       local: {
         endpoints: {

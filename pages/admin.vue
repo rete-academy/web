@@ -85,9 +85,13 @@ export default {
   },
 
   watch: {
-    activeIndex() {
-      if (this.activeIndex === '/admin') {
-        this.redirectToCorrectPlace();
+    '$route.fullPath': function () {
+      const { fullPath } = this.$route;
+
+      if (fullPath === '/admin') {
+        this.redirectToCorrectPlace('/admin/paths');
+      } else {
+        this.redirectToCorrectPlace(fullPath);
       }
     },
   },
@@ -98,18 +102,14 @@ export default {
     if (fullPath.indexOf('/admin') === 0 && fullPath.length > 6) {
       this.redirectToCorrectPlace(fullPath);
     } else {
-      this.redirectToCorrectPlace();
+      this.redirectToCorrectPlace('/admin/paths');
     }
   },
 
   methods: {
     redirectToCorrectPlace(path) {
-      if (path) {
-        this.activeIndex = path;
-        this.$router.push(path);
-      } else {
-        this.$router.push('/admin/paths');
-      }
+      this.activeIndex = path;
+      this.$router.push(path);
     },
 
     clickMenuItem(item) {

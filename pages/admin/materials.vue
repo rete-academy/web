@@ -38,6 +38,7 @@
           </p>
           <p class="time">
             Updated: {{ row.updatedTime | convertTime('HH:mm DD.MM.YYYY') }}
+            – Version: {{ row.meta.version }}
           </p>
         </template>
       </el-table-column>

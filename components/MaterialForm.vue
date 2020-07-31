@@ -43,7 +43,7 @@
           :autosize="{ minRows: 3, maxRows: 6 }"
         />
       </el-form-item>
-    <el-form-item label="Preview">
+    <el-form-item v-if="fetched || hasData" label="Preview">
       <img :src="form.image" class="material-image">
     </el-form-item>
     <el-form-item label="Sprint">
@@ -64,7 +64,17 @@
 
     <div class="controllers">
       <div class="empty">&nbsp;</div>
+
       <div class="buttons">
+        <el-button
+          size="mini"
+          type="primary"
+          :disabled="working || !form.url || !changed"
+          :icon="working? 'el-icon-loading' : 'el-icon-refresh'"
+          @click="handleRefetch"
+        >
+          Refetch
+        </el-button>
         <el-button
           plain
           size="mini"
@@ -90,7 +100,7 @@
 <script>
 import consola from 'consola';
 import { mapGetters } from 'vuex';
-import { isEqual, throttle } from 'lodash';
+import { throttle } from 'lodash';
 
 import { isValidUrl } from '@/library';
 
@@ -150,48 +160,11 @@ export default {
   watch: {
     form: {
       handler: throttle(function (obj) {
-        const { url } = this.form;
+        const { url } = obj;
+        this.changed = true;
 
-        const newForm = {
-          description: this.data.description,
-          image: this.data.image,
-          name: this.data.name,
-          url: this.data.url,
-        };
-
-        if (!isEqual(obj, newForm)) {
-          this.changed = true;
-        } else {
-          this.changed = false;
-        }
-
-        if (url && isValidUrl(url) && !this.fetched) {
-          this.working = true;
-          this.$nuxt.$loading.start();
-
-          this.$axios.post('https://api.linkpreview.net', {
-            q: this.form.url,
-            key: '5c6e71509eafb0595e5860fe9c5eaba82fb617087dbc1',
-          }).then(({ data }) => {
-            if (data) {
-              this.fetched = true;
-              this.form = {
-                url: this.form.url,
-                name: data.title,
-                description: data.description,
-                image: data.image,
-              };
-
-              this.$nuxt.$loading.finish();
-            }
-          }).catch((error) => {
-            this.$nuxt.$loading.fail();
-            consola.error(error);
-          });
-
-          this.working = false;
-        }
-      }, 1000),
+        this.handleFetch(url);
+      }, 500),
       deep: true,
     },
   },
@@ -214,6 +187,35 @@ export default {
       c(this.allFiles.filter((f) => f.value.indexOf(s.toLowerCase()) !== -1));
     },
 
+    handleFetch(url) {
+      if (url && isValidUrl(url) && !this.fetched) {
+        this.working = true;
+        this.$nuxt.$loading.start();
+
+        this.$axios.post('https://api.linkpreview.net', {
+          q: this.form.url,
+          key: '5c6e71509eafb0595e5860fe9c5eaba82fb617087dbc1',
+        }).then(({ data }) => {
+          if (data) {
+            this.fetched = true;
+            this.form = {
+              url: this.form.url,
+              name: data.title,
+              description: data.description,
+              image: data.image,
+            };
+
+            this.$nuxt.$loading.finish();
+          }
+        }).catch((error) => {
+          this.$nuxt.$loading.fail();
+          consola.error(error);
+        });
+
+        this.working = false;
+      }
+    },
+
     handleClose() {
       this.form = {
         url: '',
@@ -227,15 +229,24 @@ export default {
 
     handleSelect(item) {
       this.form = {
+        ...this.form,
         name: item.originalname,
         url: item.link,
       };
     },
 
+    handleRefetch() {
+      this.fetched = false;
+      this.handleFetch(this.form.url);
+    },
+
     onSubmit() {
       this.$emit('on-submit', {
-        ...this.form,
         id: this.data._id,
+        description: this.form.description,
+        image: this.form.image,
+        name: this.form.name,
+        url: this.form.url,
         meta: {
           position: this.data.meta ? this.data.meta.position : {},
           version: this.data.meta ? this.data.meta.version : 1,

@@ -28,7 +28,7 @@ export const actions = {
   },
 
   async [UPDATE_MATERIAL]({ dispatch }, { materialId, data }) {
-    const response = await this.$axios.put(`/api/sprints/${materialId}`, data);
+    const response = await this.$axios.put(`/api/materials/${materialId}`, data);
     dispatch(GET_MATERIALS);
     return response.data.message;
   },

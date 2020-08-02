@@ -59,6 +59,7 @@ import {
 
 import {
   faFacebook,
+  faGithub,
   faTwitter,
 } from '@fortawesome/free-brands-svg-icons';
 // } from '@fortawesome/free-regular-svg-icons'
@@ -94,6 +95,7 @@ library.add(
   faFileVideo,
   faFileWord,
   faFolder,
+  faGithub,
   faGlobe,
   faHeart,
   faJournalWhills,

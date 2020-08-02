@@ -2,10 +2,17 @@
   <div class="wrapper">
     <div class="sys-info">
       <div class="copy">
-        © 2019 Rete Academy Team.
-        Made with  <fa icon="heart" />  in Finland.
+        © 2020 Rete Academy Team.
+        Made with <fa icon="heart" /> in Finland.
       </div>
       <div class="social">
+        <a
+          href="https://github.com/rete-academy"
+          target="_blank"
+        >
+          <fa :icon="['fab', 'github']" />
+          rete-academy
+        </a>
         <a
           href="https://twitter.com/reteacademy"
           target="_blank"

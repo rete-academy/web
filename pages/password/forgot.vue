@@ -4,7 +4,7 @@
       class="logo"
       to="/"
     >
-      <img class="logo" src="@/assets/images/rete-logo-big.jpg">
+      <img class="logo" src="@/assets/images/rete-logo-big.png">
     </router-link>
     <h2>
       Reset Password
@@ -17,7 +17,12 @@
       label-position="top"
       hide-required-asterisk
     >
-      <el-form-item label="Email" prop="email" required>
+      <el-form-item
+        v-if="!emailSent"
+        label="Email"
+        prop="email"
+        required
+      >
         <el-input
           v-model="input.email"
           type="email"
@@ -26,8 +31,12 @@
           @keyup.native.enter="onSubmit"
         />
       </el-form-item>
+      <div v-else class="sent">
+        An email has been sent to you to reset your password, please check your inbox.
+      </div>
       <el-form-item>
         <el-button
+          v-if="!emailSent"
           type="primary"
           class="login-btn"
           :disabled="!input.email"
@@ -64,8 +73,7 @@ export default {
       input: {
         email: '',
       },
-      count: 10,
-      res: '',
+      emailSent: false,
       rules: {
         email: [{
           type: 'email',
@@ -89,7 +97,8 @@ export default {
               type: 'success',
               message: 'Reset successful!',
             });
-            this.$router.push('/');
+
+            this.emailSent = true;
           }).catch((e) => {
             this.$nuxt.$loading.fail();
             consola.error(e.message);

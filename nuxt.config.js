@@ -47,13 +47,10 @@ module.exports = {
 
   // These plugins load before mounting the App
   plugins: [
-    // '@/plugins/axios',
-    {
-      src: '@/plugins/element-ui',
-      ssr: true,
-    },
+    '@/plugins/element-ui',
     '@/plugins/filters',
     '@/plugins/fontawesome',
+    // '@/plugins/axios',
     // '@/plugins/chat-scroll.js',
     /*
     {

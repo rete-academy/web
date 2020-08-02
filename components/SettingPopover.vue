@@ -78,7 +78,7 @@ export default {
   data() {
     return {
       role: 2,
-      defaultAvatar: 'http://placeimg.com/300/300/people',
+      defaultAvatar: '', // Make default no avatar later
       selectedSprints: null,
       changed: false,
       position: {},

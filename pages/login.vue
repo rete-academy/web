@@ -4,7 +4,7 @@
       class="logo"
       to="/"
     >
-      <img class="logo" src="@/assets/images/rete-logo-big.jpg">
+      <img class="logo" src="@/assets/images/rete-logo-big.png">
     </router-link>
     <h2 v-if="!finished">
       Login
@@ -14,6 +14,7 @@
       ref="loginForm"
       :model="input"
       :rules="rules"
+      :disabled="working"
       label-width="80px"
       label-position="top"
       hide-required-asterisk
@@ -49,7 +50,7 @@
         <el-button
           type="success"
           class="login-btn"
-          :disabled="!input.email || !input.password"
+          :disabled="!input.email || !input.password || working"
           @click="onSubmit"
         >
           Login
@@ -57,6 +58,7 @@
         <el-button
           type="text"
           class="sign-up-btn"
+          :disabled="working"
           plain
           @click="$router.push('/signup')"
         >
@@ -65,6 +67,7 @@
         <el-button
           type="text"
           class="forgot-btn"
+          :disabled="working"
           plain
           @click="$router.push('/password/forgot')"
         >
@@ -106,6 +109,7 @@ export default {
           trigger: ['blur'],
         }],
       },
+      working: false,
     };
   },
 
@@ -133,6 +137,8 @@ export default {
 
     onSubmit() {
       this.$nuxt.$loading.start();
+      this.working = true;
+
       this.$refs.loginForm.validate((valid) => {
         if (valid) {
           this.$auth.loginWith('local', {
@@ -151,6 +157,7 @@ export default {
               type: 'success',
               message: 'Login successful!',
             });
+
             if (this.$route.query.prevPath) {
               this.$router.push(this.$route.query.prevPath);
             } else {
@@ -160,6 +167,7 @@ export default {
             this.$nuxt.$loading.fail();
             consola.error(e.message);
             this.$message.error(e.message);
+            this.working = false;
           });
         }
       });

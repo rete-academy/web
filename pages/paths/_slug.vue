@@ -6,12 +6,14 @@
         <el-button
           :type="isEnrolled ? 'danger':'success'"
           icon="el-icon-s-management"
+          :disabled="working"
           @click="handlePath"
         >
           {{ isEnrolled ? 'Unenroll' : 'Enroll Now' }}
         </el-button>
         <el-button
           v-if="isEnrolled"
+          :disabled="working"
           type="success"
           @click="$router.push('/my-paths#')"
         >
@@ -64,7 +66,7 @@
       </div>
     </div>
     <div class="path-image is-extra-large">
-      <img :src="image || 'http://placeimg.com/600/600/tech'" class="image">
+      <img :src="image" class="image">
     </div>
   </div>
 </template>
@@ -78,6 +80,7 @@ export default {
   data() {
     return {
       activeItems: [],
+      working: false,
     };
   },
 
@@ -111,6 +114,8 @@ export default {
     async handlePath() {
       try {
         this.$nuxt.$loading.start();
+        this.working = true;
+
         if (this.$auth.user) {
           const ACTION = this.isEnrolled ? 'UNENROLL' : 'ENROLL';
 
@@ -134,9 +139,11 @@ export default {
           });
         }
         this.$nuxt.$loading.finish();
+        this.working = false;
       } catch (e) {
         this.$nuxt.$loading.fail();
         this.$message.error(e.message);
+        this.working = false;
       }
     },
   },

@@ -4,7 +4,7 @@
       class="logo"
       to="/"
     >
-      <img class="logo" src="@/assets/images/rete-logo-big.jpg">
+      <img class="logo" src="@/assets/images/rete-logo-big.png">
     </router-link>
     <h2>
       Set New Password

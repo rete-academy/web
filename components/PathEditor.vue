@@ -316,6 +316,7 @@ export default {
     onChange(file, fileList) {
       this.file = file;
       this.fileList = fileList;
+      this.changed = true;
     },
 
     onRemove() {

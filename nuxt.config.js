@@ -2,6 +2,8 @@ require('dotenv').config();
 
 const pkg = require('./package');
 
+const PRIMARY_HOSTS = 'app.rete.academy';
+
 module.exports = {
   mode: 'spa',
 
@@ -35,9 +37,9 @@ module.exports = {
   },
 
   loading: {
-    color: '#FFEB3B',
-    height: '5px',
-    duration: 1000,
+    color: '#FF9900',
+    height: '2px',
+    duration: 3000,
     continuous: true,
   },
 
@@ -99,6 +101,36 @@ module.exports = {
           },
           logout: false,
         },
+      },
+    },
+  },
+
+  render: {
+    csp: {
+      reportOnly: true,
+      hashAlgorithm: 'sha256',
+      policies: {
+        'default-src': ["'self'"],
+        'img-src': ['https:', '*.google-analytics.com'],
+        'worker-src': ["'self'", 'blob:', PRIMARY_HOSTS, '*.logrocket.io'],
+        'style-src': ["'self'", "'unsafe-inline'", PRIMARY_HOSTS],
+        'script-src': [
+          "'self'",
+          "'unsafe-inline'",
+          PRIMARY_HOSTS,
+          'sentry.io',
+          '*.sentry-cdn.com',
+          '*.google-analytics.com',
+          '*.logrocket.io',
+        ],
+        'connect-src': [PRIMARY_HOSTS, 'sentry.io', '*.google-analytics.com'],
+        'form-action': ["'self'"],
+        'frame-ancestors': ["'none'"],
+        'object-src': ["'none'"],
+        'base-uri': [PRIMARY_HOSTS],
+        'report-uri': [
+          'https://sentry.io/api/<project>/security/?sentry_key=<key>',
+        ],
       },
     },
   },

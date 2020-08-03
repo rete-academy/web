@@ -75,11 +75,11 @@ export default {
           icon: 'user',
           label: 'Users',
         },
-        {
+        /* {
           index: '/admin/settings',
           icon: 'cog',
           label: 'Settings',
-        },
+        }, */
       ],
       activeIndex: '/admin/paths',
       materialFormVisible: false,

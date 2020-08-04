@@ -16,14 +16,6 @@ module.exports = {
     version: pkg.version,
   },
 
-  axios: {
-    baseURL: process.env.API_URL || 'http://localhost:8000',
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
-    },
-  },
-
   head: {
     title: 'Rete Academy',
     meta: [
@@ -68,8 +60,23 @@ module.exports = {
     '@nuxtjs/dotenv',
     '@nuxtjs/google-analytics',
     '@nuxtjs/pwa',
+    '@nuxtjs/sentry',
     'nuxt-clipboard2',
+
   ],
+
+  axios: {
+    baseURL: process.env.API_URL || 'http://localhost:8000',
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+    },
+  },
+
+  sentry: {
+    dsn: 'https://45275bbf095c47eeadeeea9d3432ab07@o130909.ingest.sentry.io/5375104',
+    config: {}, // Additional config
+  },
 
   auth: {
     cookie: false,
@@ -107,8 +114,10 @@ module.exports = {
 
   render: {
     csp: {
-      reportOnly: true,
+      // reportOnly: true,
+      addMeta: true,
       hashAlgorithm: 'sha256',
+      unsafeInlineCompatibility: true,
       policies: {
         'default-src': ["'self'"],
         'img-src': ['https:', '*.google-analytics.com'],

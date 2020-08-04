@@ -5,7 +5,7 @@ const pkg = require('./package');
 const PRIMARY_HOSTS = 'app.rete.academy';
 
 module.exports = {
-  mode: 'spa',
+  mode: 'universal',
 
   telemetry: false,
 
@@ -62,7 +62,6 @@ module.exports = {
     '@nuxtjs/pwa',
     '@nuxtjs/sentry',
     'nuxt-clipboard2',
-
   ],
 
   axios: {
@@ -113,16 +112,38 @@ module.exports = {
   },
 
   render: {
+    ssr: false,
     csp: {
-      // reportOnly: true,
+      reportOnly: true,
       addMeta: true,
       hashAlgorithm: 'sha256',
       unsafeInlineCompatibility: true,
       policies: {
         'default-src': ["'self'"],
-        'img-src': ['https:', '*.google-analytics.com'],
+        'img-src': [
+          "'self'",
+          'blob:',
+          PRIMARY_HOSTS,
+          '*.amazonaws.com',
+          '*.google-analytics.com',
+        ],
         'worker-src': ["'self'", 'blob:', PRIMARY_HOSTS, '*.logrocket.io'],
-        'style-src': ["'self'", "'unsafe-inline'", PRIMARY_HOSTS],
+        'style-src': [
+          "'self'",
+          "'unsafe-inline'",
+          PRIMARY_HOSTS,
+          '*.googleapis.com',
+        ],
+        'font-src': [
+          "'self'",
+          PRIMARY_HOSTS,
+          '*.gstatic.com',
+        ],
+        'script-src-elem': [
+          "'self'",
+          "'unsafe-inline'",
+          PRIMARY_HOSTS,
+        ],
         'script-src': [
           "'self'",
           "'unsafe-inline'",
@@ -138,7 +159,7 @@ module.exports = {
         'object-src': ["'none'"],
         'base-uri': [PRIMARY_HOSTS],
         'report-uri': [
-          'https://sentry.io/api/<project>/security/?sentry_key=<key>',
+          'https://o130909.ingest.sentry.io/api/5375104/security/?sentry_key=45275bbf095c47eeadeeea9d3432ab07',
         ],
       },
     },

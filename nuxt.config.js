@@ -2,10 +2,8 @@ require('dotenv').config();
 
 const pkg = require('./package');
 
-const PRIMARY_HOSTS = 'app.rete.academy';
-
 module.exports = {
-  mode: 'universal',
+  mode: 'spa',
 
   telemetry: false,
 
@@ -32,6 +30,7 @@ module.exports = {
     color: '#FF9900',
     height: '2px',
     duration: 3000,
+    throttle: 1000,
     continuous: true,
   },
 
@@ -66,10 +65,10 @@ module.exports = {
 
   axios: {
     baseURL: process.env.API_URL || 'http://localhost:8000',
-    headers: {
+    /* headers: {
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
-    },
+    }, */
   },
 
   sentry: {
@@ -112,14 +111,16 @@ module.exports = {
   },
 
   render: {
-    ssr: false,
+    csp: true,
+  },
+  /* render: {
     csp: {
       reportOnly: true,
       addMeta: true,
       hashAlgorithm: 'sha256',
       unsafeInlineCompatibility: true,
       policies: {
-        'default-src': ["'self'"],
+        'default-src': ["'none'"],
         'img-src': [
           "'self'",
           'blob:',
@@ -127,7 +128,12 @@ module.exports = {
           '*.amazonaws.com',
           '*.google-analytics.com',
         ],
-        'worker-src': ["'self'", 'blob:', PRIMARY_HOSTS, '*.logrocket.io'],
+        'worker-src': [
+          "'self'",
+          'blob:',
+          PRIMARY_HOSTS,
+          '*.logrocket.io',
+        ],
         'style-src': [
           "'self'",
           "'unsafe-inline'",
@@ -153,7 +159,12 @@ module.exports = {
           '*.google-analytics.com',
           '*.logrocket.io',
         ],
-        'connect-src': [PRIMARY_HOSTS, 'sentry.io', '*.google-analytics.com'],
+        'connect-src': [
+          "'self'",
+          PRIMARY_HOSTS,
+          'sentry.io',
+          '*.google-analytics.com',
+        ],
         'form-action': ["'self'"],
         'frame-ancestors': ["'none'"],
         'object-src': ["'none'"],
@@ -164,6 +175,7 @@ module.exports = {
       },
     },
   },
+  */
 
   router: {
     // Set up auth module global

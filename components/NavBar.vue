@@ -1,44 +1,41 @@
 <template>
   <div class="flex-nav">
-    <router-link
+    <nuxt-link
       class="logo"
       to="/"
     >
       <img src="@/assets/images/rete-logo-icon.png" class="logo-icon">
-    </router-link>
+    </nuxt-link>
     <div class="nav-content">
       <div class="left">
-        <router-link
+        <nuxt-link
           v-if="$auth.loggedIn"
-          class="item"
           to="/paths"
+          :prefetch="false"
+          class="item"
         >
           Browse Paths
-        </router-link>
-        <!-- router-link class="item" to="/" disabled>
-            Events
-        </router-link>
-        <router-link class="item" to="/">
-            Jobs
-        </router-link -->
+        </nuxt-link>
       </div>
 
       <div class="right">
-        <router-link
+        <nuxt-link
           v-if="isAdmin"
-          class="item"
           to="/admin"
+          :prefetch="false"
+          class="item"
         >
           Dashboard
-        </router-link>
+        </nuxt-link>
 
-        <router-link
+        <nuxt-link
           v-if="$auth.loggedIn"
-          class="item right"
           to="/my-paths"
+          :prefetch="false"
+          class="item right"
         >
           My Paths
-        </router-link>
+        </nuxt-link>
       </div>
     </div>
 

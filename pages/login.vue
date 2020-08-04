@@ -1,11 +1,11 @@
 <template>
   <div class="login-form form-wrapper">
-    <router-link
+    <nuxt-link
       class="logo"
       to="/"
     >
       <img class="logo" src="@/assets/images/rete-logo-big.png">
-    </router-link>
+    </nuxt-link>
     <h2 v-if="!finished">
       Login
     </h2>

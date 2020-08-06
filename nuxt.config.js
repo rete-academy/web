@@ -72,8 +72,8 @@ module.exports = {
   },
 
   sentry: {
-    dsn: 'https://45275bbf095c47eeadeeea9d3432ab07@o130909.ingest.sentry.io/5375104',
     config: {}, // Additional config
+    dsn: process.env.SENTRY_DSN,
   },
 
   auth: {
@@ -92,6 +92,12 @@ module.exports = {
     },
     // scopeKey: 'role',
     strategies: {
+      facebook: {
+        client_id: process.env.FB_APP_ID,
+        display: 'popup',
+        scope: ['email', 'public_profile'],
+        userinfo_endpoint: 'https://graph.facebook.com/v2.12/me?fields=about,name,picture{url},email,birthday&display',
+      },
       local: {
         endpoints: {
           login: {
@@ -211,4 +217,10 @@ module.exports = {
       }
     },
   },
+
+  buildModules: [
+    ['@nuxtjs/google-analytics', {
+      id: 'UA-3449304-35',
+    }],
+  ],
 };

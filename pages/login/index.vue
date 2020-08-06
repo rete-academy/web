@@ -9,16 +9,28 @@
     <h2 v-if="!finished">
       Login
     </h2>
+
     <el-form
       v-if="!finished"
-      ref="loginForm"
       :model="input"
       :rules="rules"
       :disabled="working"
+      ref="loginForm"
       label-width="80px"
       label-position="top"
       hide-required-asterisk
     >
+      <el-form-item>
+        <el-button
+          class="login-btn facebook"
+          @click="handleLoginWithFacebook"
+        >
+          Login with Facebook
+        </el-button>
+      </el-form-item>
+
+      <el-divider class="or">or</el-divider>
+
       <el-form-item
         label="Email"
         prop="email"
@@ -55,6 +67,7 @@
         >
           Login
         </el-button>
+
         <el-button
           type="text"
           class="sign-up-btn"
@@ -135,6 +148,22 @@ export default {
       }
     },
 
+    handleLoginWithFacebook() {
+      this.$nuxt.$loading.start();
+      this.working = true;
+
+      this.$auth.loginWith('facebook')
+        .then(() => {
+        // console.log('### what:', what);
+          this.$nuxt.$loading.finish();
+        }).catch((e) => {
+          this.$nuxt.$loading.fail();
+          consola.error(e.message);
+          this.$message.error(e.message);
+          this.working = false;
+        });
+    },
+
     onSubmit() {
       this.$nuxt.$loading.start();
       this.working = true;
@@ -192,10 +221,19 @@ export default {
     }
   }
 
-  hr {
-    width: 80%;
-    color: #CCC;
-    margin: 20px auto 10px;
+  .login-btn {
+    &.facebook {
+      background: #3b5998;
+      color: #FFFFFF;
+
+      &:hover {
+        background: lighten(#3b5998, 10);
+      }
+    }
+  }
+
+  .or {
+    margin-top: 34px;
   }
 
   .forgot-btn {

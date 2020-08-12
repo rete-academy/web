@@ -81,8 +81,8 @@ module.exports = {
     redirect: {
       login: '/login',
       logout: '/',
-      callback: '/login',
       home: '/',
+      // callback: '/login/callback',
     },
     token: {
       prefix: 'access_token.',
@@ -96,7 +96,7 @@ module.exports = {
         client_id: process.env.FB_APP_ID,
         display: 'popup',
         scope: ['email', 'public_profile'],
-        userinfo_endpoint: 'https://graph.facebook.com/v2.12/me?fields=about,name,picture{url},email,birthday&display',
+        userinfo_endpoint: process.env.FB_USER_ENDPOINT,
       },
       local: {
         endpoints: {

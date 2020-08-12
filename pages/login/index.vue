@@ -20,7 +20,7 @@
       label-position="top"
       hide-required-asterisk
     >
-      <el-form-item>
+      <!-- el-form-item>
         <el-button
           class="login-btn facebook"
           @click="handleLoginWithFacebook"
@@ -29,7 +29,7 @@
         </el-button>
       </el-form-item>
 
-      <el-divider class="or">or</el-divider>
+      <el-divider class="or">or</el-divider -->
 
       <el-form-item
         label="Email"
@@ -154,7 +154,6 @@ export default {
 
       this.$auth.loginWith('facebook')
         .then(() => {
-        // console.log('### what:', what);
           this.$nuxt.$loading.finish();
         }).catch((e) => {
           this.$nuxt.$loading.fail();

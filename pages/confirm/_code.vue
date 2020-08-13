@@ -1,6 +1,6 @@
 <template>
   <div class="confirm">
-    <img class="logo" src="@/assets/images/rete-logo-big.jpg">
+    <img class="logo" src="@/assets/images/rete-logo-big.png">
     <div v-if="success" class="valid">
       <h2>Confirmed</h2>
       <p class="text">
@@ -37,8 +37,6 @@
 </template>
 
 <script>
-import consola from 'consola';
-
 export default {
   name: 'Confirm',
 
@@ -51,7 +49,7 @@ export default {
       code: '',
       success: false,
       failed: false,
-      count: 5,
+      count: 3,
     };
   },
 
@@ -62,29 +60,23 @@ export default {
       if (this.code) {
         this.$nuxt.$loading.start();
 
-        this.$store.dispatch('users/CONFIRM_EMAIL', this.code).then((res) => {
-          this.$nuxt.$loading.finish();
-          this.success = true;
-          const countDown = setInterval(() => {
-            this.count -= 1;
-            if (this.count <= 0) {
-              clearInterval(countDown);
-              this.$router.push('/login');
-            }
-          }, 1000);
-          consola.info(res);
-        }).catch((err) => {
-          this.$nuxt.$loading.fail();
-          this.failed = true;
-          const countDown = setInterval(() => {
-            this.count -= 1;
-            if (this.count <= 0) {
-              clearInterval(countDown);
-              this.$router.push('/login');
-            }
-          }, 1000);
-          consola.error(err.message);
-        });
+        this.$store.dispatch('users/CONFIRM_EMAIL', this.code)
+          .then(() => {
+            this.$nuxt.$loading.finish();
+            this.success = true;
+          })
+          .catch(() => {
+            this.$nuxt.$loading.fail();
+            this.failed = true;
+          });
+
+        const countDown = setInterval(() => {
+          this.count -= 1;
+          if (this.count <= 0) {
+            clearInterval(countDown);
+            this.$router.push('/login');
+          }
+        }, 1000);
       }
     });
   },

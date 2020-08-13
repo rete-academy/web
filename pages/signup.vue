@@ -14,6 +14,7 @@
       ref="signUpForm"
       :model="input"
       :rules="rules"
+      :disabled="working"
       label-width="80px"
       label-position="top"
       hide-required-asterisk
@@ -76,7 +77,7 @@
         <el-button
           type="success"
           class="sign-up-btn"
-          :disabled="!acceptTos || score < 3"
+          :disabled="!acceptTos || score < 3 || working"
           @click="onSubmit"
         >
           Register
@@ -147,6 +148,7 @@ export default {
       currentType: 'password',
       showPassword: false,
       passwordIcon: 'eye-slash',
+      working: false,
       rules: {
         name: [{
           required: true,
@@ -255,15 +257,18 @@ export default {
     handleSignUp() {
       if (this.acceptTos) {
         this.$nuxt.$loading.start();
+        this.working = true;
 
         this.$store.dispatch('users/SIGN_UP', this.input)
           .then((res) => {
             this.$nuxt.$loading.finish();
             this.finished = true;
+            this.working = false;
             consola.info(res);
           }).catch((err) => {
             this.$nuxt.$loading.fail();
             this.$message.error(err.message);
+            this.working = false;
           });
       }
     },

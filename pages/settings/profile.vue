@@ -11,8 +11,7 @@
         :show-file-list="false"
         :on-change="onChange"
       >
-        <img v-if="hasAvatar" :src="profileImage" class="image">
-        <fa v-else icon="upload" class="avatar-uploader-icon" />
+        <img :src="profileImage" class="image">
       </el-upload>
     </div>
 
@@ -40,7 +39,6 @@
 
           <span
             class="link"
-            v-if="!profile.meta.confirm"
             @click="resendConfirm"
           >
             Resend confirmation
@@ -142,7 +140,7 @@ export default {
       } if (this.file) {
         return this.file.url;
       }
-      return '';
+      return '/rete-icon-gray.png';
     },
 
     uploadEndpoint() {
@@ -224,7 +222,9 @@ export default {
             'users/RESEND_CONFIRM',
             this.profile.email,
           );
-          await this.$auth.fetchUser();
+
+          // await this.$auth.fetchUser();
+
           this.$message({
             type: 'success',
             message: 'Confirmation sent successfully!',

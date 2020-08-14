@@ -1,18 +1,10 @@
 <template>
   <div class="profile wrapper profile-box">
     <div class="avatar">
-      <el-upload
-        class="avatar-uploader"
-        list-type="picture"
-        :action="uploadEndpoint"
-        :auto-upload="true"
-        :http-request="submitUpload"
-        :headers="uploadHeaders"
-        :show-file-list="false"
-        :on-change="onChange"
+      <img
+        :src="hasAvatar ? profile.avatar.location : '/rete-icon-gray.png'"
+        class="image"
       >
-        <img :src="profileImage" class="image">
-      </el-upload>
     </div>
 
     <div class="content">
@@ -37,6 +29,12 @@
           <fa icon="envelope" class="info-icon" />
           {{ profile.email }}
 
+          <fa
+            v-if="profile.meta.confirm"
+            icon="check"
+            class="confirmed"
+          />
+
           <span
             class="link"
             @click="resendConfirm"
@@ -53,6 +51,7 @@
       width="30%"
       v-if="editProfileVisible"
       :visible.sync="editProfileVisible"
+      :before-close="dialogClose"
     >
       <el-form
         ref="profileForm"
@@ -60,6 +59,20 @@
         label-width="180px"
         label-position="top"
       >
+        <el-form-item label="Avatar" class="avatar">
+          <el-upload
+            class="avatar-uploader"
+            list-type="picture"
+            :action="uploadEndpoint"
+            :auto-upload="false"
+            :http-request="submitUpload"
+            :headers="uploadHeaders"
+            :show-file-list="false"
+            :on-change="onChange"
+          >
+            <img :src="profileImage" class="image">
+          </el-upload>
+        </el-form-item>
         <el-form-item label="Name" class="name">
           <el-row :gutter="10">
             <el-col :span="24">
@@ -175,6 +188,12 @@ export default {
       this.editProfileVisible = true;
     },
 
+    dialogClose(done) {
+      console.log('### dialogClose');
+      this.file = null;
+      done();
+    },
+
     async handleSave() {
       this.$nuxt.$loading.start();
       this.loading = true;
@@ -240,6 +259,7 @@ export default {
     },
 
     handleCancel() {
+      this.file = null;
       this.editProfileVisible = false;
     },
   },
@@ -315,6 +335,11 @@ export default {
     }
   }
 
-  // .edit-profile-dialog {}
+  .confirmed {
+    color: green;
+  }
+  .link {
+    margin-left: 20px;
+  }
 }
 </style>

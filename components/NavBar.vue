@@ -8,6 +8,12 @@
     </nuxt-link>
     <div class="nav-content">
       <div class="left">
+        <a
+          href="https://www.rete.academy/tag/news"
+          class="item"
+        >
+          News
+        </a>
         <nuxt-link
           v-if="$auth.loggedIn"
           to="/paths"

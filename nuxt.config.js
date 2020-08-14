@@ -29,8 +29,8 @@ module.exports = {
   loading: {
     color: '#FF9900',
     height: '2px',
-    duration: 3000,
-    throttle: 1000,
+    duration: 5000,
+    throttle: 200,
     continuous: true,
   },
 

@@ -27,21 +27,19 @@ export default {
 
   async asyncData({ store, error }) {
     try {
-      if (store.getters['paths/paths'].length === 0) {
-        await store.dispatch('paths/GET_PATHS');
-      }
-      if (store.getters['sprints/sprints'].length === 0) {
-        await store.dispatch('sprints/GET_SPRINTS');
-      }
-      if (store.getters['materials/materials'].length === 0) {
-        await store.dispatch('materials/GET_MATERIALS');
-      }
-      if (store.getters['users/users'].length === 0) {
-        await store.dispatch('users/GET_USERS');
-      }
-      if (store.getters['files/files'].length === 0) {
-        await store.dispatch('files/GET_FILES');
-      }
+      const actions = [
+        'paths/GET_PATHS',
+        'sprints/GET_SPRINTS',
+        'materials/GET_MATERIALS',
+        'users/GET_USERS',
+        'files/GET_FILES',
+      ];
+
+      Promise.all(
+        actions.map(async (action) => {
+          await store.dispatch(action);
+        }),
+      );
     } catch (e) {
       error({ message: e, statusCode: 404 });
     }

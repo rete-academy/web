@@ -114,7 +114,7 @@ export default {
         redirect('/login');
       } else if (!found) {
         Message({
-          duration: 10000,
+          duration: 2000,
           message: 'You must enroll first. Redirect to browse all paths...',
           showClose: true,
           type: 'warning',

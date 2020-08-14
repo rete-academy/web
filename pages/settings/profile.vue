@@ -48,7 +48,7 @@
     <el-dialog
       title="Edit Profile"
       class="edit-profile-dialog"
-      width="30%"
+      width="40%"
       v-if="editProfileVisible"
       :visible.sync="editProfileVisible"
       :before-close="dialogClose"
@@ -59,34 +59,32 @@
         label-width="180px"
         label-position="top"
       >
-        <el-form-item label="Avatar" class="avatar">
-          <el-upload
-            class="avatar-uploader"
-            list-type="picture"
-            :action="uploadEndpoint"
-            :auto-upload="false"
-            :http-request="submitUpload"
-            :headers="uploadHeaders"
-            :show-file-list="false"
-            :on-change="onChange"
-          >
-            <img :src="profileImage" class="image">
-          </el-upload>
-        </el-form-item>
-        <el-form-item label="Name" class="name">
-          <el-row :gutter="10">
-            <el-col :span="24">
+        <el-row :gutter="10">
+          <el-col :span="8">
+            <el-form-item label="Avatar" class="avatar">
+              <el-upload
+                class="avatar-uploader"
+                list-type="picture"
+                :action="uploadEndpoint"
+                :auto-upload="false"
+                :http-request="submitUpload"
+                :headers="uploadHeaders"
+                :show-file-list="false"
+                :on-change="onChange"
+              >
+                <img :src="profileImage" class="image">
+              </el-upload>
+            </el-form-item>
+          </el-col>
+          <el-col :span="16">
+            <el-form-item label="Name" class="name">
               <el-input v-model="form.name" :disabled="loading" />
-            </el-col>
-          </el-row>
-        </el-form-item>
-        <el-form-item label="Email" class="email">
-          <el-row :gutter="10">
-            <el-col :span="24">
+            </el-form-item>
+            <el-form-item label="Email" class="email">
               <el-input v-model="form.email" :disabled="loading" />
-            </el-col>
-          </el-row>
-        </el-form-item>
+            </el-form-item>
+          </el-col>
+        </el-row>
       </el-form>
 
       <span slot="footer" class="dialog-footer">
@@ -189,7 +187,6 @@ export default {
     },
 
     dialogClose(done) {
-      console.log('### dialogClose');
       this.file = null;
       done();
     },
@@ -336,7 +333,7 @@ export default {
   }
 
   .confirmed {
-    color: green;
+    color: #67C23A;
   }
   .link {
     margin-left: 20px;

@@ -36,9 +36,16 @@
           {{ row.progress.length }}
         </template>
       </el-table-column>
-      <el-table-column label="Confirmation">
+      <el-table-column label="Info">
         <template slot-scope="{ row }">
-          {{ row.meta.confirm }}
+          <span class="email">
+            {{ row.email }}
+            <fa
+              v-if="row.meta.confirm"
+              icon="check"
+              class="confirmed"
+            />
+          </span>
         </template>
       </el-table-column>
       <el-table-column
@@ -202,6 +209,10 @@ export default {
 .manage-popover {
     min-width: 160px;
 }
+.confirmed {
+  color: #67C23A;
+}
+
 .user-role {
     width: 18px;
 }

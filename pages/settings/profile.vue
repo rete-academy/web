@@ -335,6 +335,7 @@ export default {
   .confirmed {
     color: #67C23A;
   }
+
   .link {
     margin-left: 20px;
   }

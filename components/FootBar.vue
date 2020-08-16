@@ -28,6 +28,13 @@
           ReteAcademy
         </a>
       </div>
+      <!--div>
+        <select v-model="$colorMode.preference">
+          <option value="system">System</option>
+          <option value="light">Light</option>
+          <option value="dark">Dark</option>
+        </select>
+      </div -->
       <div class="version">
         v{{ version }}
       </div>
@@ -45,8 +52,17 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 .social a {
     margin: 0 20px;
 }
+
+/* body {
+  background-color: #fff;
+  color: rgba(0,0,0,0.8);
+}
+.dark-mode body {
+  background-color: #1A1C20;
+  color: #ebf4f1;
+} */
 </style>

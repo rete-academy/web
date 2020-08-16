@@ -222,5 +222,6 @@ module.exports = {
     ['@nuxtjs/google-analytics', {
       id: 'UA-3449304-35',
     }],
+    // '@nuxtjs/color-mode',
   ],
 };

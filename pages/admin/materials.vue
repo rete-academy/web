@@ -33,10 +33,19 @@
               <fa :icon="row.icon" />
             </span>
             <span class="name">
-              {{ row.name | truncate(45) }}
+              <el-tooltip
+                class="item"
+                effect="dark"
+                :content="row.url | truncate(55)"
+                placement="top-start"
+              >
+                <a :href="row.url" class="button" target="_blank">
+                  {{ row.name | truncate(45) }}
+                </a>
+              </el-tooltip>
             </span>
           </p>
-          <p class="time">
+          <p class="time small">
             Updated: {{ row.updatedTime | convertTime('HH:mm DD.MM.YYYY') }}
             – Version: {{ row.meta.version }}
           </p>

@@ -36,7 +36,8 @@
               <el-tooltip
                 class="item"
                 effect="dark"
-                :content="row.url | truncate(55)"
+                :content="row.url | truncate(95)"
+                :open-delay="900"
                 placement="top-start"
               >
                 <a :href="row.url" class="button" target="_blank">

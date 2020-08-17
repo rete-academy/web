@@ -87,8 +87,6 @@ export default {
   watch: {
     '$route.fullPath': function () {
       const { fullPath } = this.$route;
-      console.log('### fullPath:', fullPath);
-      console.log('### activeIndex:', this.activeIndex);
 
       if (fullPath === '/admin') {
         this.redirectToCorrectPlace('/admin/paths');
@@ -114,15 +112,15 @@ export default {
 
   methods: {
     redirectToCorrectPlace(path) {
-      this.activeIndex = path;
+      const indexes = this.items.map(({ index }) => index);
+      const found = indexes.find((index) => path.includes(index));
+      this.activeIndex = found;
       this.$router.push(path);
     },
 
     clickMenuItem(item) {
-      if (item.index !== this.activeIndex) {
-        this.activeIndex = item.index;
-        this.$router.push(item.index);
-      }
+      this.activeIndex = item.index;
+      this.$router.push(item.index);
     },
   },
 };

@@ -108,7 +108,7 @@ export default {
       await store.dispatch('paths/GET_PATHS');
       const paths = store.getters['paths/paths'];
       // make sure the paths are up to date
-      const found = user.enrolled.some((id) => !!paths.find((p) => p._id === id));
+      const found = user.enrolled.some(({ _id }) => !!paths.find((p) => p._id === _id));
 
       if (!store.$auth.loggedIn) {
         redirect('/login');
@@ -144,8 +144,8 @@ export default {
     myPaths() {
       if (this.$auth.user && this.$auth.user.enrolled && this.paths) {
         return this.$auth.user.enrolled
-          .filter((id) => !!this.paths.find((p) => p._id === id))
-          .map((id) => this.paths.find((p) => p._id === id));
+          .filter(({ _id }) => !!this.paths.find((p) => p._id === _id))
+          .map(({ _id }) => this.paths.find((p) => p._id === _id));
       }
       return [];
     },

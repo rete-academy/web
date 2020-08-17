@@ -8,7 +8,7 @@
       class="image-content"
       :style="{ width: width + 'px', height: width + 'px'}"
     >
-      <img :src="path.image" class="image">
+      <img :src="pathImage" class="image" @error="imageLoadError">
     </div>
     <div
       v-if="!plain"
@@ -25,8 +25,6 @@
 </template>
 
 <script>
-import consola from 'consola';
-
 export default {
   name: 'CardItem',
 
@@ -47,6 +45,7 @@ export default {
 
   data() {
     return {
+      imageError: false,
     };
   },
 
@@ -54,13 +53,22 @@ export default {
     path() {
       return { ...this.data };
     },
+
+    pathImage() {
+      if (!this.imageError) {
+        return this.path.image;
+      }
+      return '/rete-icon-gray.png';
+    },
   },
 
-  created() {
-    consola.info(this.plain);
-  },
+  // created() {},
 
   methods: {
+    imageLoadError() {
+      this.imageError = true;
+    },
+
     go(slug) {
       // consola.info(slug)
       this.$router.push({

@@ -66,7 +66,7 @@
       </div>
     </div>
     <div class="path-image is-extra-large">
-      <img :src="image" class="image">
+      <img :src="pathImage" class="image" @error="imageLoadError">
     </div>
   </div>
 </template>
@@ -77,10 +77,16 @@ export default {
 
   auth: false,
 
+  // Get the data of the path, the merge into this component's data
+  async asyncData({ params, store }) {
+    return store.dispatch('paths/GET_PATH', params.slug);
+  },
+
   data() {
     return {
       activeItems: [],
       working: false,
+      imageError: false,
     };
   },
 
@@ -98,18 +104,26 @@ export default {
 
     isEnrolled() {
       if (this.$auth.user && this.$auth.user.enrolled) {
-        return !!this.$auth.user.enrolled.find((id) => id === this.$data._id);
+        return !!this.$auth.user.enrolled.find((p) => p._id === this.$data._id);
       }
       return false;
     },
-  },
 
-  async asyncData({ params, store }) {
-    return store.dispatch('paths/GET_PATH', params.slug);
+    pathImage() {
+      if (!this.imageError) {
+        return this.$data.image;
+      }
+      return '/rete-icon-gray.png';
+    },
+
   },
 
   methods: {
     handleChange() {},
+
+    imageLoadError() {
+      this.imageError = true;
+    },
 
     async handlePath() {
       try {
@@ -149,6 +163,7 @@ export default {
   },
 };
 </script>
+
 <style lang="scss" scoped>
 .single-path {
     display: flex;

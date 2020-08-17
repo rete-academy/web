@@ -22,7 +22,7 @@
                 class="user-role"
               />
             </span>
-            <span class="name">
+            <span class="name link" @click="handleClickUser(row)">
               {{ row.name }}
             </span>
           </p>
@@ -152,6 +152,10 @@ export default {
     handleClose() {
       this.currentUser = undefined;
       this.editorVisible = false;
+    },
+
+    handleClickUser(user) {
+      this.$router.push(`/admin/users/${user.username}`);
     },
 
     handleDelete(id) {

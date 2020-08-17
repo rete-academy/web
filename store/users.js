@@ -5,122 +5,119 @@ import {
   UNENROLL,
   INCREASE_PROGRESS,
   DECREASE_PROGRESS,
-  FETCH_USER,
+  FETCH_PROFILE,
+  SET_PROFILE,
   FORGOT,
+  GET_USER,
   GET_USERS,
   RESEND_CONFIRM,
   RESET,
-  SET_USER,
   SET_USERS,
   SIGN_UP,
-  UPDATE_PROGRESS,
   UPDATE_STATUS,
   UPDATE_USER,
 } from '@/store/types';
 
 export const state = () => ({
   profile: {},
-  paths: [],
-  path: {},
   users: [],
 });
 
 export const getters = {
   profile: (state) => state.profile,
-  paths: (state) => state.paths,
-  path: (state) => state.path,
   users: (state) => state.users,
 };
 
 export const actions = {
-  async [FETCH_USER]({ commit }) {
+  async [FETCH_PROFILE]({ commit }) {
     await this.$auth.fetchUser();
-    commit(SET_USER, this.$auth.user);
+    commit(SET_PROFILE, this.$auth.user);
   },
 
-  async [SIGN_UP](_, data) {
-    const response = await this.$axios.post('/api/users', data);
-    return response.data.message;
+  async [SIGN_UP](_, value) {
+    const { data } = await this.$axios.post('/api/users', value);
+    return data.message;
   },
 
-  async [GET_USERS]({ commit }) {
+  async [GET_USERS]({ commit }) { // Need to do pagination
     const { data } = await this.$axios.get('/api/users');
     commit(SET_USERS, data.message);
     return data.message;
   },
 
+  async [GET_USER](_, username) {
+    const { data } = await this.$axios.get(`/api/users/${username}`);
+    return data.message;
+  },
+
   async [CONFIRM_EMAIL](_, code) {
-    const response = await this.$axios.put(`/api/users/confirm/${code}`);
-    return response.data.message;
+    const ep = `/api/users/confirm/${code}`;
+    const { data } = await this.$axios.put(ep);
+    return data.message;
   },
 
   async [RESEND_CONFIRM](_, email) {
-    const endpoint = '/api/users/profile/send-confirm';
-    const response = await this.$axios.post(endpoint, { email });
-    return response.data.message;
+    const ep = '/api/users/profile/send-confirm';
+    const { data } = await this.$axios.post(ep, { email });
+    return data.message;
   },
 
   async [FORGOT](_, email) {
-    const response = await this.$axios.post('/api/password/forgot', { email });
-    return response.data.message;
+    const ep = '/api/password/forgot';
+    const { data } = await this.$axios.post(ep, { email });
+    return data.message;
   },
 
   async [RESET](_, { token, password }) {
-    const endpoint = `/api/password/reset?token=${token}`;
-    const response = await this.$axios.post(endpoint, { password });
-    return response.data.message;
+    const ep = `/api/password/reset?token=${token}`;
+    const { data } = await this.$axios.post(ep, { password });
+    return data.message;
   },
 
-  async [UPDATE_USER]({ dispatch }, { userId, data }) {
-    const response = await this.$axios.put(`/api/users/${userId}`, data);
-    dispatch(GET_USERS);
-    dispatch(FETCH_USER);
-    return response.data.message;
+  async [UPDATE_USER]({ dispatch }, { userId, data: value }) {
+    const ep = `/api/users/${userId}`;
+    const { data } = await this.$axios.put(ep, value);
+    await dispatch(FETCH_PROFILE);
+    return data.message;
   },
 
-  async [ENROLL]({ dispatch }, { userId, data }) {
-    const response = await this.$axios.put(`/api/users/${userId}/enroll`, { data });
-    dispatch(GET_USERS);
-    dispatch(FETCH_USER);
-    return response.data.message;
+  async [ENROLL]({ dispatch }, { userId, data: value }) {
+    const ep = `/api/users/${userId}/enroll`;
+    const { data } = await this.$axios.put(ep, { data: value });
+    await dispatch(FETCH_PROFILE);
+    return data.message;
   },
 
-  async [UNENROLL]({ dispatch }, { userId, data }) {
-    const response = await this.$axios.put(`/api/users/${userId}/unenroll`, { data });
-    dispatch(GET_USERS);
-    dispatch(FETCH_USER);
-    return response.data.message;
+  async [UNENROLL]({ dispatch }, { userId, data: value }) {
+    const ep = `/api/users/${userId}/unenroll`;
+    const { data } = await this.$axios.put(ep, { data: value });
+    await dispatch(FETCH_PROFILE);
+    return data.message;
   },
 
-  async [INCREASE_PROGRESS]({ dispatch }, { userId, data }) {
-    const response = await this.$axios.put(`/api/users/${userId}/increase`, { data });
-    dispatch(GET_USERS);
-    dispatch(FETCH_USER);
-    return response.data.message;
+  async [INCREASE_PROGRESS]({ dispatch }, { userId, data: value }) {
+    const ep = `/api/users/${userId}/increase`;
+    const { data } = await this.$axios.put(ep, { data: value });
+    await dispatch(FETCH_PROFILE);
+    return data.message;
   },
 
-  async [DECREASE_PROGRESS]({ dispatch }, { userId, data }) {
-    const response = await this.$axios.put(`/api/users/${userId}/decrease`, { data });
-    dispatch(GET_USERS);
-    dispatch(FETCH_USER);
-    return response.data.message;
+  async [DECREASE_PROGRESS]({ dispatch }, { userId, data: value }) {
+    const ep = `/api/users/${userId}/decrease`;
+    const { data } = await this.$axios.put(ep, { data: value });
+    await dispatch(FETCH_PROFILE);
+    return data.message;
   },
 
-  async [UPDATE_STATUS](_, { userId, data }) {
-    const endpoint = `/api/users/${userId}/update-status`;
-    const response = await this.$axios.put(endpoint, data);
-    return response.data.message;
-  },
-
-  async [UPDATE_PROGRESS](_, { userId, data }) {
-    const endpoint = `/api/users/${userId}/update-progress`;
-    const response = await this.$axios.put(endpoint, data);
-    return response.data.message;
+  async [UPDATE_STATUS](_, { userId, data: value }) {
+    const ep = `/api/users/${userId}/update-status`;
+    const { data } = await this.$axios.put(ep, value);
+    return data.message;
   },
 };
 
 export const mutations = {
-  [SET_USER](state, data) {
+  [SET_PROFILE](state, data) {
     state.profile = data;
   },
   [SET_USERS](state, data) {

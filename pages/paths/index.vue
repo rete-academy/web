@@ -9,6 +9,7 @@
     />
   </section>
 </template>
+
 <script>
 import { mapGetters } from 'vuex';
 import { CardItem } from '@/components';
@@ -24,7 +25,7 @@ export default {
     ...mapGetters('paths', ['paths']),
   },
 
-  mounted() {
+  created() {
     if (this.$auth.loggedIn) {
       if (this.paths.length === 0) {
         this.$store.dispatch('paths/GET_PATHS');

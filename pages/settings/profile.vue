@@ -168,8 +168,7 @@ export default {
   },
 
   async asyncData({ store }) {
-    return store.dispatch('users/FETCH_USER');
-    // error({ message: e, statusCode: 404 });
+    return store.dispatch('users/FETCH_PROFILE');
   },
 
   methods: {

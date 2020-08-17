@@ -87,6 +87,8 @@ export default {
   watch: {
     '$route.fullPath': function () {
       const { fullPath } = this.$route;
+      console.log('### fullPath:', fullPath);
+      console.log('### activeIndex:', this.activeIndex);
 
       if (fullPath === '/admin') {
         this.redirectToCorrectPlace('/admin/paths');

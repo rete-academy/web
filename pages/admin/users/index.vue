@@ -55,17 +55,19 @@
       >
         <template slot-scope="{ row }">
           <el-button
-            size="mini"
-            icon="el-icon-setting"
-            plain
+            v-if="isAdmin"
             @click="handleEditUser(row)"
+            icon="el-icon-setting"
+            size="mini"
+            plain
           />
           <el-button
-            size="mini"
+            v-if="isAdmin"
+            @click="handleDelete(row._id)"
             icon="el-icon-delete"
+            size="mini"
             type="danger"
             plain
-            @click="handleDelete(row._id)"
           />
         </template>
       </el-table-column>
@@ -105,6 +107,10 @@ export default {
 
   computed: {
     ...mapGetters('users', ['users']),
+
+    isAdmin() {
+      return checkRole(this.$auth.user, 'admin');
+    },
   },
 
   created() {},

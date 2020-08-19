@@ -217,7 +217,7 @@ export default {
     },
 
     canEdit(p) {
-      return checkRole(this.$auth.user, 1) || checkAuthor(p, this.$auth.user);
+      return checkRole(this.$auth.user, 'admin') || checkAuthor(this.$auth.user, p);
     },
 
     canSee(p) {

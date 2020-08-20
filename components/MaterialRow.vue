@@ -49,7 +49,7 @@ export default {
 
     isChecked() {
       const { material } = this.data;
-      return !!this.$auth.user.progress.find((id) => id === material._id);
+      return !!this.$auth.user.progress.find((m) => m._id === material._id);
     },
 
     stepId() {

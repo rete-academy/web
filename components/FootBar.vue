@@ -2,9 +2,10 @@
   <div class="wrapper">
     <div class="sys-info">
       <div class="copy">
-        © 2020 Rete Academy Team.
+        © 2020 Rete Academy.
         Made with <fa icon="heart" /> in Finland.
       </div>
+
       <div class="social">
         <a
           href="https://github.com/rete-academy"

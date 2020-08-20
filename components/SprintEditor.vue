@@ -87,9 +87,22 @@
             type="selection"
             width="50"
           />
-          <el-table-column
-            label="Material Name"
-          >
+          <el-table-column>
+            <template slot="header">
+              <div class="custom-head">
+                <span class="name">
+                  Material name
+                </span>
+
+                <el-input
+                  v-model="filter"
+                  size="mini"
+                  placeholder="Type to search"
+                  clearable
+                />
+              </div>
+            </template>
+
             <template slot-scope="{ row }">
               {{ row.name | truncate(45) }}
             </template>
@@ -119,11 +132,11 @@
       <el-pagination
         background
         v-if="paginated.length > 1 && activeTab === 'materials'"
-        class="pagination"
-        layout="prev, pager, next"
         :total="total"
         :page-size="pageSize"
         :current-page.sync="currentPage"
+        class="pagination"
+        layout="prev, pager, next"
       />
 
       <div v-else class="empty">&nbsp;</div>
@@ -155,7 +168,7 @@ import {
 } from 'lodash';
 import { mapState } from 'vuex';
 
-import { checkRole } from '@/library';
+import { checkAuthor, checkRole } from '@/library';
 
 export default {
   name: 'SprintEditor',
@@ -208,9 +221,19 @@ export default {
       ];
     },
 
+    filteredMaterials() {
+      const materials = [...this.materials];
+
+      /* Dont know why, the sort makes selection lost
+      const p = { ...this.position };
+      materials.sort((a, b) => p[a._id] - p[b._id]); */
+
+      return materials.filter((o) => this.matched(o) && this.canSee(o));
+    },
+
     paginated() {
       return chunk(
-        this.materials.filter((o) => this.matched(o) && this.canSee(o)),
+        this.filteredMaterials,
         this.pageSize,
       );
     },
@@ -233,17 +256,17 @@ export default {
     }
 
     if (this.data.meta) {
-      this.position = this.convertPositions(this.data.meta.position || {});
+      const { position } = this.data.meta;
+
+      if (position) {
+        this.position = { ...position };
+      }
     }
   },
 
   mounted() {
     this.$router.push({ query: { id: this.data._id, tab: 'config' } });
-    setTimeout(() => this.calculateSelections(), 10);
-
-    // if (this.$route.query.id !== 'new') {
-    // this.file = { url: this.data.image };
-    // }
+    setTimeout(() => this.calculateSelections(), 50);
   },
 
   destroyed() {
@@ -252,21 +275,26 @@ export default {
 
   watch: {
     form: {
-      handler: debounce(function (obj) {
-        const newForm = {
-          description: this.data.description,
-          image: this.data.image,
-          name: this.data.name,
-          status: this.data.status,
-        };
-        if (!isEqual(obj, newForm)) {
-          this.changed = true;
-        } else {
-          this.changed = false;
-        }
+      handler: debounce(function () {
+        this.changed = true;
       }, 100),
       deep: true,
     },
+
+    filter: {
+      handler: debounce(function () {
+        if (this.filteredMaterials.length > 0) {
+          this.calculateSelections();
+        }
+      }, 100),
+    },
+
+    /* position: {
+      handler: debounce(function () {
+        setTimeout(() => this.calculateSelections(), 10);
+      }, 100),
+      deep: true,
+    }, */
 
     currentPage() {
       setTimeout(() => this.calculateSelections(), 10);
@@ -280,19 +308,12 @@ export default {
 
     canEdit(o) {
       const isAdmin = checkRole(this.$auth.user, 'admin');
-      const isAuthor = (o.authors || []).some((a) => a._id === this.$auth.user._id);
+      const isAuthor = checkAuthor(this.$auth.user, o);
       return isAdmin || isAuthor;
     },
 
     canSee(o) {
       return o.status === 'public' || this.canEdit(o);
-    },
-
-    convertPositions(pos) {
-      return Object.keys(pos).reduce((a, c) => ({
-        ...a,
-        [c]: pos[c] ? parseInt(pos[c], 10) : 0,
-      }), {});
     },
 
     calculateSelections() {
@@ -305,13 +326,13 @@ export default {
     beforeUpload(file) {
       this.file = file;
 
-      const isLt2M = file.size / 1024 / 1024 < 20;
+      const isBig = file.size / 1024 / 1024 < 10;
 
-      if (!isLt2M) {
-        this.$message.error('File size can not exceed 20MB!');
+      if (!isBig) {
+        this.$message.error('File size can not exceed 10MB!');
       }
 
-      return isLt2M;
+      return isBig;
     },
 
     onChange(file, fileList) {
@@ -371,6 +392,16 @@ export default {
   .image {
     width: 150px;
     height: 150px;
+  }
+}
+
+.custom-head {
+  display: flex;
+  align-items: center;
+
+  .name {
+    min-width: 100px;
+    margin-right: 20px;
   }
 }
 

@@ -88,7 +88,7 @@
             width="50"
           />
           <el-table-column
-            label="Sprint Name"
+            label="Material Name"
           >
             <template slot-scope="{ row }">
               {{ row.name | truncate(45) }}
@@ -118,7 +118,7 @@
     <div class="controllers">
       <el-pagination
         background
-        v-if="paginated.length > 1 && activeTab === 'sprints'"
+        v-if="paginated.length > 1 && activeTab === 'materials'"
         class="pagination"
         layout="prev, pager, next"
         :total="total"
@@ -127,6 +127,7 @@
       />
 
       <div v-else class="empty">&nbsp;</div>
+
       <div class="buttons">
         <el-button
           :disabled="working"

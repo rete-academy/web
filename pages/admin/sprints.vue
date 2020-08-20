@@ -111,7 +111,7 @@ export default {
       selection: 'name',
       currentPage: 1,
       currentSprint: undefined,
-      pageSize: 8,
+      pageSize: 7,
       filter: '',
       selectedMaterials: [],
       changed: false,

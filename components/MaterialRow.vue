@@ -12,11 +12,11 @@
         New!
       </span>
 
-      <fa
+      <!-- fa
         icon="eye"
         class="preview button"
         @click="handleClick(data)"
-      />
+      / -->
 
       <a :href="data.material.url" class="button" target="_blank">
         <fa icon="external-link-alt" />
